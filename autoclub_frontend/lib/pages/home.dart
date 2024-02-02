@@ -10,14 +10,15 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-
-
 }
+
+enum Location { undefined, downtown, home, hotel, showroom, tuning, wharf }
 
 class _MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
 
   /*
+  Order matters:
   0 - downtown
   1 - home
   2 - hotel
@@ -25,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
   4 - tuning
   5 - wharf
    */
-  int mapToggles = -1;
+  Location location = Location.undefined;
 
   @override
   void initState() {
@@ -42,148 +43,158 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget> [
-        SizedBox(
+    return Stack(children: <Widget>[
+      SizedBox(
           child: GestureDetector(
-            child: InteractiveViewer(
-                // scaleFactor: 0.3,
-                minScale: 0.7,
-                maxScale: 0.7,
-                interactionEndFrictionCoefficient: 0.02,
-                constrained: false,
-                transformationController: viewTransformationController,
-                child: Stack(
-                    children: <Widget>[
-                      // Background image
-                      Image.asset("images/game-bg.png"),
+        child: InteractiveViewer(
+            // scaleFactor: 0.3,
+            minScale: 0.7,
+            maxScale: 0.7,
+            interactionEndFrictionCoefficient: 0.02,
+            constrained: false,
+            transformationController: viewTransformationController,
+            child: Stack(children: <Widget>[
+              // Background image
+              Image.asset("images/game-bg.png"),
 
-                      // Items on map
-                      mapItem(1600, 700, "images/downtown.svg", 0),
-                      mapItem(2150, 950, "images/home.svg", 1),
-                      mapItem(2000, 450, "images/hotel.svg", 2),
-                      mapItem(2350, 600, "images/showroom.svg", 3),
-                      mapItem(2760, 1200, "images/tuning.svg", 4),
-                      mapItem(950, 600, "images/wharf.svg", 5),
+              // Items on map
+              mapItem(1600, 700, "images/downtown.svg", Location.downtown),
+              mapItem(2150, 950, "images/home.svg", Location.home),
+              mapItem(2000, 450, "images/hotel.svg", Location.hotel),
+              mapItem(2350, 600, "images/showroom.svg", Location.showroom),
+              mapItem(2760, 1200, "images/tuning.svg", Location.tuning),
+              mapItem(950, 600, "images/wharf.svg", Location.wharf),
+            ])),
+      )),
 
-                    ]
-                )
-            ),
-          )
-        ),
-
-        // Location Entry Prompt
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-                margin: const EdgeInsets.only(bottom: 40),
-                child: locationEntrance(mapToggles)
-            )
-        ),
-
-      ]
-    );
+      // Location Entry Prompt
+      Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              margin: const EdgeInsets.only(bottom: 40),
+              child: locationEntrance(location))),
+    ]);
   }
 
-
-  Widget mapItem(double posX, double posY, String img, int toggle) {
-    bool thisToggled = mapToggles == toggle;
+  Widget mapItem(double posX, double posY, String img, Location toggle) {
+    bool thisToggled = location == toggle;
     return AnimatedPositioned(
-        left: (thisToggled) ? posX - 15: posX,
+        left: (thisToggled) ? posX - 15 : posX,
         top: (thisToggled) ? posY - 26 : posY,
         duration: const Duration(milliseconds: 450),
         curve: Curves.ease,
         child: GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
-                mapToggles = toggle;
+                location = toggle;
               });
             },
             child: AnimatedContainer(
                 duration: const Duration(milliseconds: 450),
-                width: ((thisToggled) ? 280 : 250) + ((toggle == 4) ? 30 : 0),
+                width: ((thisToggled) ? 280 : 250) +
+                    ((toggle == Location.tuning) ? 30 : 0), 
                 height: (thisToggled) ? 280 : 250,
                 curve: Curves.ease,
-                child: SimpleShadow(color: Colors.black, sigma: 8, child: SvgPicture.asset(img, fit: BoxFit.contain,))
-            )
-        )
-    );
+                child: SimpleShadow(
+                    color: Colors.black,
+                    sigma: 8,
+                    child: SvgPicture.asset(
+                      img,
+                      fit: BoxFit.contain,
+                    )))));
   }
 
-
-  Widget locationEntrance(int toggle) {
+  Widget locationEntrance(Location toggle) {
     double width = MediaQuery.of(context).size.width;
 
-    Widget child = (toggle != -1) ?
-    SimpleShadow(
-      color: Colors.black,
-      sigma: 8,
-      child: Container(
-        key: ValueKey<int>(toggle), // Unique key to trigger animation when toggle changes
-        width: (width < 900) ? width * 0.6 : 900 * 0.6,
-        height: 130,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: whiteTranslucent,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-          child: Stack(
-            children: [
-
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: const Icon(Icons.close_rounded), onPressed: () {
-                    setState(() {
-                      mapToggles = -1;
-                    });
-                  },
+    Widget child = (toggle != Location.undefined)
+        ? SimpleShadow(
+            color: Colors.black,
+            sigma: 8,
+            child: Container(
+              key: ValueKey<Location>(
+                  toggle), // Unique key to trigger animation when toggle changes
+              width: (width < 900) ? width * 0.6 : 900 * 0.6,
+              height: 130,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: whiteTranslucent,
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () {
+                          setState(() {
+                            location = Location.undefined;
+                          });
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Text(
+                              homepageLocation[toggle.index],
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              homepageDescription[toggle.index],
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: blue),
+                                  onPressed: () {
+                                    // TODO: implement actions
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.login_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "Enter",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium,
+                                      )
+                                    ],
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      Text(homepageLocation[toggle], style: Theme.of(context).textTheme.displayMedium,),
-                      const SizedBox(height: 10,),
-                      Text(homepageDescription[toggle], style: Theme.of(context).textTheme.displaySmall,),
-                      const SizedBox(height: 12,),
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: blue
-                            ),
-                            onPressed: () {
-                              // TODO: implement actions
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.login_rounded, color: Colors.white,),
-                                const SizedBox(width: 10,),
-                                Text("Enter", style: Theme.of(context).textTheme.labelMedium,)
-                              ],
-                            )
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-
-            ],
-          ),
-        ),
-      ),
-    ) : const SizedBox(key: ValueKey<int>(-1));
+            ),
+          )
+        : const SizedBox(key: ValueKey<int>(-1));
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 100), // Animation duration
@@ -194,6 +205,4 @@ class _MyHomePageState extends State<MyHomePage> {
       child: child, // Child to display
     );
   }
-
-
 }
