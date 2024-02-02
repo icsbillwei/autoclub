@@ -1,5 +1,5 @@
 import 'package:autoclub_frontend/pages/home.dart';
-import 'package:autoclub_frontend/style.dart';
+import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:flutter/material.dart';
 
 void main() {
