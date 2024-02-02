@@ -12,6 +12,7 @@
    */
 
 List<String> homepageLocation = [
+  "?????",
   "Downtown",
   "My Home",
   "Hotel",
@@ -21,6 +22,7 @@ List<String> homepageLocation = [
 ];
 
 List<String> homepageDescription = [
+  "?????",
   "Many things happen here at downtown",
   "Where you store your cars and stuff",
   "You can find taxi jobs here",

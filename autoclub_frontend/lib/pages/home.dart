@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.bottomCenter,
           child: Container(
               margin: const EdgeInsets.only(bottom: 40),
-              child: locationEntrance(location))),
+              child: locationEntrance())),
     ]);
   }
 
@@ -106,16 +106,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     )))));
   }
 
-  Widget locationEntrance(Location toggle) {
+  Widget locationEntrance() {
     double width = MediaQuery.of(context).size.width;
 
-    Widget child = (toggle != Location.undefined)
+    Widget child = (location != Location.undefined)
         ? SimpleShadow(
             color: Colors.black,
             sigma: 8,
             child: Container(
               key: ValueKey<Location>(
-                  toggle), // Unique key to trigger animation when toggle changes
+                  location), // Unique key to trigger animation when toggle changes
               width: (width < 900) ? width * 0.6 : 900 * 0.6,
               height: 130,
               decoration: BoxDecoration(
@@ -145,14 +145,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           children: [
                             Text(
-                              homepageLocation[toggle.index],
+                              homepageLocation[location.index],
                               style: Theme.of(context).textTheme.displayMedium,
                             ),
                             const SizedBox(
                               height: 10,
                             ),
                             Text(
-                              homepageDescription[toggle.index],
+                              homepageDescription[location.index],
                               style: Theme.of(context).textTheme.displaySmall,
                             ),
                             const SizedBox(
