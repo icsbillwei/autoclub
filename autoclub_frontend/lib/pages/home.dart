@@ -15,6 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 enum Location { undefined, downtown, home, hotel, showroom, tuning, wharf }
+enum BrowserPages { home, motortrader }
 
 class _MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
@@ -107,6 +108,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget browser() {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    String searchBar = "Choose a website from below";
+    BrowserPages page = BrowserPages.home;
+
     return SimpleShadow(
       color: Colors.black,
       sigma: 10,
@@ -117,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
           width: width * 0.8,
           height: height * 0.8,
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             child: Column(
               children: [
 
@@ -126,13 +130,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 50,
                   child: Row(
                     children: [
-                      SvgPicture.asset("images/Corone-logo.svg", width: 80,),
-                      SizedBox(width: 20,),
+                      SvgPicture.asset("images/Corone-logo.svg", width: 40),
+                      const SizedBox(width: 20,),
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.onSecondary,
-                            borderRadius: BorderRadius.circular(20)
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                            child: Text(
+                              searchBar,
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
                           ),
                         ),
                       ),
@@ -142,7 +153,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: FittedBox(
                           child: IconButton(
                               onPressed: (){
-                          
+                                setState(() {
+                                  page = BrowserPages.home;
+                                });
                               },
                               icon: Icon(
                                 Icons.home, 
@@ -167,11 +180,56 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
-                )
+                ),
 
                 // Content
+                Container(
+                  child: () {
+                    switch (page) {
 
+                      case BrowserPages.home:
+                        return Align(
+                          alignment: Alignment.topCenter,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 100,),
+                              SvgPicture.asset("/images/corone.svg", width: 230,),
+                              SizedBox(height: 130,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
 
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20)
+                                      )
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(25),
+                                      child: Column(
+                                        children: [
+                                          Image.asset("images/mt.png", width: 60,),
+                                          SizedBox(height: 20,),
+                                          Text("Motortrader", style: Theme.of(context).textTheme.displaySmall,)
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+
+                      case BrowserPages.motortrader:
+                        return SizedBox();
+                    }
+
+                }())
               ],
             ),
           )
