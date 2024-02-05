@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:autoclub_frontend/code_assets/texts.dart';
 import 'package:autoclub_frontend/main.dart';
@@ -6,6 +5,8 @@ import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+
+import '../browser/browser_window.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -15,20 +16,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 enum Location { undefined, downtown, home, hotel, showroom, tuning, wharf }
-enum BrowserPages { home, motortrader }
 
 class _MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
 
-  /*
-  Order matters:
-  0 - downtown
-  1 - home
-  2 - hotel
-  3 - showroom
-  4 - tuning
-  5 - wharf
-   */
   Location location = Location.undefined;
 
   @override
@@ -88,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
             elevation: 5,
             onPressed: () {
               showDialog(context: context, builder:  (BuildContext context) {
-                return browser();
+                return BrowserWidget();
               });
             },
             label: Text(
@@ -99,144 +90,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       )
-
-
     ]);
   }
 
 
-  Widget browser() {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    String searchBar = "Choose a website from below";
-    BrowserPages page = BrowserPages.home;
-
-    return SimpleShadow(
-      color: Colors.black,
-      sigma: 10,
-      child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        surfaceTintColor: Theme.of(context).colorScheme.background,
-        child: Container(
-          width: width * 0.8,
-          height: height * 0.8,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-            child: Column(
-              children: [
-
-                // Navbar
-                Container(
-                  height: 50,
-                  child: Row(
-                    children: [
-                      SvgPicture.asset("images/Corone-logo.svg", width: 40),
-                      const SizedBox(width: 20,),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                            child: Text(
-                              searchBar,
-                              style: Theme.of(context).textTheme.displaySmall,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20,),
-                      SizedBox(
-                        height: 50,
-                        child: FittedBox(
-                          child: IconButton(
-                              onPressed: (){
-                                setState(() {
-                                  page = BrowserPages.home;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.home, 
-                                color: Theme.of(context).colorScheme.secondary,
-                              )
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                        child: FittedBox(
-                          child: IconButton(
-                              onPressed: (){
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(
-                                Icons.close_rounded, 
-                                color: Theme.of(context).colorScheme.secondary,
-                              )
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Content
-                Container(
-                  child: () {
-                    switch (page) {
-
-                      case BrowserPages.home:
-                        return Align(
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 100,),
-                              SvgPicture.asset("/images/corone.svg", width: 230,),
-                              SizedBox(height: 130,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(context).colorScheme.onSecondary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20)
-                                      )
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(25),
-                                      child: Column(
-                                        children: [
-                                          Image.asset("images/mt.png", width: 60,),
-                                          SizedBox(height: 20,),
-                                          Text("Motortrader", style: Theme.of(context).textTheme.displaySmall,)
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        );
-
-                      case BrowserPages.motortrader:
-                        return SizedBox();
-                    }
-
-                }())
-              ],
-            ),
-          )
-        ),
-      ),
-    );
-  }
 
 
   Widget mapItem(double posX, double posY, String img, Location toggle) {
