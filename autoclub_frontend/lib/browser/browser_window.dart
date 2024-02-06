@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
-
 enum BrowserPages { home, motortrader, motorpedia }
 
 class BrowserWidget extends StatefulWidget {
@@ -17,8 +16,8 @@ class BrowserWidget extends StatefulWidget {
   _BrowserWidgetState createState() => _BrowserWidgetState();
 }
 
-
 class _BrowserWidgetState extends State<BrowserWidget> {
+  // 坚信: We can add some filtering
   String searchBar = "Choose a website from below";
   BrowserPages page = BrowserPages.home;
 
@@ -30,7 +29,6 @@ class _BrowserWidgetState extends State<BrowserWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -47,14 +45,15 @@ class _BrowserWidgetState extends State<BrowserWidget> {
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Column(
                 children: [
-
                   // Navbar
                   Container(
                     height: 50,
                     child: Row(
                       children: [
                         SvgPicture.asset("images/Corone-logo.svg", width: 40),
-                        const SizedBox(width: 20,),
+                        const SizedBox(
+                          width: 20,
+                        ),
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
@@ -62,7 +61,8 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
                               child: Text(
                                 searchBar,
                                 style: Theme.of(context).textTheme.displaySmall,
@@ -70,33 +70,35 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         SizedBox(
                           height: 40,
                           child: FittedBox(
                             child: IconButton(
-                                onPressed: (){
+                                onPressed: () {
                                   updateBrowserPage(BrowserPages.home);
                                 },
                                 icon: Icon(
                                   Icons.home,
-                                  color: Theme.of(context).colorScheme.secondary,
-                                )
-                            ),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                )),
                           ),
                         ),
                         SizedBox(
                           height: 40,
                           child: FittedBox(
                             child: IconButton(
-                                onPressed: (){
+                                onPressed: () {
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(
                                   Icons.close_rounded,
-                                  color: Theme.of(context).colorScheme.secondary,
-                                )
-                            ),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                )),
                           ),
                         ),
                       ],
@@ -104,39 +106,33 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                   ),
 
                   // Content
-                  Container(
-                      child: () {
-                        switch (page) {
+                  Container(child: () {
+                    switch (page) {
+                      case BrowserPages.home:
+                        return BrowserHomepage(
+                          updateBrowserPage: updateBrowserPage,
+                        );
 
-                          case BrowserPages.home:
-                            return BrowserHomepage(updateBrowserPage: updateBrowserPage,);
+                      case BrowserPages.motortrader:
+                        return SizedBox();
 
-                          case BrowserPages.motortrader:
-                            return SizedBox();
-
-                          case BrowserPages.motorpedia:
-                            return Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                "Site not found",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: GoogleFonts.cutiveMono().fontFamily,
-                                  fontSize: 30
-                                ),
-                              ),
-                            );
-                        }
-
-                      }())
+                      case BrowserPages.motorpedia:
+                        return Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Site not found",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: GoogleFonts.cutiveMono().fontFamily,
+                                fontSize: 30),
+                          ),
+                        );
+                    }
+                  }())
                 ],
               ),
-            )
-        ),
+            )),
       ),
     );
   }
-
 }
-
-
