@@ -203,6 +203,10 @@ class CarModel {
   This is a basic representation, and the cars that the player would obtain is in the subclass Car.
    */
 
+  /*
+  TODO: Fuel economy vals
+   */
+
   Brand brand;
   String name;
   int year;
@@ -265,6 +269,24 @@ class CarModel {
    */
   int maxMileage;
   int minMileage;
+
+  /*
+  Stats for the car, calculated through calculation function
+  You can find the calculations on the car list spreadsheet
+  Values are out of 10 and represent the general performance of the car in various aspects
+   */
+
+  late double launchStat;
+  late double accelStat;
+  late double speedStat;
+  late double handlingStat;
+  late double brakingStat;
+
+  late int performancePoint;
+
+  int get pwRatio => ((power / weight) * 1000).toInt();
+
+  //String d;
 
   /*
   Various components for the car
@@ -332,9 +354,46 @@ class CarModel {
       this.depCurve,
       this.maxMileage,
       this.minMileage,
+      this.performancePoint,
       this.designer
-      );
+      ){
+        updatePerfStats();
+      }
+
+
+  void updatePerfStats() {
+    /*
+    Update stat values
+     */
+    launchStat = 18 / accel;
+    accelStat = 38.5 / (qmile - 4) - 1;
+    speedStat = (vmax - 60) / 44;
+    handlingStat = 1.666 * (handling0 + handling1);
+    brakingStat = 200 / (braking - 6.6) - 3;
+  }
+
+
+  void updatePerfPoint({
+    // Default weightings for each stat
+    double launchWeight = 0.15,
+    double accelWeight = 0.25,
+    double speedWeight = 0.2,
+    double handlingWeight = 0.25,
+    double brakingWeight = 0.15
+  }) {
+    performancePoint =
+    (
+        launchStat * launchWeight +
+        accelStat * accelWeight +
+        speedStat * speedWeight +
+        handlingStat * handlingWeight +
+        brakingStat * brakingWeight
+    ) as int;
+  }
+
 }
+
+
 
 
 class Car extends CarModel {
@@ -371,6 +430,7 @@ class Car extends CarModel {
       super.depCurve,
       super.maxMileage,
       super.minMileage,
+      super.performancePoint,
       super.designer,
       this.currPrice,
       this.mileage
