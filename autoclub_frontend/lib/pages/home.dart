@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // TODO: Add listener to update date time accordingly
   final time = const TimeOfDay(hour: 12, minute: 23);
-  final money = 712931.96;
+  final int money = 712931;
   Location location = Location.undefined;
 
   // Is there a better way to set theme
@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return BrowserWidget();
+                    return const BrowserWidget();
                   });
             },
             label: Text(

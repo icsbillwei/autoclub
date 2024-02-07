@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 
 const dark = Color.fromRGBO(62, 62, 62, 1);
-const whiteTranslucent = Color.fromRGBO(255, 255, 255, 0.8);
+const whiteTranslucent = Color.fromRGBO(255, 255, 255, 0.9);
 const blue = Color.fromRGBO(0, 165, 217, 1);
 const bgWhite = Color.fromRGBO(248, 248, 248, 1);
 const darkWhite = Color.fromRGBO(225, 225, 225, 1);
@@ -23,13 +23,42 @@ ThemeData lightTheme = ThemeData(
         surface: bgWhite,
         onSurface: bgWhite),
     textTheme: const TextTheme(
+
         // Main menu => location description => title
-        displayMedium:
-            TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: dark),
-        displaySmall: TextStyle(fontSize: 14, color: dark),
+        displayMedium: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            color: Colors.black
+        ),
+
+        // "of daytime left"
+        displaySmall: TextStyle(
+            fontSize: 14,
+            color: Colors.black
+        ),
+
+        // "xx hours"
+        headlineSmall: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.black
+        ),
+
         labelMedium: TextStyle(
-            fontWeight: FontWeight.w500, fontSize: 14, color: Colors.white),
-        labelSmall: TextStyle()),
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            color: Colors.white
+        ),
+
+        labelSmall: TextStyle(), // I forgot what is this for
+
+        // Navbar => time
+        headlineMedium: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 32,
+            color: Colors.black
+        )
+    ),
     fontFamily: GoogleFonts.getFont("Sora").fontFamily);
 
 ThemeData navTheme = ThemeData(

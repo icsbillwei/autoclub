@@ -4,11 +4,12 @@ import 'package:autoclub_frontend/models/location.dart';
 import 'package:autoclub_frontend/models/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 
 class SideNav extends StatelessWidget {
   final TimeOfDay time;
   final Location location;
-  final double money;
+  final int money;
   final Weather weather;
 
   // colors
@@ -31,7 +32,7 @@ class SideNav extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double widthFactor = 0.125;
+    double widthFactor = 0.115;
     double heightFactor = 0.925;
     // predefined colour
     final backgroundColour = theme == "dark"
@@ -40,87 +41,79 @@ class SideNav extends StatelessWidget {
 
     final textColour = theme == "dark" ? Colors.white : Colors.black;
 
-    return Container(
-      width: screenWidth * widthFactor,
-      height: screenHeight * heightFactor,
-      margin: EdgeInsets.all(screenWidth * widthFactor / 6.2),
-      padding: EdgeInsets.symmetric(
-          horizontal: 8, vertical: 15 + screenWidth * widthFactor / 15),
-      // decoration (colour and border radius)
-      decoration: BoxDecoration(
-          color: backgroundColour,
-          borderRadius: BorderRadius.all(Radius.circular(screenWidth / 80))),
-      child: Column(
-        children: [
-          // SECTION: Weather Icon
-          SvgPicture.asset(
-            "images/weather/sunny.svg",
-            width: min(screenWidth * widthFactor * 0.45,
-                screenHeight * heightFactor * 0.45),
-          ),
-
-          const SizedBox(
-            height: 15,
-          ),
-
-          // SECTION: Time
-          Text(
-            "${time.hour}:${time.minute}",
-            style: TextStyle(
-              inherit: false,
-              fontSize: 45,
-              color: textColour,
+    return SimpleShadow(
+      sigma: 8,
+      child: Container(
+        width: min(screenWidth * widthFactor, 180),
+        height: screenHeight * heightFactor,
+        margin: EdgeInsets.all(screenWidth * widthFactor / 6.2),
+        padding: EdgeInsets.symmetric(
+            horizontal: 8, vertical: 15 + screenWidth * widthFactor / 15),
+        // decoration (colour and border radius)
+        decoration: BoxDecoration(
+            color: backgroundColour,
+            borderRadius: BorderRadius.all(Radius.circular(30))),
+        child: Column(
+          children: [
+            // SECTION: Weather Icon
+            SvgPicture.asset(
+              "images/weather/sunny.svg",
+              width: min(screenWidth * widthFactor * 0.25,
+                  screenHeight * heightFactor * 0.25),
             ),
-          ),
 
-          const SizedBox(
-            height: 15,
-          ),
+            const SizedBox(
+              height: 15,
+            ),
 
-          // SECTION: : time left in the day
-          // note: & time left in the night as well?
-          Text("${daytimeLeft()} hours",
-              style: TextStyle(
-                  inherit: false,
-                  fontWeight: FontWeight.bold,
-                  color: textColour)),
+            // SECTION: Time
+            Text(
+              "${time.hour}:${time.minute}",
+              style: Theme.of(context).textTheme.headlineMedium
+            ),
 
-          // Note: need `inherit: false` to get rid of default styling for some reason
-          Text("of daytime left",
-              style: TextStyle(inherit: false, color: textColour)),
+            const SizedBox(
+              height: 15,
+            ),
 
-          const SizedBox(height: 50),
+            // SECTION: : time left in the day
+            // note: & time left in the night as well?
+            Text("${daytimeLeft()} hours",
+                style: Theme.of(context).textTheme.headlineSmall
+            ),
+            // Note: need `inherit: false` to get rid of default styling for some reason
+            Text("of daytime left",
+                style: Theme.of(context).textTheme.displaySmall),
 
-          // SECTION: Current Location
-          Icon(Icons.location_on, color: textColour),
-          const SizedBox(height: 5),
-          Text(location.name,
-              style: TextStyle(
-                  inherit: false,
-                  fontWeight: FontWeight.bold,
-                  color: textColour)),
+            const SizedBox(height: 50),
 
-          Text("current location",
-              style: TextStyle(
-                  inherit: false,
-                  fontWeight: FontWeight.w100,
-                  color: textColour)),
+            // SECTION: Current Location
+            Icon(Icons.location_on, color: textColour),
+            const SizedBox(height: 5),
+            Text(location.name,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontSize: 13
+                )),
 
-          // SECTION: Money
-          const SizedBox(height: 40),
-          Text("\$${currencyFormat.format(money)}",
-              style: TextStyle(
-                  inherit: false,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: textColour)),
+            Text("current location",
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontSize: 12
+                )),
 
-          // SECTION: Profile Picture (Todo)
+            // SECTION: Money
+            const SizedBox(height: 45),
+            Text("\$ ${currencyFormat.format(money)}",
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontSize: 18
+                )),
 
-          // SECTION: Username (Todo)
+            // SECTION: Profile Picture (Todo)
 
-          // SECTION: Settings and Log Out
-        ],
+            // SECTION: Username (Todo)
+
+            // SECTION: Settings and Log Out
+          ],
+        ),
       ),
     );
   }
