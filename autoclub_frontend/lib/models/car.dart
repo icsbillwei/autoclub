@@ -1,6 +1,11 @@
 import 'brands.dart';
 
+
 enum CarType {
+  /*
+Body types of car objects
+ */
+
   sedan(name: "Sedan"),
   hatchback(name: "Hatchback"),
   wagon(name: "Wagon"),
@@ -22,26 +27,45 @@ enum CarType {
   const CarType({required this.name});
 }
 
+
 enum CarTag {
+  /*
+Tags for car objects.
+Used to specify attributes of the cars.
+ */
+
   classic(name: "Classic"),
   tuner(name: "Tuner"),
   muscle(name: "Muscle"),
   premium(name: "Premium"),
   luxury(name: "Luxury"),
   gt(name: "Grand tourer"),
-  superLuxury(name: "Super Luxury");
+  superLuxury(name: "Super Luxury"),
+  kei(name: "Kei car"),
+  race(name: "Race"),
+  utility(name: "Utility");
 
   final String name;
   const CarTag({required this.name});
 }
 
+
 enum Continent {
+  /*
+Continents for the countries.
+ */
+
   asia,
   europe,
   northAmerica
 }
 
+
 enum Country {
+  /*
+Possible countries for the car objects.
+ */
+
   uk(cont: Continent.europe, name: "United Kingdom"),
   japan(cont: Continent.asia, name: "Japan"),
   italy(cont: Continent.europe, name: "Italy"),
@@ -59,6 +83,10 @@ enum Country {
 
 
 enum DrivetrainType {
+/*
+Types of drivetrains for the cars.
+ */
+
   ff(name: "Front engine, front wheel drive", acronym: "FF"),
   fr(name: "Front engine, rear wheel drive", acronym: "FR"),
   mr(name: "Mid engine, rear wheel drive", acronym: "MR"),
@@ -73,25 +101,34 @@ enum DrivetrainType {
 }
 
 
-enum EngineType {
-  i3(acronym: "I3"),
-  i4(acronym: "I4"),
-  i5(acronym: "I5"),
-  i6(acronym: "I6"),
-  v6(acronym: "V6"),
-  v8(acronym: "V8"),
-  v10(acronym: "V10"),
-  v12(acronym: "V12"),
-  v16(acronym: "V16"),
-  b4(acronym: "B4"),
-  b6(acronym: "B6");
 
-  final String acronym;
-  const EngineType({required this.acronym});
+enum EngineType {
+  /*
+Types of engines for the cars.
+ */
+
+  i3(name: "I3"),
+  i4(name: "I4"),
+  i5(name: "I5"),
+  i6(name: "I6"),
+  v6(name: "V6"),
+  v8(name: "V8"),
+  v10(name: "V10"),
+  v12(name: "V12"),
+  v16(name: "V16"),
+  b4(name: "B4"),
+  b6(name: "B6");
+
+  final String name;
+  const EngineType({required this.name});
 }
 
 
 enum EngineAspiration {
+  /*
+Types of engine aspiration for the car engines.
+ */
+
   na(name: "Naturally Aspirated"),
   turbo(name: "Turbocharged"),
   sc(name: "Supercharged");
@@ -102,23 +139,70 @@ enum EngineAspiration {
 
 
 enum CargoSpace {
-  xs(acronym: "XS", size: 1),
-  s(acronym: "S", size: 2),
-  m(acronym: "M", size: 3),
-  l(acronym: "L", size: 4),
-  xl(acronym: "XL", size: 5),
-  xxl(acronym: "XL", size: 6);
+  /*
+Cargo space rating for the cars.
+Used for mission requirements.
+ */
 
-  final String acronym;
+  xs(name: "XS", size: 1),
+  s(name: "S", size: 2),
+  m(name: "M", size: 3),
+  l(name: "L", size: 4),
+  xl(name: "XL", size: 5),
+  xxl(name: "XL", size: 6);
+
+  final String name;
   final int size;
-  const CargoSpace({required this.acronym, required this.size});
+  const CargoSpace({required this.name, required this.size});
 }
+
+
+enum ComponentDamage {
+  /*
+  Damage levels for the individual components
+  With varying levels of repair cost
+   */
+  none(name: "None", level: 0, coef: 0),
+  light(name: "Light", level: 1, coef: 0.1),
+  medium(name: "Medium", level: 2, coef: 0.3),
+  severe(name: "Severe", level: 3, coef: 0.6),
+  broken(name: "Broken", level: 4, coef: 1);
+
+  final String name;
+  final int level;
+
+  // coefficient for the repair cost relative to the component price
+  final double coef;
+
+  const ComponentDamage({required this.name, required this.coef, required this.level});
+}
+
+
+class Component {
+  /*
+  Individual components for the cars
+  Used for the repairing and damaging system
+  Possibly used for the upgrading system
+   */
+
+  final ComponentDamage damage;
+  final String name;
+
+  // Price of component relative to new price of car
+  final double ratio;
+
+  // TODO: Implement component link to performance
+  const Component({required this.name, required this.damage, required this.ratio});
+}
+
 
 
 class CarModel {
   /*
   Car object that represents a car in the game.
+  This is a basic representation, and the cars that the player would obtain is in the subclass Car.
    */
+
   Brand brand;
   String name;
   int year;
@@ -126,9 +210,9 @@ class CarModel {
   CarType type;
   List<CarTag> tags;
   Country country;
-  DrivetrainType drivetrain;
-  EngineType engine;
-  EngineAspiration aspiration;
+  DrivetrainType drivetrainType;
+  EngineType engineType;
+  EngineAspiration aspirationType;
   CargoSpace space;
 
   int power;
@@ -171,6 +255,56 @@ class CarModel {
    */
   int braking;
 
+  /*
+  Coefficient for the depreciation calculation
+   */
+  int depCurve;
+
+  /*
+  Max and min possible mileage for when the car appears in a used dealership
+   */
+  int maxMileage;
+  int minMileage;
+
+  /*
+  Various components for the car
+   */
+  Component engine = const Component(
+      name: "Engine",
+      damage: ComponentDamage.none,
+      ratio: 0.3
+  );
+
+  Component drivetrain = const Component(
+      name: "Drivetrain",
+      damage: ComponentDamage.none,
+      ratio: 0.2
+  );
+
+  Component suspension = const Component(
+      name: "Suspension",
+      damage: ComponentDamage.none,
+      ratio: 0.15
+  );
+
+  Component bodywork = const Component(
+      name: "Bodywork",
+      damage: ComponentDamage.none,
+      ratio: 0.15
+  );
+
+  Component interior = const Component(
+      name: "Interior",
+      damage: ComponentDamage.none,
+      ratio: 0.08
+  );
+
+  Component wheelsTires = const Component(
+      name: "Wheels and Tires",
+      damage: ComponentDamage.none,
+      ratio: 0.12
+  );
+
   String designer;
 
 
@@ -182,9 +316,9 @@ class CarModel {
       this.type,
       this.tags,
       this.country,
-      this.drivetrain,
-      this.engine,
-      this.aspiration,
+      this.drivetrainType,
+      this.engineType,
+      this.aspirationType,
       this.space,
       this.power,
       this.weight,
@@ -195,6 +329,52 @@ class CarModel {
       this.handling0,
       this.handling1,
       this.braking,
+      this.depCurve,
+      this.maxMileage,
+      this.minMileage,
       this.designer
       );
 }
+
+
+class Car extends CarModel {
+  /*
+  The actual car object with parameters to account for usage
+   */
+
+  int currPrice;
+  int mileage; // in km
+
+
+  Car(
+      // Super constructors
+      super.name,
+      super.brand,
+      super.year,
+      super.newPrice,
+      super.type,
+      super.tags,
+      super.country,
+      super.drivetrainType,
+      super.engineType,
+      super.aspirationType,
+      super.space,
+      super.power,
+      super.weight,
+      super.seatCount,
+      super.accel,
+      super.qmile,
+      super.vmax,
+      super.handling0,
+      super.handling1,
+      super.braking,
+      super.depCurve,
+      super.maxMileage,
+      super.minMileage,
+      super.designer,
+      this.currPrice,
+      this.mileage
+      );
+
+}
+
