@@ -1,199 +1,8 @@
+import 'dart:math';
+
 import 'brands.dart';
+import 'car_utilities.dart';
 
-
-enum CarType {
-  /*
-Body types of car objects
- */
-
-  sedan(name: "Sedan"),
-  hatchback(name: "Hatchback"),
-  wagon(name: "Wagon"),
-  suv(name: "SUV"),
-  coupe(name: "Coupe"),
-  convertible(name: "Convertible"),
-  microcar(name: "Microcar"),
-  minivan(name: "Minivan"),
-  van(name: "Box van"),
-  pickup(name: "Pickup"),
-  supercar(name: "Supercar"),
-  hypercar(name: "Hypercar"),
-
-  // For cars that do not fall under any of the above categories
-  special(name:"Special");
-
-  final String name;
-  // possible todo: add icons
-  const CarType({required this.name});
-}
-
-
-enum CarTag {
-  /*
-Tags for car objects.
-Used to specify attributes of the cars.
- */
-
-  classic(name: "Classic"),
-  tuner(name: "Tuner"),
-  muscle(name: "Muscle"),
-  premium(name: "Premium"),
-  luxury(name: "Luxury"),
-  gt(name: "Grand tourer"),
-  superLuxury(name: "Super Luxury"),
-  kei(name: "Kei car"),
-  race(name: "Race"),
-  utility(name: "Utility");
-
-  final String name;
-  const CarTag({required this.name});
-}
-
-
-enum Continent {
-  /*
-Continents for the countries.
- */
-
-  asia,
-  europe,
-  northAmerica
-}
-
-
-enum Country {
-  /*
-Possible countries for the car objects.
- */
-
-  uk(cont: Continent.europe, name: "United Kingdom"),
-  japan(cont: Continent.asia, name: "Japan"),
-  italy(cont: Continent.europe, name: "Italy"),
-  indonesia(cont: Continent.asia, name: "Indonesia"),
-  germany(cont: Continent.europe, name: "Germany"),
-  finland(cont: Continent.europe, name: "Finland"),
-  estonia(cont: Continent.europe, name: "Estonia"),
-  poland(cont: Continent.europe, name: "Poland"),
-  us(cont: Continent.northAmerica, name: "United States");
-
-  final Continent cont;
-  final String name;
-  const Country({required this.cont, required this.name});
-}
-
-
-enum DrivetrainType {
-/*
-Types of drivetrains for the cars.
- */
-
-  ff(name: "Front engine, front wheel drive", acronym: "FF"),
-  fr(name: "Front engine, rear wheel drive", acronym: "FR"),
-  mr(name: "Mid engine, rear wheel drive", acronym: "MR"),
-  rr(name: "Rear engine, rear wheel drive", acronym: "RR"),
-  fourwd(name: "Four wheel drive", acronym: "4WD"),
-  fawd(name: "Front engine, all wheel drive", acronym: "F-AWD"),
-  mawd(name: "Mid engine, all wheel drive", acronym: "M-AWD");
-
-  final String name;
-  final String acronym;
-  const DrivetrainType({required this.name, required this.acronym});
-}
-
-
-
-enum EngineType {
-  /*
-Types of engines for the cars.
- */
-
-  i3(name: "I3"),
-  i4(name: "I4"),
-  i5(name: "I5"),
-  i6(name: "I6"),
-  v6(name: "V6"),
-  v8(name: "V8"),
-  v10(name: "V10"),
-  v12(name: "V12"),
-  v16(name: "V16"),
-  b4(name: "B4"),
-  b6(name: "B6");
-
-  final String name;
-  const EngineType({required this.name});
-}
-
-
-enum EngineAspiration {
-  /*
-Types of engine aspiration for the car engines.
- */
-
-  na(name: "Naturally Aspirated"),
-  turbo(name: "Turbocharged"),
-  sc(name: "Supercharged");
-
-  final String name;
-  const EngineAspiration({required this.name});
-}
-
-
-enum CargoSpace {
-  /*
-Cargo space rating for the cars.
-Used for mission requirements.
- */
-
-  xs(name: "XS", size: 1),
-  s(name: "S", size: 2),
-  m(name: "M", size: 3),
-  l(name: "L", size: 4),
-  xl(name: "XL", size: 5),
-  xxl(name: "XL", size: 6);
-
-  final String name;
-  final int size;
-  const CargoSpace({required this.name, required this.size});
-}
-
-
-enum ComponentDamage {
-  /*
-  Damage levels for the individual components
-  With varying levels of repair cost
-   */
-  none(name: "None", level: 0, coef: 0),
-  light(name: "Light", level: 1, coef: 0.1),
-  medium(name: "Medium", level: 2, coef: 0.3),
-  severe(name: "Severe", level: 3, coef: 0.6),
-  broken(name: "Broken", level: 4, coef: 1);
-
-  final String name;
-  final int level;
-
-  // coefficient for the repair cost relative to the component price
-  final double coef;
-
-  const ComponentDamage({required this.name, required this.coef, required this.level});
-}
-
-
-class Component {
-  /*
-  Individual components for the cars
-  Used for the repairing and damaging system
-  Possibly used for the upgrading system
-   */
-
-  final ComponentDamage damage;
-  final String name;
-
-  // Price of component relative to new price of car
-  final double ratio;
-
-  // TODO: Implement component link to performance
-  const Component({required this.name, required this.damage, required this.ratio});
-}
 
 
 
@@ -286,10 +95,10 @@ class CarModel {
 
   int get pwRatio => ((power / weight) * 1000).toInt();
 
-  //String d;
+  List<String>? dealerDescription;
 
   /*
-  Various components for the car
+  Various components for the car2
    */
   Component engine = const Component(
       name: "Engine",
@@ -327,38 +136,41 @@ class CarModel {
       ratio: 0.12
   );
 
+  late List<Component> componentList;
+
   String designer;
 
 
-  CarModel(
-      this.name,
-      this.brand,
-      this.year,
-      this.newPrice,
-      this.type,
-      this.tags,
-      this.country,
-      this.drivetrainType,
-      this.engineType,
-      this.aspirationType,
-      this.space,
-      this.power,
-      this.weight,
-      this.seatCount,
-      this.accel,
-      this.qmile,
-      this.vmax,
-      this.handling0,
-      this.handling1,
-      this.braking,
-      this.depCurve,
-      this.maxMileage,
-      this.minMileage,
-      this.performancePoint,
-      this.designer
-      ){
-        updatePerfStats();
-      }
+  CarModel({
+    required this.name,
+    required this.brand,
+    required this.year,
+    required this.newPrice,
+    required this.type,
+    required this.tags,
+    required this.country,
+    required this.drivetrainType,
+    required this.engineType,
+    required this.aspirationType,
+    required this.space,
+    required this.power,
+    required this.weight,
+    required this.seatCount,
+    required this.accel,
+    required this.qmile,
+    required this.vmax,
+    required this.handling0,
+    required this.handling1,
+    required this.braking,
+    required this.depCurve,
+    required this.maxMileage,
+    required this.minMileage,
+    required this.performancePoint,
+    required this.designer
+  }){
+    updatePerfStats();
+    componentList = [engine, drivetrain, suspension, bodywork, interior, wheelsTires];
+  }
 
 
   void updatePerfStats() {
@@ -395,46 +207,154 @@ class CarModel {
 
 
 
-
 class Car extends CarModel {
   /*
   The actual car object with parameters to account for usage
+  This will be the car class that is sold in dealerships and the player would use
+  Includes functionalities and additional params
    */
 
   int currPrice;
   int mileage; // in km
 
+  /*
+  Hidden stat, indicates the general quality level of the car
+  Used for used dealer generation
+  Used dealer description is also based on stat
+  Scale is 1-6 with 6 being brand new
+   */
+  int qualityStar;
 
-  Car(
-      // Super constructors
-      super.name,
-      super.brand,
-      super.year,
-      super.newPrice,
-      super.type,
-      super.tags,
-      super.country,
-      super.drivetrainType,
-      super.engineType,
-      super.aspirationType,
-      super.space,
-      super.power,
-      super.weight,
-      super.seatCount,
-      super.accel,
-      super.qmile,
-      super.vmax,
-      super.handling0,
-      super.handling1,
-      super.braking,
-      super.depCurve,
-      super.maxMileage,
-      super.minMileage,
-      super.performancePoint,
-      super.designer,
-      this.currPrice,
-      this.mileage
-      );
+
+
+
+  Car({
+    required String name,
+    required Brand brand,
+    required int year,
+    required int newPrice,
+    required CarType type,
+    required List<CarTag> tags,
+    required Country country,
+    required DrivetrainType drivetrainType,
+    required EngineType engineType,
+    required EngineAspiration aspirationType,
+    required CargoSpace space,
+    required int power,
+    required int weight,
+    required int seatCount,
+    required int accel,
+    required int qmile,
+    required int vmax,
+    required int handling0,
+    required int handling1,
+    required int braking,
+    required int depCurve,
+    required int maxMileage,
+    required int minMileage,
+    required int performancePoint,
+    required String designer,
+    required this.currPrice,
+    required this.mileage,
+    required this.qualityStar
+  }) : super(
+    name: name,
+    brand: brand,
+    year: year,
+    newPrice: newPrice,
+    type: type,
+    tags: tags,
+    country: country,
+    drivetrainType: drivetrainType,
+    engineType: engineType,
+    aspirationType: aspirationType,
+    space: space,
+    power: power,
+    weight: weight,
+    seatCount: seatCount,
+    accel: accel,
+    qmile: qmile,
+    vmax: vmax,
+    handling0: handling0,
+    handling1: handling1,
+    braking: braking,
+    depCurve: depCurve,
+    maxMileage: maxMileage,
+    minMileage: minMileage,
+    performancePoint: performancePoint,
+    designer: designer,
+  );
+
+
+  void initRandomUsed() {
+    final random = Random();
+
+    int rangeRandom(min, max) {
+      return min + random.nextInt(max - min);
+    }
+
+    // generates a mileage count based on given min and max values for specific car
+    mileage = rangeRandom(minMileage, maxMileage);
+
+    /*
+    Generate a quality rating realistically based on the mileage
+    Higher mileage cars are more likely to have more things broken, hence lower star rating
+     */
+    bool cointoss = random.nextBool();
+    switch (mileage) {
+
+      case (<= 4000):
+        qualityStar = 6;
+
+      case (> 5000 && <= 15000):
+        qualityStar = (cointoss) ? 6 : 5;
+
+      case (> 15000 && <= 50000):
+        qualityStar = (cointoss) ? 5 : 4;
+
+      case (> 50000 && <= 100000):
+        qualityStar = (cointoss) ? 4 : 3;
+
+      case (> 100000 && <= 150000):
+        qualityStar = (cointoss) ? 3 : 2;
+
+      case (> 150000 && <= 250000):
+        qualityStar = (cointoss) ? 2 : 1;
+
+      case (> 250000):
+        qualityStar = 1;
+    }
+    
+    int totalDmg;
+
+    /*
+    max: 24 points
+     */
+    switch (qualityStar) {
+      case(6):
+        totalDmg = 0;
+      case(5):
+        totalDmg = rangeRandom(1, 2);
+      case(4):
+        totalDmg = rangeRandom(2, 5);
+      case(3):
+        totalDmg = rangeRandom(5, 8);
+      case(2):
+        totalDmg = rangeRandom(8, 14);
+      case(1):
+        totalDmg = rangeRandom(14, 20);
+    }
+
+  }
+
+
+  void valuation() {
+    int newCurrPrice = newPrice;
+    for (Component comp in componentList) {
+      newCurrPrice -= (newPrice * comp.ratio * comp.damage.coef) as int;
+    }
+    currPrice = newCurrPrice;
+  }
 
 }
 

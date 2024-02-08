@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 import '../browser/browser_window.dart';
+import '../models/car.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -26,6 +27,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Is there a better way to set theme
   final theme = "light";
+
+  /*
+  ---------- Temp user data -------------
+   */
+  List<Car> carlist = [];
+  Car? currentCar;
+
 
   @override
   void initState() {
@@ -133,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ? navTheme.primaryColorDark
         : navTheme.primaryColorLight;
 
-    final textColour = theme == "dark" ? Colors.white : Colors.black;
+    // final textColour = theme == "dark" ? Colors.white : Colors.black;
 
     Widget child = (location != Location.undefined)
         ? SimpleShadow(
