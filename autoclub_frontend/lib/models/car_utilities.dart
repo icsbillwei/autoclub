@@ -182,12 +182,14 @@ class Component {
   Possibly used for the upgrading system
    */
 
-  final ComponentDamage damage;
+  ComponentDamage damage;
   final String name;
 
   // Price of component relative to new price of car
   final double ratio;
 
   // TODO: Implement component link to performance
-  const Component({required this.name, required this.damage, required this.ratio});
+  Component({required this.name, required this.damage, required this.ratio});
 }
+
+

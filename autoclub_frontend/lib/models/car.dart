@@ -5,6 +5,11 @@ import 'car_utilities.dart';
 
 
 
+int rangeRandom(min, max) {
+  final random = Random();
+  return min + random.nextInt(max - min);
+}
+
 
 class CarModel {
   /*
@@ -100,37 +105,37 @@ class CarModel {
   /*
   Various components for the car2
    */
-  Component engine = const Component(
+  Component engine = Component(
       name: "Engine",
       damage: ComponentDamage.none,
       ratio: 0.3
   );
 
-  Component drivetrain = const Component(
+  Component drivetrain = Component(
       name: "Drivetrain",
       damage: ComponentDamage.none,
       ratio: 0.2
   );
 
-  Component suspension = const Component(
+  Component suspension = Component(
       name: "Suspension",
       damage: ComponentDamage.none,
       ratio: 0.15
   );
 
-  Component bodywork = const Component(
+  Component bodywork = Component(
       name: "Bodywork",
       damage: ComponentDamage.none,
       ratio: 0.15
   );
 
-  Component interior = const Component(
+  Component interior = Component(
       name: "Interior",
       damage: ComponentDamage.none,
       ratio: 0.08
   );
 
-  Component wheelsTires = const Component(
+  Component wheelsTires = Component(
       name: "Wheels and Tires",
       damage: ComponentDamage.none,
       ratio: 0.12
@@ -288,11 +293,6 @@ class Car extends CarModel {
 
   void initRandomUsed() {
     final random = Random();
-
-    int rangeRandom(min, max) {
-      return min + random.nextInt(max - min);
-    }
-
     // generates a mileage count based on given min and max values for specific car
     mileage = rangeRandom(minMileage, maxMileage);
 
@@ -303,7 +303,7 @@ class Car extends CarModel {
     bool cointoss = random.nextBool();
     switch (mileage) {
 
-      case (<= 4000):
+      case (<= 5000):
         qualityStar = 6;
 
       case (> 5000 && <= 15000):
@@ -324,27 +324,103 @@ class Car extends CarModel {
       case (> 250000):
         qualityStar = 1;
     }
-    
-    int totalDmg;
 
+
+  }
+
+
+  void initRandomDamage(int star) {
     /*
-    max: 24 points
-     */
-    switch (qualityStar) {
-      case(6):
-        totalDmg = 0;
-      case(5):
-        totalDmg = rangeRandom(1, 2);
-      case(4):
-        totalDmg = rangeRandom(2, 5);
-      case(3):
-        totalDmg = rangeRandom(5, 8);
-      case(2):
-        totalDmg = rangeRandom(8, 14);
-      case(1):
-        totalDmg = rangeRandom(14, 20);
-    }
+    Damage rates are as following for each slot:
+    6 star - 3% light
+    97% no damage
 
+    5 star - 20% light, 5% medium
+    75% no damage
+
+    4 star - 40% light, 10% medium, 3% heavy,
+    46% no damage
+
+    3 star - 30% light, 30% medium, 15% heavy, 1% broken
+    24% no damage
+
+    2 star - 20% light, 40% medium, 25% heavy, 5% broken
+    5% no damage
+
+    1 star - 10% light, 30% medium, 50% heavy, 10% broken
+    0% no damage
+     */
+
+    for (Component c in componentList) {
+      int rng = rangeRandom(1, 100);
+      switch (star) {
+        case 6:
+          if (rng <= 3){
+            c.damage = ComponentDamage.light;
+          }
+
+        case 5:
+          if (rng <= 5) {
+            c.damage = ComponentDamage.medium;
+          }
+          else if (rng <= 25) {
+            c.damage = ComponentDamage.light;
+          }
+
+        case 4:
+          if (rng <= 3) {
+            c.damage = ComponentDamage.severe;
+          }
+          else if (rng <= 13) {
+            c.damage = ComponentDamage.medium;
+          }
+          else if (rng <= 53) {
+            c.damage = ComponentDamage.light;
+          }
+
+        case 3:
+          if (rng <= 1){
+            c.damage = ComponentDamage.broken;
+          }
+          else if (rng <= 16) {
+            c.damage = ComponentDamage.severe;
+          }
+          else if (rng <= 46) {
+            c.damage = ComponentDamage.medium;
+          }
+          else if (rng <= 76) {
+            c.damage = ComponentDamage.light;
+          }
+
+        case 2:
+          if (rng <= 5){
+            c.damage = ComponentDamage.broken;
+          }
+          else if (rng <= 30) {
+            c.damage = ComponentDamage.severe;
+          }
+          else if (rng <= 70) {
+            c.damage = ComponentDamage.medium;
+          }
+          else if (rng <= 90) {
+            c.damage = ComponentDamage.light;
+          }
+
+        case 1:
+          if (rng <= 10){
+            c.damage = ComponentDamage.broken;
+          }
+          else if (rng <= 60) {
+            c.damage = ComponentDamage.severe;
+          }
+          else if (rng <= 90) {
+            c.damage = ComponentDamage.medium;
+          }
+          else if (rng <= 100) {
+            c.damage = ComponentDamage.light;
+          }
+      }
+    }
   }
 
 
