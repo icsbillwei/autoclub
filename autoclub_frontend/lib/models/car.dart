@@ -43,13 +43,13 @@ class CarModel {
   Acceleration, in 0-100 km/h time in seconds
   less is better
    */
-  int accel;
+  double accel;
 
   /*
   Acceleration, in 0-400m distance time in seconds
   less is better
    */
-  int qmile;
+  double qmile;
 
   /*
   Top speed, in km/h
@@ -177,6 +177,7 @@ class CarModel {
     required this.designer
   }){
     updatePerfStats();
+    updatePerfPoint();
     componentList = [engine, drivetrain, suspension, bodywork, interior, wheelsTires];
   }
 
@@ -208,10 +209,51 @@ class CarModel {
         speedStat * speedWeight +
         handlingStat * handlingWeight +
         brakingStat * brakingWeight
-    ) as int;
+    ).toInt();
   }
 
+  @override
+  String toString() {
+    final componentsString = componentList.map((component) => component.name).join(', ');
+    final tagsString = tags.map((tag) => tag.name).join(', ');
+
+    return '''
+        CarModel Details:
+          ID: $id
+          Name: $name
+          Brand Name: $brandName
+          Year: $year
+          New Price: $newPrice
+          Type: ${type.name}
+          Tags: $tagsString
+          Country: ${country.name}
+          Drivetrain Type: ${drivetrainType.acronym}
+          Engine Type: ${engineType.name}
+          Aspiration Type: ${aspirationType.name}
+          Space: ${space.name}
+          Power: $power
+          Weight: $weight
+          Seat Count: $seatCount
+          Acceleration (0-100 km/h): $accel s
+          Quarter Mile Time: $qmile s
+          Top Speed: $vmax km/h
+          Short Radius Handling: $handling0 G
+          Long Radius Handling: $handling1 G
+          Braking Distance: $braking m
+          Depreciation Curve: $depCurve
+          Max Mileage: $maxMileage
+          Min Mileage: $minMileage
+          Performance Point: $performancePoint
+          Power-to-Weight Ratio: ${pwRatio.toString()}
+          Designer: $designer
+          Components: $componentsString
+            ''';
+  }
 }
+
+
+
+
 
 
 
@@ -251,8 +293,8 @@ class Car extends CarModel {
     required int power,
     required int weight,
     required int seatCount,
-    required int accel,
-    required int qmile,
+    required double accel,
+    required double qmile,
     required int vmax,
     required double handling0,
     required double handling1,

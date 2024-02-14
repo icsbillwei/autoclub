@@ -193,6 +193,9 @@ class Component {
 
   // TODO: Implement component link to performance
   Component({required this.name, required this.damage, required this.ratio});
+
+  @override
+  String toString() => "$name (Damage: ${damage.toString()}, Ratio: $ratio)";
 }
 
 
