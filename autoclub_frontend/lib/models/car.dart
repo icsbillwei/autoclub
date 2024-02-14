@@ -21,7 +21,9 @@ class CarModel {
   TODO: Fuel economy vals
    */
 
-  Brand brand;
+  int id;
+  // Brand brand; TODO: implement brand system
+  String brandName;
   String name;
   int year;
   int newPrice;
@@ -59,24 +61,24 @@ class CarModel {
   Short radius (20m) cornering handling, in G value
   more is better
    */
-  int handling0;
+  double handling0;
 
   /*
   Long radius (200m) cornering handling, in G value
   more is better
    */
-  int handling1;
+  double handling1;
 
   /*
   Braking distance from 100 - 0 km/h, in m
   less is better
    */
-  int braking;
+  double braking;
 
   /*
   Coefficient for the depreciation calculation
    */
-  int depCurve;
+  double depCurve;
 
   /*
   Max and min possible mileage for when the car appears in a used dealership
@@ -147,8 +149,10 @@ class CarModel {
 
 
   CarModel({
+    required this.id,
     required this.name,
-    required this.brand,
+    // required this.brand,
+    required this.brandName,
     required this.year,
     required this.newPrice,
     required this.type,
@@ -170,7 +174,6 @@ class CarModel {
     required this.depCurve,
     required this.maxMileage,
     required this.minMileage,
-    required this.performancePoint,
     required this.designer
   }){
     updatePerfStats();
@@ -231,11 +234,11 @@ class Car extends CarModel {
   int qualityStar;
 
 
-
-
   Car({
+    required int id,
     required String name,
-    required Brand brand,
+    // required Brand brand,
+    required String brandName,
     required int year,
     required int newPrice,
     required CarType type,
@@ -251,10 +254,10 @@ class Car extends CarModel {
     required int accel,
     required int qmile,
     required int vmax,
-    required int handling0,
-    required int handling1,
-    required int braking,
-    required int depCurve,
+    required double handling0,
+    required double handling1,
+    required double braking,
+    required double depCurve,
     required int maxMileage,
     required int minMileage,
     required int performancePoint,
@@ -263,8 +266,10 @@ class Car extends CarModel {
     required this.mileage,
     required this.qualityStar
   }) : super(
+    id: id,
     name: name,
-    brand: brand,
+    // brand: brand,
+    brandName: brandName,
     year: year,
     newPrice: newPrice,
     type: type,
@@ -286,8 +291,45 @@ class Car extends CarModel {
     depCurve: depCurve,
     maxMileage: maxMileage,
     minMileage: minMileage,
-    performancePoint: performancePoint,
     designer: designer,
+  );
+
+
+  Car.fromModel({
+    /*
+    Constructor for generating Car object from CarModel object
+     */
+    required CarModel model,
+    required this.currPrice,
+    required this.mileage,
+    required this.qualityStar,
+  }) : super(
+    id: model.id,
+    name: model.name,
+    // brand: model.brand,
+    brandName: model.brandName,
+    year: model.year,
+    newPrice: model.newPrice,
+    type: model.type,
+    tags: model.tags,
+    country: model.country,
+    drivetrainType: model.drivetrainType,
+    engineType: model.engineType,
+    aspirationType: model.aspirationType,
+    space: model.space,
+    power: model.power,
+    weight: model.weight,
+    seatCount: model.seatCount,
+    accel: model.accel,
+    qmile: model.qmile,
+    vmax: model.vmax,
+    handling0: model.handling0,
+    handling1: model.handling1,
+    braking: model.braking,
+    depCurve: model.depCurve,
+    maxMileage: model.maxMileage,
+    minMileage: model.minMileage,
+    designer: model.designer,
   );
 
 
@@ -324,8 +366,8 @@ class Car extends CarModel {
       case (> 250000):
         qualityStar = 1;
     }
-
-
+    initRandomDamage(qualityStar);
+    valuation();
   }
 
 

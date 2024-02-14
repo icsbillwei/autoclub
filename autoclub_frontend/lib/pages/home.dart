@@ -2,7 +2,8 @@ import 'package:autoclub_frontend/code_assets/texts.dart';
 import 'package:autoclub_frontend/main.dart';
 import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:autoclub_frontend/models/location.dart';
-import 'package:autoclub_frontend/utilities/sideNav.dart';
+import 'package:autoclub_frontend/components/sideNav.dart';
+import 'package:autoclub_frontend/utilities/sheets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
@@ -39,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     transformView(viewTransformationController);
     super.initState();
+    getCarList();
   }
 
   @override

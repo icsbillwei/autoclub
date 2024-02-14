@@ -71,7 +71,8 @@ Possible countries for the car objects.
   finland(cont: Continent.europe, name: "Finland"),
   estonia(cont: Continent.europe, name: "Estonia"),
   poland(cont: Continent.europe, name: "Poland"),
-  us(cont: Continent.northAmerica, name: "United States");
+  us(cont: Continent.northAmerica, name: "United States"),
+  china(cont: Continent.asia, name: "China");
 
   final Continent cont;
   final String name;
@@ -114,7 +115,8 @@ Types of engines for the cars.
   v12(name: "V12"),
   v16(name: "V16"),
   b4(name: "B4"),
-  b6(name: "B6");
+  b6(name: "B6"),
+  ev(name: "EV");
 
   final String name;
   const EngineType({required this.name});
@@ -128,7 +130,8 @@ Types of engine aspiration for the car engines.
 
   na(name: "Naturally Aspirated"),
   turbo(name: "Turbocharged"),
-  sc(name: "Supercharged");
+  sc(name: "Supercharged"),
+  ev(name: "EV");
 
   final String name;
   const EngineAspiration({required this.name});
