@@ -22,6 +22,10 @@ ThemeData lightTheme = ThemeData(
         onBackground: bgWhite,
         surface: bgWhite,
         onSurface: bgWhite),
+
+    /*
+    Main textTheme
+     */
     textTheme: const TextTheme(
 
         // Main menu => location description => title
@@ -56,10 +60,27 @@ ThemeData lightTheme = ThemeData(
         headlineMedium: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: 32,
-            color: Colors.black
+            color: Colors.black,
         )
     ),
-    fontFamily: GoogleFonts.getFont("Sora").fontFamily);
+
+
+    /*
+    Motortrader text theme
+     */
+    primaryTextTheme: TextTheme(
+      
+      // Motortrader navbar texts
+      headlineMedium:  TextStyle(
+        fontSize: 18,
+        color: dark,
+        fontFamily: GoogleFonts.getFont("Rubik").fontFamily
+      )
+    ),
+    
+    
+    fontFamily: GoogleFonts.getFont("Sora").fontFamily
+);
 
 ThemeData navTheme = ThemeData(
   primaryColorLight: const Color.fromRGBO(245, 245, 245, 0.8),

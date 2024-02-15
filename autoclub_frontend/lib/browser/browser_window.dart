@@ -1,4 +1,5 @@
 import 'package:autoclub_frontend/browser/browser_homepage.dart';
+import 'package:autoclub_frontend/browser/used_dealer/used_dealer_homepage.dart';
 import 'package:autoclub_frontend/code_assets/texts.dart';
 import 'package:autoclub_frontend/main.dart';
 import 'package:autoclub_frontend/code_assets/style.dart';
@@ -18,8 +19,8 @@ class BrowserWidget extends StatefulWidget {
 
 class _BrowserWidgetState extends State<BrowserWidget> {
   // 坚信: We can add some filtering
-  String searchBar = "Choose a website from below";
   BrowserPages page = BrowserPages.home;
+
 
   void updateBrowserPage(BrowserPages newPage) {
     setState(() {
@@ -32,6 +33,13 @@ class _BrowserWidgetState extends State<BrowserWidget> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+    String searchBar = switch (page) {
+      BrowserPages.home => "Choose a website from below",
+      BrowserPages.motorpedia => "motorpedia.org",
+      BrowserPages.motortrader => "motortrader.com/home"
+    };
+
+
     return SimpleShadow(
       color: Colors.black,
       sigma: 10,
@@ -40,9 +48,9 @@ class _BrowserWidgetState extends State<BrowserWidget> {
         surfaceTintColor: Theme.of(context).colorScheme.background,
         child: Container(
             width: width * 0.8,
-            height: height * 0.8,
+            height: height * 0.9,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               child: Column(
                 children: [
                   // Navbar
@@ -62,7 +70,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
+                                  vertical: 12, horizontal: 20),
                               child: Text(
                                 searchBar,
                                 style: Theme.of(context).textTheme.displaySmall,
@@ -114,7 +122,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                         );
 
                       case BrowserPages.motortrader:
-                        return SizedBox();
+                        return UsedDealerHomepage();
 
                       case BrowserPages.motorpedia:
                         return Align(

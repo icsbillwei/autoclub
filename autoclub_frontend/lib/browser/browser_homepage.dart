@@ -28,7 +28,7 @@ class BrowserHomepage extends StatelessWidget {
               // Motortrader
               ElevatedButton(
                 onPressed: () {
-
+                  updateBrowserPage(BrowserPages.motortrader);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.onSecondary,

@@ -91,7 +91,5 @@ void getCarList() async {
     ));
   }
 
-  for (final x in carList){
-    print(x);
-  }
+
 }
