@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'brands.dart';
-import 'car_utilities.dart';
+import '../utilities/car_utilities.dart';
 
 
 
@@ -212,6 +212,12 @@ class CarModel {
     ).toInt();
   }
 
+
+  String fullName() {
+    return "$year $brandName $name";
+  }
+
+
   @override
   String toString() {
     final componentsString = componentList.map((component) => component.name).join(', ');
@@ -342,9 +348,9 @@ class Car extends CarModel {
     Constructor for generating Car object from CarModel object
      */
     required CarModel model,
-    required this.currPrice,
-    required this.mileage,
-    required this.qualityStar,
+    this.currPrice = 0,
+    this.mileage = 0,
+    this.qualityStar = 0,
   }) : super(
     id: model.id,
     name: model.name,

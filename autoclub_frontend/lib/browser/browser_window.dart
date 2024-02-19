@@ -11,7 +11,9 @@ import 'package:simple_shadow/simple_shadow.dart';
 enum BrowserPages { home, motortrader, motorpedia }
 
 class BrowserWidget extends StatefulWidget {
-  const BrowserWidget({Key? key}) : super(key: key);
+  final gameCarList;
+
+  const BrowserWidget({Key? key, required this.gameCarList}) : super(key: key);
 
   @override
   _BrowserWidgetState createState() => _BrowserWidgetState();
@@ -122,7 +124,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                         );
 
                       case BrowserPages.motortrader:
-                        return UsedDealerHomepage();
+                        return UsedDealerHomepage(gameCarList: widget.gameCarList,);
 
                       case BrowserPages.motorpedia:
                         return Align(

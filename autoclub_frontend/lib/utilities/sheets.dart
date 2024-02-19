@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:autoclub_frontend/models/car_utilities.dart';
+import 'package:autoclub_frontend/utilities/car_utilities.dart';
 import 'package:gsheets/gsheets.dart';
 import 'sheets_api_secret.dart';
 
@@ -9,7 +9,7 @@ import '../models/car.dart';
 
 
 
-void getCarList() async {
+Future<List<CarModel>> getCarList() async {
   const credentials = secret;
   const spreadsheetId = '1hXMin22954xgk3rtsxmEhyC3hbO6IP7kEDydZCp3TUA';
 
@@ -91,5 +91,5 @@ void getCarList() async {
     ));
   }
 
-
+  return carList;
 }

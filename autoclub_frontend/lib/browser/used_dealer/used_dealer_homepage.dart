@@ -3,11 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 import 'package:autoclub_frontend/models/car.dart';
-import 'package:autoclub_frontend/models/car_utilities.dart';
+import 'package:autoclub_frontend/utilities/car_utilities.dart';
 
 
 class UsedDealerHomepage extends StatefulWidget {
-  const UsedDealerHomepage({super.key});
+  final gameCarList;
+  const UsedDealerHomepage({super.key, required this.gameCarList});
 
   @override
   State<UsedDealerHomepage> createState() => _UsedDealerHomepageState();

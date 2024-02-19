@@ -105,21 +105,22 @@ enum EngineType {
 Types of engines for the cars.
  */
 
-  i3(name: "I3"),
-  i4(name: "I4"),
-  i5(name: "I5"),
-  i6(name: "I6"),
-  v6(name: "V6"),
-  v8(name: "V8"),
-  v10(name: "V10"),
-  v12(name: "V12"),
-  v16(name: "V16"),
-  b4(name: "B4"),
-  b6(name: "B6"),
-  ev(name: "EV");
+  i3(name: "I3", fullName: "Inline 3"),
+  i4(name: "I4", fullName: "Inline 4"),
+  i5(name: "I5", fullName: "Inline 5"),
+  i6(name: "I6", fullName: "Inline 6"),
+  v6(name: "V6", fullName: "V6"),
+  v8(name: "V8", fullName: "V8"),
+  v10(name: "V10", fullName: "V10"),
+  v12(name: "V12", fullName: "V12"),
+  v16(name: "V16", fullName: "V16"),
+  b4(name: "B4", fullName: "Flat 4"),
+  b6(name: "B6", fullName: "Flat 6"),
+  ev(name: "EV", fullName: "Electric drive");
 
   final String name;
-  const EngineType({required this.name});
+  final String fullName;
+  const EngineType({required this.name, required this.fullName});
 }
 
 

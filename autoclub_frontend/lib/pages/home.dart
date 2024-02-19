@@ -32,15 +32,18 @@ class _MyHomePageState extends State<MyHomePage> {
   /*
   ---------- Temp user data -------------
    */
-  List<Car> carlist = [];
+  List<CarModel> gameCarlist = [];
   Car? currentCar;
 
+  void getGameCarList() async {
+    gameCarlist = await getCarList();
+  }
 
   @override
   void initState() {
     transformView(viewTransformationController);
     super.initState();
-    getCarList();
+    getGameCarList();
   }
 
   @override
@@ -95,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return const BrowserWidget();
+                    return BrowserWidget(gameCarList: gameCarlist,);
                   });
             },
             label: Text(
