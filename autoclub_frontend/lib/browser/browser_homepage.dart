@@ -4,6 +4,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 import 'browser_window.dart';
 
+
 class BrowserHomepage extends StatelessWidget {
 
   final Function(BrowserPages) updateBrowserPage;
@@ -25,10 +26,10 @@ class BrowserHomepage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
 
-              // Motortrader
+              // Autosandauctions
               ElevatedButton(
                 onPressed: () {
-                  updateBrowserPage(BrowserPages.motortrader);
+                  updateBrowserPage(BrowserPages.autosandauctions);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.onSecondary,
@@ -37,12 +38,12 @@ class BrowserHomepage extends StatelessWidget {
                     )
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 5),
+                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 0),
                   child: Column(
                     children: [
-                      Image.asset("images/mt.png", width: 60,),
+                      SvgPicture.asset("images/autosandauctions-icon.svg", width: 60,),
                       const SizedBox(height: 20,),
-                      Text("Motortrader", style: Theme.of(context).textTheme.displaySmall,)
+                      Text("Autos & Auctions", style: Theme.of(context).textTheme.displaySmall,)
                     ],
                   ),
                 ),

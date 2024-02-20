@@ -10,6 +10,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 import '../browser/browser_window.dart';
 import '../models/car.dart';
+import '../utilities/dealer_car_generation.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -29,10 +30,12 @@ class _MyHomePageState extends State<MyHomePage> {
   // Is there a better way to set theme
   final theme = "light";
 
+  List<CarModel> gameCarlist = [];
+  List<Map<String, dynamic>> usedListings = [];
+
   /*
   ---------- Temp user data -------------
    */
-  List<CarModel> gameCarlist = [];
   Car? currentCar;
 
   void getGameCarList() async {
@@ -98,7 +101,15 @@ class _MyHomePageState extends State<MyHomePage> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return BrowserWidget(gameCarList: gameCarlist,);
+                    if (usedListings != [] && gameCarlist != []) {
+                      usedListings = generateUsedCarListings(6, gameCarlist);
+                      return BrowserWidget(
+                        gameCarList: gameCarlist, usedListings: usedListings,);
+                    }
+                    else {
+                      print("!!!!");
+                      return const SizedBox();
+                    }
                   });
             },
             label: Text(

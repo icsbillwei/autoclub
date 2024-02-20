@@ -517,12 +517,12 @@ class Car extends CarModel {
 
   void valuation() {
     int newCurrPrice = (newPrice * (1 / (0.000001 * depCurve * mileage + 1))).toInt();
-    print("$name:  $newCurrPrice");
+    // print("$name:  $newCurrPrice");
     int tempCurrPrice = newCurrPrice;
     for (Component comp in componentList) {
       newCurrPrice -= (tempCurrPrice * comp.ratio * comp.damage.coef * usedCarDamagePriceRatio).toInt();
     }
-    print("$name new:  $newCurrPrice");
+    // print("$name new:  $newCurrPrice");
     currPrice = newCurrPrice;
   }
 

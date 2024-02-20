@@ -43,7 +43,7 @@ String titleDescription(Car car) {
     drivetrain = "4X4";
   }
 
-  return "$aspiration$engine, $engineLocation$drivetrain";
+  return "$aspiration$engine $engineLocation$drivetrain";
 }
 
 
@@ -56,7 +56,8 @@ List<Map<String, dynamic>> generateUsedCarListings(
   List<Map<String, dynamic>> usedCarListings = usedCarList.map((car) {
     int randomRange = (car.currPrice * 0.03).toInt();
     int randomSalePrice = car.currPrice + rangeRandom(0, randomRange);
-    randomSalePrice = randomSalePrice ~/ 10 * 10;
+    randomSalePrice = randomSalePrice ~/ 10 * 10; // rounds it to 10th place
+    // String thumbnailImg = (car);
     return {
       "carObject": car,
       "titleDescription": titleDescription(car),
@@ -65,12 +66,14 @@ List<Map<String, dynamic>> generateUsedCarListings(
     };
   }).toList();
 
+  /*
   for (final uc in usedCarListings) {
     print(uc["carObject"]);
     print("saleprice: ${uc["salePrice"]}");
     print("title desc: ${uc["titleDescription"]}");
     print("\n\n\n");
   }
+   */
   return usedCarListings;
 }
 

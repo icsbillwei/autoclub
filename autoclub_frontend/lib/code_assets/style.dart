@@ -70,10 +70,34 @@ ThemeData lightTheme = ThemeData(
      */
     primaryTextTheme: TextTheme(
       
-      // Motortrader navbar texts
+      // Autos and auctions navbar texts
       headlineMedium:  TextStyle(
         fontSize: 18,
         color: dark,
+        fontFamily: GoogleFonts.getFont("Rubik").fontFamily
+      ),
+
+      // autos and auctions listing title
+      displayLarge: TextStyle(
+        fontSize: 20,
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+        fontFamily: GoogleFonts.getFont("Rubik").fontFamily
+      ),
+
+      // listing description
+      displayMedium: TextStyle(
+        fontSize: 14,
+        color: dark,
+        fontWeight: FontWeight.w500,
+        fontFamily: GoogleFonts.getFont("Rubik").fontFamily
+      ),
+
+      // listing price
+      displaySmall: TextStyle(
+        fontSize: 15,
+        color: Colors.white,
+        fontWeight: FontWeight.w500,
         fontFamily: GoogleFonts.getFont("Rubik").fontFamily
       )
     ),

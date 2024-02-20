@@ -8,19 +8,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
-enum BrowserPages { home, motortrader, motorpedia }
+import '../models/car.dart';
+
+enum BrowserPages { home, autosandauctions, motorpedia }
 
 class BrowserWidget extends StatefulWidget {
-  final gameCarList;
+  final List<CarModel> gameCarList;
+  final List<Map<String, dynamic>> usedListings;
 
-  const BrowserWidget({Key? key, required this.gameCarList}) : super(key: key);
+  const BrowserWidget({Key? key, required this.gameCarList, required this.usedListings}) : super(key: key);
 
   @override
   _BrowserWidgetState createState() => _BrowserWidgetState();
 }
 
 class _BrowserWidgetState extends State<BrowserWidget> {
-  // 坚信: We can add some filtering
   BrowserPages page = BrowserPages.home;
 
 
@@ -38,7 +40,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
     String searchBar = switch (page) {
       BrowserPages.home => "Choose a website from below",
       BrowserPages.motorpedia => "motorpedia.org",
-      BrowserPages.motortrader => "motortrader.com/home"
+      BrowserPages.autosandauctions => "autosandauctions.com"
     };
 
 
@@ -80,7 +82,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         SizedBox(
@@ -123,8 +125,8 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                           updateBrowserPage: updateBrowserPage,
                         );
 
-                      case BrowserPages.motortrader:
-                        return UsedDealerHomepage(gameCarList: widget.gameCarList,);
+                      case BrowserPages.autosandauctions:
+                        return UsedDealerHomepage(gameCarList: widget.gameCarList, listings: widget.usedListings,);
 
                       case BrowserPages.motorpedia:
                         return Align(
