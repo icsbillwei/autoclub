@@ -164,9 +164,9 @@ enum ComponentDamage {
   With varying levels of repair cost
    */
   none(name: "None", level: 0, coef: 0),
-  light(name: "Light", level: 1, coef: 0.1),
-  medium(name: "Medium", level: 2, coef: 0.25),
-  severe(name: "Severe", level: 3, coef: 0.5),
+  light(name: "Light", level: 1, coef: 0.15),
+  medium(name: "Medium", level: 2, coef: 0.35),
+  severe(name: "Severe", level: 3, coef: 0.6),
   broken(name: "Broken", level: 4, coef: 0.9);
 
   final String name;

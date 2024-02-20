@@ -54,8 +54,9 @@ List<Map<String, dynamic>> generateUsedCarListings(
   List<Car> usedCarList = pickRandomCars(gameCarList, length);
 
   List<Map<String, dynamic>> usedCarListings = usedCarList.map((car) {
-    int randomRange = (car.currPrice * 0.05).toInt();
-    int randomSalePrice = car.currPrice + rangeRandom(-randomRange, 2 * randomRange);
+    int randomRange = (car.currPrice * 0.03).toInt();
+    int randomSalePrice = car.currPrice + rangeRandom(0, randomRange);
+    randomSalePrice = randomSalePrice ~/ 10 * 10;
     return {
       "carObject": car,
       "titleDescription": titleDescription(car),
@@ -63,6 +64,13 @@ List<Map<String, dynamic>> generateUsedCarListings(
       "salePrice": randomSalePrice
     };
   }).toList();
+
+  for (final uc in usedCarListings) {
+    print(uc["carObject"]);
+    print("saleprice: ${uc["salePrice"]}");
+    print("title desc: ${uc["titleDescription"]}");
+    print("\n\n\n");
+  }
   return usedCarListings;
 }
 

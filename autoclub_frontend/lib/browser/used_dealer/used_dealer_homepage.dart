@@ -4,6 +4,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 import 'package:autoclub_frontend/models/car.dart';
 import 'package:autoclub_frontend/utilities/car_utilities.dart';
+import 'package:autoclub_frontend/utilities/dealer_car_generation.dart';
 
 
 class UsedDealerHomepage extends StatefulWidget {
@@ -16,6 +17,12 @@ class UsedDealerHomepage extends StatefulWidget {
 
 class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
 
+  @override
+  void initState() {
+    super.initState();
+    print("!! Used dealer initstate");
+    generateUsedCarListings(5, widget.gameCarList);
+  }
 
   @override
   Widget build(BuildContext context) {
