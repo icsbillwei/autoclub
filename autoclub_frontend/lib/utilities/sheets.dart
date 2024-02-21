@@ -60,6 +60,7 @@ Future<List<CarModel>> getCarList() async {
     double depCurve = double.tryParse(row["depCurve"]!)!;
     int maxMileage = int.tryParse(row["maxMileage"]!)!;
     int minMileage = int.tryParse(row["minMileage"]!)!;
+    String imgLinks = row["imageLinks"]!;
     String designer = row["designer"]!;
 
     carList.add(CarModel(
@@ -87,6 +88,7 @@ Future<List<CarModel>> getCarList() async {
       depCurve: depCurve,
       maxMileage: maxMileage,
       minMileage: minMileage,
+      imgLinks: imgLinks,
       designer: designer
     ));
   }

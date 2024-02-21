@@ -57,11 +57,11 @@ List<Map<String, dynamic>> generateUsedCarListings(
     int randomRange = (car.currPrice * 0.03).toInt();
     int randomSalePrice = car.currPrice + rangeRandom(0, randomRange);
     randomSalePrice = randomSalePrice ~/ 10 * 10; // rounds it to 10th place
-    // String thumbnailImg = (car);
+    String thumbnailImg = (car.imgLinks != "none") ? car.imgLinks : "https://i.imgur.com/ak0gS4U.png";
     return {
       "carObject": car,
       "titleDescription": titleDescription(car),
-      "thumbnailLink": "https://i.imgur.com/ak0gS4U.png", // todo: replace this
+      "thumbnailLink": thumbnailImg, // todo: replace this
       "salePrice": randomSalePrice
     };
   }).toList();

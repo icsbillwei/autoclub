@@ -40,7 +40,8 @@ Used to specify attributes of the cars.
   superLuxury(name: "Super Luxury"),
   kei(name: "Kei car"),
   race(name: "Race"),
-  utility(name: "Utility");
+  utility(name: "Utility"),
+  sport(name: "Sport");
 
   final String name;
   const CarTag({required this.name});

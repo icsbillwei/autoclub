@@ -144,6 +144,7 @@ class CarModel {
       ratio: 0.12
   );
 
+  String imgLinks;
   late List<Component> componentList;
 
   String designer;
@@ -175,6 +176,7 @@ class CarModel {
     required this.depCurve,
     required this.maxMileage,
     required this.minMileage,
+    required this.imgLinks,
     required this.designer
   }){
     updatePerfStats();
@@ -310,6 +312,7 @@ class Car extends CarModel {
     required int maxMileage,
     required int minMileage,
     required int performancePoint,
+    required String imgLinks,
     required String designer,
     required this.currPrice,
     required this.mileage,
@@ -340,6 +343,7 @@ class Car extends CarModel {
     depCurve: depCurve,
     maxMileage: maxMileage,
     minMileage: minMileage,
+    imgLinks: imgLinks,
     designer: designer,
   );
 
@@ -378,6 +382,7 @@ class Car extends CarModel {
     depCurve: model.depCurve,
     maxMileage: model.maxMileage,
     minMileage: model.minMileage,
+    imgLinks: model.imgLinks,
     designer: model.designer,
   );
 

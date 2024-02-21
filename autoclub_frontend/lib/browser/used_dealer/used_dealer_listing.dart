@@ -13,14 +13,14 @@ class UsedDealerListing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Define a fixed height for the image or use MediaQuery to make it responsive
-    //double imageHeight = 160; // Example fixed height
+    double imageHeight = 180; // Example fixed height
 
     return Column(
       mainAxisSize: MainAxisSize.min, // Make the column take up only needed space
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          //height: imageHeight, // Apply fixed height to control image size
+          height: imageHeight, // Apply fixed height to control image size
           child: Stack(
               children: [
                 Image.network(listing["thumbnailLink"], fit: BoxFit.cover),
