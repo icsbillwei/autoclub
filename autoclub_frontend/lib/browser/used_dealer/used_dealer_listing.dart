@@ -23,7 +23,10 @@ class UsedDealerListing extends StatelessWidget {
           height: imageHeight, // Apply fixed height to control image size
           child: Stack(
               children: [
-                Image.network(listing["thumbnailLink"], fit: BoxFit.cover),
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(listing["thumbnailLink"], fit: BoxFit.cover),
+                ),
                 Positioned(
                   bottom: 10,
                   left: 10,

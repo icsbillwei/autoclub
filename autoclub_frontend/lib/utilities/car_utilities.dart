@@ -41,7 +41,8 @@ Used to specify attributes of the cars.
   kei(name: "Kei car"),
   race(name: "Race"),
   utility(name: "Utility"),
-  sport(name: "Sport");
+  sport(name: "Sport"),
+  none(name: "???"); // placeholder for cars with no tag
 
   final String name;
   const CarTag({required this.name});
@@ -73,7 +74,8 @@ Possible countries for the car objects.
   estonia(cont: Continent.europe, name: "Estonia"),
   poland(cont: Continent.europe, name: "Poland"),
   us(cont: Continent.northAmerica, name: "United States"),
-  china(cont: Continent.asia, name: "China");
+  china(cont: Continent.asia, name: "China"),
+  malaysia(cont: Continent.asia, name: "Malaysia");
 
   final Continent cont;
   final String name;
