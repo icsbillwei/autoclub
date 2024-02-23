@@ -1,69 +1,60 @@
-import 'package:autoclub_frontend/code_assets/style.dart';
+import 'package:autoclub_frontend/browser/used_dealer/used_dealer_homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../models/car.dart';
 import 'package:intl/intl.dart';
 
 
-class UsedDealerListing extends StatelessWidget {
+class UsedDealerListing extends StatefulWidget {
   final Map<String, dynamic> listing;
+  Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage;
 
-  const UsedDealerListing({Key? key, required this.listing}) : super(key: key);
+  UsedDealerListing({super.key, required this.listing, required this.updateDealerPage});
+
+  @override
+  State<UsedDealerListing> createState() => _UsedDealerListingState();
+}
+
+
+class _UsedDealerListingState extends State<UsedDealerListing> {
 
   @override
   Widget build(BuildContext context) {
-    // Define a fixed height for the image or use MediaQuery to make it responsive
-    double imageHeight = 180; // Example fixed height
+    String? gotUrl = widget.listing["thumbnailLink"];
+    String imageUrl = (gotUrl != null) ? gotUrl : "https://i.imgur.com/ak0gS4U.png";
 
     return Column(
-      mainAxisSize: MainAxisSize.min, // Make the column take up only needed space
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: imageHeight, // Apply fixed height to control image size
-          child: Stack(
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(imageUrl,
+                fit: BoxFit.cover,
+                width: MediaQuery.of(context).size.width * 0.4,),
+            ),
+            const SizedBox(width: 10,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(listing["thumbnailLink"], fit: BoxFit.cover),
+                Text(
+                  widget.listing["carObject"].fullName(),
+                  style: Theme.of(context).primaryTextTheme.displayLarge,
                 ),
-                Positioned(
-                  bottom: 10,
-                  left: 10,
-                  child: Container(
-                    width: 120,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                       "\$ ${NumberFormat("#,##0", "en_US").format(listing["salePrice"])}",
-                        style: Theme.of(context).primaryTextTheme.displaySmall,
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 8,),
+                Text(
+                  widget.listing["titleDescription"],
+                  style: Theme.of(context).primaryTextTheme.displayMedium,
                 ),
-              ]
-          ),
-        ),
-        const SizedBox(height: 15,),
-        Text(
-            listing["carObject"].fullName(),
-          style: Theme.of(context).primaryTextTheme.displayLarge,
-        ),
-        const SizedBox(height: 8,),
-        Text(
-          listing["titleDescription"],
-          style: Theme.of(context).primaryTextTheme.displayMedium,
-        ),
-        Text(
-          "${NumberFormat("#,##0", "en_US").format(listing["carObject"].mileage)} km",
-          style: Theme.of(context).primaryTextTheme.displayMedium,
+                Text(
+                  "${NumberFormat("#,##0", "en_US").format(widget.listing["carObject"].mileage)} km",
+                  style: Theme.of(context).primaryTextTheme.displayMedium,
+                )
+              ],
+            )
+          ],
         )
+
       ],
     );
   }
+
 }

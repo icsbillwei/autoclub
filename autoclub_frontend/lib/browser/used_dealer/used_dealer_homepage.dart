@@ -1,4 +1,5 @@
 import 'package:autoclub_frontend/browser/used_dealer/used_dealer_listing.dart';
+import 'package:autoclub_frontend/browser/used_dealer/used_dealer_listing_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
@@ -8,13 +9,14 @@ import 'package:autoclub_frontend/utilities/car_utilities.dart';
 import 'package:autoclub_frontend/utilities/dealer_car_generation.dart';
 
 
-enum UsedDealerPage {buy, sell}
+enum UsedDealerPage {buy, sell, listing}
 
 
 class UsedDealerHomepage extends StatefulWidget {
   final List<CarModel> gameCarList;
   final List<Map<String, dynamic>> listings;
-  const UsedDealerHomepage({super.key, required this.gameCarList, required this.listings});
+  Map<String, dynamic> targetListing = {"id": -1};
+  UsedDealerHomepage({super.key, required this.gameCarList, required this.listings});
 
   @override
   State<UsedDealerHomepage> createState() => _UsedDealerHomepageState();
@@ -22,6 +24,15 @@ class UsedDealerHomepage extends StatefulWidget {
 
 class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
   UsedDealerPage page = UsedDealerPage.buy;
+
+  void updateDealerPage(UsedDealerPage newPage, Map<String, dynamic> target) {
+    setState(() {
+      page = newPage;
+      if (newPage == UsedDealerPage.listing) {
+        widget.targetListing = target;
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -76,10 +87,12 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
                     mainAxisSpacing: 0,
                     crossAxisSpacing: 20,
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                    children: widget.listings.map((l) => UsedDealerListing(listing: l)).toList(),
+                    children: widget.listings.map((l) => UsedDealerListingEntry(listing: l, updateDealerPage: updateDealerPage,)).toList(),
                   );
                 case UsedDealerPage.sell:
                   // TODO: Handle this case.
+                case UsedDealerPage.listing:
+                  return UsedDealerListing(listing: widget.targetListing, updateDealerPage: updateDealerPage,);
               }
             }())
         ],

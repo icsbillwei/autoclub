@@ -1,8 +1,7 @@
 import 'package:autoclub_frontend/code_assets/texts.dart';
-import 'package:autoclub_frontend/main.dart';
 import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:autoclub_frontend/models/location.dart';
-import 'package:autoclub_frontend/components/sideNav.dart';
+import 'package:autoclub_frontend/components/side_nav.dart';
 import 'package:autoclub_frontend/utilities/sheets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,12 +11,14 @@ import '../browser/browser_window.dart';
 import '../models/car.dart';
 import '../utilities/dealer_car_generation.dart';
 
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
 
 class _MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
@@ -259,6 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 
 void transformView(controller) {
   // Zoom controller
