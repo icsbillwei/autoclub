@@ -46,6 +46,7 @@ Future<List<CarModel>> getCarList() async {
     Country country = Country.values[int.tryParse(row["country"]!)!];
     DrivetrainType drivetrainType = DrivetrainType.values[int.tryParse(row["drivetrainType"]!)!];
     EngineType engineType = EngineType.values[int.tryParse(row["engineType"]!)!];
+    double displacement = double.tryParse(row["displacement"]!)!;
     EngineAspiration aspirationType = EngineAspiration.values[int.tryParse(row["aspirationType"]!)!];
     CargoSpace space = CargoSpace.values[int.tryParse(row["space"]!)!];
     int power = int.tryParse(row["power"]!)!;
@@ -74,6 +75,7 @@ Future<List<CarModel>> getCarList() async {
       country: country,
       drivetrainType: drivetrainType,
       engineType: engineType,
+      displacement: displacement,
       aspirationType: aspirationType,
       space: space,
       power: power,

@@ -75,7 +75,8 @@ Possible countries for the car objects.
   poland(cont: Continent.europe, name: "Poland"),
   us(cont: Continent.northAmerica, name: "United States"),
   china(cont: Continent.asia, name: "China"),
-  malaysia(cont: Continent.asia, name: "Malaysia");
+  malaysia(cont: Continent.asia, name: "Malaysia"),
+  canada(cont: Continent.northAmerica, name: "Canada");
 
   final Continent cont;
   final String name;
@@ -135,7 +136,10 @@ Types of engine aspiration for the car engines.
   na(name: "Naturally Aspirated"),
   turbo(name: "Turbocharged"),
   sc(name: "Supercharged"),
-  ev(name: "EV");
+  ev(name: "EV"),
+  twincharge(name: "Twincharged"),
+  naHybrid(name: "Naturally Aspirated + Hybrid"),
+  turboHybrid(name: "Turbocharged + Hybrid");
 
   final String name;
   const EngineAspiration({required this.name});

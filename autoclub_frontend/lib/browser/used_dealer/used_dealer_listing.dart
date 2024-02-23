@@ -34,7 +34,7 @@ class UsedDealerListing extends StatelessWidget {
                     width: 120,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: dark,
+                      color: Colors.black,
                       borderRadius: BorderRadius.circular(15)
                     ),
                     child: Align(

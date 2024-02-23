@@ -27,6 +27,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final int money = 712931;
   Location location = Location.undefined;
 
+  final usedDealerCount = 12;
+
   // Is there a better way to set theme
   final theme = "light";
 
@@ -102,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   context: context,
                   builder: (BuildContext context) {
                     if (usedListings != [] && gameCarlist != []) {
-                      usedListings = generateUsedCarListings(6, gameCarlist);
+                      usedListings = generateUsedCarListings(usedDealerCount, gameCarlist);
                       return BrowserWidget(
                         gameCarList: gameCarlist, usedListings: usedListings,);
                     }

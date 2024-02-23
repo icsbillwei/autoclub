@@ -33,6 +33,7 @@ class CarModel {
   Country country;
   DrivetrainType drivetrainType;
   EngineType engineType;
+  double displacement;
   EngineAspiration aspirationType;
   CargoSpace space;
 
@@ -162,6 +163,7 @@ class CarModel {
     required this.country,
     required this.drivetrainType,
     required this.engineType,
+    required this.displacement,
     required this.aspirationType,
     required this.space,
     required this.power,
@@ -297,6 +299,7 @@ class Car extends CarModel {
     required Country country,
     required DrivetrainType drivetrainType,
     required EngineType engineType,
+    required double displacement,
     required EngineAspiration aspirationType,
     required CargoSpace space,
     required int power,
@@ -329,6 +332,7 @@ class Car extends CarModel {
     country: country,
     drivetrainType: drivetrainType,
     engineType: engineType,
+    displacement: displacement,
     aspirationType: aspirationType,
     space: space,
     power: power,
@@ -368,6 +372,7 @@ class Car extends CarModel {
     country: model.country,
     drivetrainType: model.drivetrainType,
     engineType: model.engineType,
+    displacement: model.displacement,
     aspirationType: model.aspirationType,
     space: model.space,
     power: model.power,
