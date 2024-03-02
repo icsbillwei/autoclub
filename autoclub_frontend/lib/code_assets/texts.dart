@@ -30,3 +30,5 @@ List<String> homepageDescription = [
   "Repairs, upgrades and customizations for your car go here",
   "You can find delivery jobs here"
 ];
+
+String placeholderDescription = "Discover the perfect blend of reliability and style with our pre-owned vehicle, an ideal choice for those who value performance and comfort. This vehicle has been meticulously cared for, ensuring a ride that feels both smooth and secure, mile after mile. With a versatile interior that adapts to your needs, it's equipped for both daily commutes and longer journeys.";
