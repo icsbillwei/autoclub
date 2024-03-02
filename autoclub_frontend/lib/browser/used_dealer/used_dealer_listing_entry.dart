@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 
 class UsedDealerListingEntry extends StatelessWidget {
   final Map<String, dynamic> listing;
-  Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage;
+  final Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage;
 
-  UsedDealerListingEntry({Key? key, required this.listing, required this.updateDealerPage}) : super(key: key);
+  const UsedDealerListingEntry({Key? key, required this.listing, required this.updateDealerPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

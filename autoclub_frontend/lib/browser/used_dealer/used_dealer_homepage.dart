@@ -15,8 +15,7 @@ enum UsedDealerPage {buy, sell, listing}
 class UsedDealerHomepage extends StatefulWidget {
   final List<CarModel> gameCarList;
   final List<Map<String, dynamic>> listings;
-  Map<String, dynamic> targetListing = {"id": -1};
-  UsedDealerHomepage({super.key, required this.gameCarList, required this.listings});
+  const UsedDealerHomepage({super.key, required this.gameCarList, required this.listings});
 
   @override
   State<UsedDealerHomepage> createState() => _UsedDealerHomepageState();
@@ -24,12 +23,15 @@ class UsedDealerHomepage extends StatefulWidget {
 
 class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
   UsedDealerPage page = UsedDealerPage.buy;
+  Map<String, dynamic> targetListing = {"id": -1};
+
 
   void updateDealerPage(UsedDealerPage newPage, Map<String, dynamic> target) {
     setState(() {
       page = newPage;
       if (newPage == UsedDealerPage.listing) {
-        widget.targetListing = target;
+        // print("#### ${target["salePrice"]}");
+        targetListing = target;
       }
     });
   }
@@ -54,7 +56,7 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
               SizedBox(width: 50,),
               TextButton(
                 onPressed: () {
-                  // todo: buy cars
+                  updateDealerPage(UsedDealerPage.buy, {});
                 },
                 child: Text(
                   "Buy Cars",
@@ -92,7 +94,7 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
                 case UsedDealerPage.sell:
                   // TODO: Handle this case.
                 case UsedDealerPage.listing:
-                  return UsedDealerListing(listing: widget.targetListing, updateDealerPage: updateDealerPage,);
+                  return UsedDealerListing(listing: targetListing, updateDealerPage: updateDealerPage,);
               }
             }())
         ],
