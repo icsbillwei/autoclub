@@ -3,13 +3,16 @@ import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:autoclub_frontend/code_assets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../models/car.dart';
 
 
 class UsedDealerListing extends StatefulWidget {
   final Map<String, dynamic> listing;
   Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage;
+  Function(Car, int) addUserCar;
+  final int money;
 
-  UsedDealerListing({super.key, required this.listing, required this.updateDealerPage});
+  UsedDealerListing({super.key, required this.listing, required this.updateDealerPage, required this.addUserCar, required this.money});
 
   @override
   State<UsedDealerListing> createState() => _UsedDealerListingState();
@@ -17,6 +20,62 @@ class UsedDealerListing extends StatefulWidget {
 
 
 class _UsedDealerListingState extends State<UsedDealerListing> {
+
+
+  void showPurchaseConfirmation(BuildContext context, Car car, int sellPrice, Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage, int money) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Purchase Confirmation'),
+          content: Text(
+            'Are you sure you want to purchase this ${car.fullName()} for \$$sellPrice?',
+            style: Theme.of(context).primaryTextTheme.displayMedium,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                updateDealerPage(UsedDealerPage.buy, {});
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                if (sellPrice < money) {
+                  widget.addUserCar(car, sellPrice);
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                  updateDealerPage(UsedDealerPage.buy, {});
+                }
+                else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Insufficient funds'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Dismiss the error dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
 
   Widget detailedInfoItem(String desc, dynamic info) {
     return Container(
@@ -60,6 +119,7 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
+                // Back to listings
                   onPressed: () {
                     widget.updateDealerPage(UsedDealerPage.buy, {});
                   },
@@ -107,7 +167,7 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                     const SizedBox(height: 30,),
                     ElevatedButton(
                         onPressed: () {
-
+                          showPurchaseConfirmation(context, listing["carObject"], listing["salePrice"], widget.updateDealerPage, widget.money);
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.green, // This is the background color

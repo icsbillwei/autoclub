@@ -15,8 +15,10 @@ enum BrowserPages { home, autosandauctions, motorpedia }
 class BrowserWidget extends StatefulWidget {
   final List<CarModel> gameCarList;
   final List<Map<String, dynamic>> usedListings;
+  final Function(Car, int) addUserCar;
+  final int money;
 
-  const BrowserWidget({Key? key, required this.gameCarList, required this.usedListings}) : super(key: key);
+  const BrowserWidget({Key? key, required this.gameCarList, required this.usedListings, required this.addUserCar, required this.money}) : super(key: key);
 
   @override
   _BrowserWidgetState createState() => _BrowserWidgetState();
@@ -126,7 +128,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                         );
 
                       case BrowserPages.autosandauctions:
-                        return UsedDealerHomepage(gameCarList: widget.gameCarList, listings: widget.usedListings,);
+                        return UsedDealerHomepage(gameCarList: widget.gameCarList, listings: widget.usedListings, addUserCar: widget.addUserCar, money: widget.money,);
 
                       case BrowserPages.motorpedia:
                         return Align(

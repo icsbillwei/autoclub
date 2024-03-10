@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // TODO: Add listener to update date time accordingly
   final time = const TimeOfDay(hour: 12, minute: 23);
-  final int money = 712931;
+  int money = 20000;
   Location location = Location.undefined;
 
   final usedDealerCount = 12;
@@ -40,9 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
   ---------- Temp user data -------------
    */
   Car? currentCar;
+  List<Car> userCarList = [];
+
 
   void getGameCarList() async {
     gameCarlist = await getCarList();
+  }
+
+  void addUserCar(Car newCar, int price) {
+    userCarList.add(newCar);
+    money -= price;
+    setState(() {
+
+    });
+    print(userCarList.length);
   }
 
   @override
@@ -107,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (usedListings != [] && gameCarlist != []) {
                       usedListings = generateUsedCarListings(usedDealerCount, gameCarlist);
                       return BrowserWidget(
-                        gameCarList: gameCarlist, usedListings: usedListings,);
+                        gameCarList: gameCarlist, usedListings: usedListings, addUserCar: addUserCar, money: money,);
                     }
                     else {
                       print("!!!!");

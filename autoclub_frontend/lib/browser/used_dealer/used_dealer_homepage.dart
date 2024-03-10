@@ -15,7 +15,9 @@ enum UsedDealerPage {buy, sell, listing}
 class UsedDealerHomepage extends StatefulWidget {
   final List<CarModel> gameCarList;
   final List<Map<String, dynamic>> listings;
-  const UsedDealerHomepage({super.key, required this.gameCarList, required this.listings});
+  final Function(Car, int) addUserCar;
+  final int money;
+  const UsedDealerHomepage({super.key, required this.gameCarList, required this.listings, required this.addUserCar, required this.money});
 
   @override
   State<UsedDealerHomepage> createState() => _UsedDealerHomepageState();
@@ -94,7 +96,7 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
                 case UsedDealerPage.sell:
                   // TODO: Handle this case.
                 case UsedDealerPage.listing:
-                  return UsedDealerListing(listing: targetListing, updateDealerPage: updateDealerPage,);
+                  return UsedDealerListing(listing: targetListing, updateDealerPage: updateDealerPage, addUserCar: widget.addUserCar, money: widget.money,);
               }
             }())
         ],
