@@ -7,8 +7,6 @@ import 'sheets_api_secret.dart';
 
 import '../models/car.dart';
 
-
-
 Future<List<CarModel>> getCarList() async {
   const credentials = secret;
   const spreadsheetId = '1hXMin22954xgk3rtsxmEhyC3hbO6IP7kEDydZCp3TUA';
@@ -22,14 +20,13 @@ Future<List<CarModel>> getCarList() async {
 
   final rows = await sheet!.values.map.allRows(fromRow: 1);
   /*
-  debug use
+  debug u
   for (var x in rows!) {
     print("> ${x}");
   }
    */
   for (final row in rows!) {
-
-    if (row["id"] == null){
+    if (row["id"] == null) {
       break;
     }
 
@@ -44,10 +41,13 @@ Future<List<CarModel>> getCarList() async {
       return CarTag.values[int.tryParse(s)!];
     }).toList();
     Country country = Country.values[int.tryParse(row["country"]!)!];
-    DrivetrainType drivetrainType = DrivetrainType.values[int.tryParse(row["drivetrainType"]!)!];
-    EngineType engineType = EngineType.values[int.tryParse(row["engineType"]!)!];
+    DrivetrainType drivetrainType =
+        DrivetrainType.values[int.tryParse(row["drivetrainType"]!)!];
+    EngineType engineType =
+        EngineType.values[int.tryParse(row["engineType"]!)!];
     double displacement = double.tryParse(row["displacement"]!)!;
-    EngineAspiration aspirationType = EngineAspiration.values[int.tryParse(row["aspirationType"]!)!];
+    EngineAspiration aspirationType =
+        EngineAspiration.values[int.tryParse(row["aspirationType"]!)!];
     CargoSpace space = CargoSpace.values[int.tryParse(row["space"]!)!];
     int power = int.tryParse(row["power"]!)!;
     int weight = int.tryParse(row["weight"]!)!;
@@ -65,34 +65,33 @@ Future<List<CarModel>> getCarList() async {
     String designer = row["designer"]!;
 
     carList.add(CarModel(
-      id: id,
-      brandName: brandName,
-      name: name,
-      year: year,
-      newPrice: newPrice,
-      type: type,
-      tags: tags,
-      country: country,
-      drivetrainType: drivetrainType,
-      engineType: engineType,
-      displacement: displacement,
-      aspirationType: aspirationType,
-      space: space,
-      power: power,
-      weight: weight,
-      seatCount: seatCount,
-      accel: accel,
-      qmile: qmile,
-      vmax: vmax,
-      handling0: handling0,
-      handling1: handling1,
-      braking: braking,
-      depCurve: depCurve,
-      maxMileage: maxMileage,
-      minMileage: minMileage,
-      imgLinks: imgLinks,
-      designer: designer
-    ));
+        id: id,
+        brandName: brandName,
+        name: name,
+        year: year,
+        newPrice: newPrice,
+        type: type,
+        tags: tags,
+        country: country,
+        drivetrainType: drivetrainType,
+        engineType: engineType,
+        displacement: displacement,
+        aspirationType: aspirationType,
+        space: space,
+        power: power,
+        weight: weight,
+        seatCount: seatCount,
+        accel: accel,
+        qmile: qmile,
+        vmax: vmax,
+        handling0: handling0,
+        handling1: handling1,
+        braking: braking,
+        depCurve: depCurve,
+        maxMileage: maxMileage,
+        minMileage: minMileage,
+        imgLinks: imgLinks,
+        designer: designer));
   }
 
   return carList;

@@ -47,6 +47,14 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
 
   @override
   Widget build(BuildContext context) {
+
+    /*
+    This is the Autos & Auctions SUBPAGE of the browser
+    This includes the website navbar and conditionally displays the buy, sell and detailed listing pages
+
+    passes through money, listings, addUserCar
+     */
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       child: Column(

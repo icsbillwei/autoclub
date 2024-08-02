@@ -10,7 +10,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 import '../browser/browser_window.dart';
 import '../models/car.dart';
 import '../utilities/dealer_car_generation.dart';
-
+import 'garage/garage.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -19,16 +19,15 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-
 class _MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
 
   // TODO: Add listener to update date time accordingly
   final time = const TimeOfDay(hour: 12, minute: 23);
   int money = 20000;
-  Location location = Location.undefined;
+  SelectedLocation location = SelectedLocation.undefined;
 
-  final usedDealerCount = 12;
+  final usedDealerCount = 10; // adjust the number of used cars in the dealer
 
   // Is there a better way to set theme
   final theme = "light";
@@ -42,7 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Car? currentCar;
   List<Car> userCarList = [];
 
-
+  /*
+ This calls getCarList from sheets.dart, which returns a list of CarModels
+  */
   void getGameCarList() async {
     gameCarlist = await getCarList();
   }
@@ -50,10 +51,62 @@ class _MyHomePageState extends State<MyHomePage> {
   void addUserCar(Car newCar, int price) {
     userCarList.add(newCar);
     money -= price;
-    setState(() {
-
-    });
+    setState(() {});
+    print("User car added");
     print(userCarList.length);
+  }
+
+  /*
+    for handling location entries
+  */
+  void handleEnterPress() {
+    switch (location) {
+      case SelectedLocation.downtown:
+        // Action for downtown
+        print('Downtown selected');
+        break;
+      case SelectedLocation.home:
+        // Go into homepage with animation
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => GaragePage(
+              userCarList: userCarList,
+              money: money,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+            transitionDuration:
+                const Duration(seconds: 1), // Adjust the duration as needed
+          ),
+        );
+        print('Home selected');
+        break;
+      case SelectedLocation.hotel:
+        // Action for hotel
+        print('Hotel selected');
+        break;
+      case SelectedLocation.showroom:
+        // Action for showroom
+        print('Showroom selected');
+        break;
+      case SelectedLocation.tuning:
+        // Action for tuning
+        print('Tuning selected');
+        break;
+      case SelectedLocation.wharf:
+        // Action for wharf
+        print('Wharf selected');
+        break;
+      default:
+        // Default action
+        print('No location selected');
+    }
   }
 
   @override
@@ -82,12 +135,14 @@ class _MyHomePageState extends State<MyHomePage> {
               Image.asset("images/game-bg.png"),
 
               // Items on map
-              mapItem(1600, 700, "images/downtown.svg", Location.downtown),
-              mapItem(2150, 950, "images/home.svg", Location.home),
-              mapItem(2000, 450, "images/hotel.svg", Location.hotel),
-              mapItem(2350, 600, "images/showroom.svg", Location.showroom),
-              mapItem(2760, 1200, "images/tuning.svg", Location.tuning),
-              mapItem(950, 600, "images/wharf.svg", Location.wharf),
+              mapItem(
+                  1600, 700, "images/downtown.svg", SelectedLocation.downtown),
+              mapItem(2150, 950, "images/home.svg", SelectedLocation.home),
+              mapItem(2000, 450, "images/hotel.svg", SelectedLocation.hotel),
+              mapItem(
+                  2350, 600, "images/showroom.svg", SelectedLocation.showroom),
+              mapItem(2760, 1200, "images/tuning.svg", SelectedLocation.tuning),
+              mapItem(950, 600, "images/wharf.svg", SelectedLocation.wharf),
             ])),
       )),
 
@@ -116,11 +171,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   context: context,
                   builder: (BuildContext context) {
                     if (usedListings != [] && gameCarlist != []) {
-                      usedListings = generateUsedCarListings(usedDealerCount, gameCarlist);
+                      usedListings =
+                          generateUsedCarListings(usedDealerCount, gameCarlist);
                       return BrowserWidget(
-                        gameCarList: gameCarlist, usedListings: usedListings, addUserCar: addUserCar, money: money,);
-                    }
-                    else {
+                        gameCarList: gameCarlist,
+                        usedListings: usedListings,
+                        addUserCar: addUserCar,
+                        money: money,
+                      );
+                    } else {
                       print("!!!!");
                       return const SizedBox();
                     }
@@ -137,7 +196,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  Widget mapItem(double posX, double posY, String img, Location toggle) {
+  Widget mapItem(
+      double posX, double posY, String img, SelectedLocation toggle) {
     bool thisToggled = location == toggle;
     return AnimatedPositioned(
         left: (thisToggled) ? posX - 15 : posX,
@@ -153,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: AnimatedContainer(
                 duration: const Duration(milliseconds: 450),
                 width: ((thisToggled) ? 280 : 250) +
-                    ((toggle == Location.tuning) ? 30 : 0),
+                    ((toggle == SelectedLocation.tuning) ? 30 : 0),
                 height: (thisToggled) ? 280 : 250,
                 curve: Curves.ease,
                 child: SimpleShadow(
@@ -173,12 +233,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // final textColour = theme == "dark" ? Colors.white : Colors.black;
 
-    Widget child = (location != Location.undefined)
+    Widget child = (location != SelectedLocation.undefined)
         ? SimpleShadow(
             color: Colors.black,
             sigma: 8,
             child: Container(
-              key: ValueKey<Location>(
+              key: ValueKey<SelectedLocation>(
                   location), // Unique key to trigger animation when toggle changes
               width: (width < 900) ? width * 0.6 : 900 * 0.6,
               height: 130,
@@ -198,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Theme.of(context).colorScheme.secondary),
                         onPressed: () {
                           setState(() {
-                            location = Location.undefined;
+                            location = SelectedLocation.undefined;
                           });
                         },
                       ),
@@ -229,7 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: blue),
                                   onPressed: () {
-                                    // TODO: implement actions
+                                    handleEnterPress();
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -271,7 +331,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 
 void transformView(controller) {
   // Zoom controller

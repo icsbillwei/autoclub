@@ -45,7 +45,15 @@ class _BrowserWidgetState extends State<BrowserWidget> {
       BrowserPages.autosandauctions => "autosandauctions.com"
     };
 
+  /*
+  This page is the browser main window
+  This includes the floating window and navbar
+  The content section conditionally displays the page that the browser is currently on
 
+
+  passes gameCarList, usedListings, addUserCar and money to usedDealer
+  passes updateBrowserPage to homepage
+   */
     return SimpleShadow(
       color: Colors.black,
       sigma: 10,
@@ -58,6 +66,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               child: Column(
+                // Main Column
                 children: [
                   // Navbar
                   Container(
@@ -68,6 +77,7 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                         const SizedBox(
                           width: 20,
                         ),
+                        // fake browser search bar
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
@@ -87,6 +97,8 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                         const SizedBox(
                           width: 20,
                         ),
+
+                        // Home button
                         SizedBox(
                           height: 40,
                           child: FittedBox(
@@ -101,6 +113,8 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                                 )),
                           ),
                         ),
+
+                        // Exit button
                         SizedBox(
                           height: 40,
                           child: FittedBox(
@@ -119,7 +133,9 @@ class _BrowserWidgetState extends State<BrowserWidget> {
                     ),
                   ),
 
-                  // Content
+                  /*
+                  Content
+                   */
                   Container(child: () {
                     switch (page) {
                       case BrowserPages.home:

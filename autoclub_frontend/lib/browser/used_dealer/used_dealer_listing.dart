@@ -5,24 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/car.dart';
 
-
 class UsedDealerListing extends StatefulWidget {
   final Map<String, dynamic> listing;
   Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage;
   Function(Car, int) addUserCar;
   final int money;
 
-  UsedDealerListing({super.key, required this.listing, required this.updateDealerPage, required this.addUserCar, required this.money});
+  UsedDealerListing(
+      {super.key,
+      required this.listing,
+      required this.updateDealerPage,
+      required this.addUserCar,
+      required this.money});
 
   @override
   State<UsedDealerListing> createState() => _UsedDealerListingState();
 }
 
-
 class _UsedDealerListingState extends State<UsedDealerListing> {
-
-
-  void showPurchaseConfirmation(BuildContext context, Car car, int sellPrice, Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage, int money) {
+  /*
+  Dialog for car purchase confirmation
+  */
+  void showPurchaseConfirmation(
+      BuildContext context,
+      Car car,
+      int sellPrice,
+      Function(UsedDealerPage, Map<String, dynamic>) updateDealerPage,
+      int money) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -47,8 +56,7 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                   widget.addUserCar(car, sellPrice);
                   Navigator.of(context).pop(); // Dismiss the dialog
                   updateDealerPage(UsedDealerPage.buy, {});
-                }
-                else {
+                } else {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -58,7 +66,8 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                           TextButton(
                             child: Text('OK'),
                             onPressed: () {
-                              Navigator.of(context).pop(); // Dismiss the error dialog
+                              Navigator.of(context)
+                                  .pop(); // Dismiss the error dialog
                             },
                           ),
                         ],
@@ -74,25 +83,31 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
     );
   }
 
-
-
-
+  /*
+  One block of detailed information within the detailed information section
+  */
   Widget detailedInfoItem(String desc, dynamic info) {
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.5, color: dark)
-      ),
+      decoration: BoxDecoration(border: Border.all(width: 0.5, color: dark)),
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
         children: [
           Text(
             desc,
-            style: Theme.of(context).primaryTextTheme.displayMedium?.copyWith(fontSize: 18),
+            style: Theme.of(context)
+                .primaryTextTheme
+                .displayMedium
+                ?.copyWith(fontSize: 18),
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(
+            width: 10,
+          ),
           Text(
             info.toString(),
-            style: Theme.of(context).primaryTextTheme.displayMedium?.copyWith(fontSize: 18),
+            style: Theme.of(context)
+                .primaryTextTheme
+                .displayMedium
+                ?.copyWith(fontSize: 18),
           ),
         ],
       ),
@@ -104,98 +119,142 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
     // print("### ${widget.listing["salePrice"]}");
     final Map<String, dynamic> listing = widget.listing;
     String? gotUrl = listing["thumbnailLink"];
-    String imageUrl = (gotUrl != null) ? gotUrl : "https://i.imgur.com/ak0gS4U.png";
-
+    String imageUrl = (gotUrl != null)
+        ? gotUrl
+        : "https://i.imgur.com/ak0gS4U.png"; // placeholder car thumbmail
 
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(
+            height: 40,
+          ),
 
-          const SizedBox(height: 40,),
-
+          // first row
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                // Back to listings
+                  // Back to listings button
                   onPressed: () {
                     widget.updateDealerPage(UsedDealerPage.buy, {});
                   },
-                  icon: const Icon(Icons.arrow_back_sharp, color: Colors.black,)
-              ),
+                  icon: const Icon(
+                    Icons.arrow_back_sharp,
+                    color: Colors.black,
+                  )),
               Text(
                 "All listings",
                 style: Theme.of(context).primaryTextTheme.headlineMedium,
               ),
             ],
           ),
-          const SizedBox(height: 30,),
+          const SizedBox(
+            height: 30,
+          ),
 
           Row(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(imageUrl,
+                child: Image.network(
+                  imageUrl,
                   fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width * 0.4,),
+                  width: MediaQuery.of(context).size.width * 0.4,
+                ),
               ),
-              const SizedBox(width: 30,),
+              const SizedBox(
+                width: 30,
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       listing["carObject"].fullName(),
-                      style: Theme.of(context).primaryTextTheme.displayLarge?.copyWith(fontSize: 28),
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .displayLarge
+                          ?.copyWith(fontSize: 28),
                     ),
-                    const SizedBox(height: 15,),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     Text(
                       listing["titleDescription"],
-                      style: Theme.of(context).primaryTextTheme.displayMedium?.copyWith(fontSize: 16),
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .displayMedium
+                          ?.copyWith(fontSize: 16),
                     ),
                     Text(
                       "${NumberFormat("#,##0", "en_US").format(listing["carObject"].mileage)} km",
-                      style: Theme.of(context).primaryTextTheme.displayMedium?.copyWith(fontSize: 18),
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .displayMedium
+                          ?.copyWith(fontSize: 18),
                     ),
-                    const SizedBox(height: 30,),
+                    const SizedBox(
+                      height: 30,
+                    ),
                     Text(
                       "\$ ${NumberFormat("#,##0", "en_US").format(listing["salePrice"])}",
-                      style: Theme.of(context).primaryTextTheme.displayLarge?.copyWith(fontSize: 24),
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .displayLarge
+                          ?.copyWith(fontSize: 24),
                     ),
-                    const SizedBox(height: 30,),
+                    const SizedBox(
+                      height: 30,
+                    ),
                     ElevatedButton(
                         onPressed: () {
-                          showPurchaseConfirmation(context, listing["carObject"], listing["salePrice"], widget.updateDealerPage, widget.money);
+                          showPurchaseConfirmation(
+                              context,
+                              listing["carObject"],
+                              listing["salePrice"],
+                              widget.updateDealerPage,
+                              widget.money);
                         },
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.green, // This is the background color
-                          backgroundColor: Colors.white, // This is the foreground color (text color)
+                          foregroundColor:
+                              Colors.green, // This is the background color
+                          backgroundColor: Colors
+                              .white, // This is the foreground color (text color)
                           // You can add more properties to style it further
                         ),
-                        child: const Text(
-                          "Buy"
-                        )
+                        child: const Text("Buy")),
+                    const SizedBox(
+                      height: 30,
                     ),
-                    const SizedBox(height: 30,),
+
+                    // Description
                     Text(
                       placeholderDescription,
-                      style: Theme.of(context).primaryTextTheme.displayMedium?.copyWith(fontSize: 16),
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .displayMedium
+                          ?.copyWith(fontSize: 16),
                     ),
                   ],
                 ),
               )
             ],
           ),
-          const SizedBox(height: 100,),
+          const SizedBox(
+            height: 100,
+          ),
 
           Text(
             "Detailed Information",
             style: Theme.of(context).primaryTextTheme.displayLarge,
           ),
 
-          const SizedBox(height: 40,),
+          const SizedBox(
+            height: 40,
+          ),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -205,22 +264,32 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                 maxCrossAxisExtent: 600,
                 mainAxisSpacing: 0,
                 crossAxisSpacing: 0,
-                childAspectRatio: 10/1,
+                childAspectRatio: 10 / 1,
                 children: [
                   detailedInfoItem("Make:", listing["carObject"].brandName),
                   detailedInfoItem("Name:", listing["carObject"].name),
                   detailedInfoItem("Year:", listing["carObject"].year),
                   detailedInfoItem("Mileage:", listing["carObject"].mileage),
-                  detailedInfoItem("Country:", listing["carObject"].country.name),
-                  detailedInfoItem("Vehicle Type:", listing["carObject"].type.name),
-                  detailedInfoItem("Engine Type:", listing["carObject"].engineType.fullName),
-                  detailedInfoItem("Displacement:", "${listing["carObject"].displacement.toStringAsFixed(1)} L"),
-                  detailedInfoItem("Engine Aspiration:", listing["carObject"].aspirationType.name),
-                  detailedInfoItem("Drivetrain Type:", listing["carObject"].drivetrainType.name),
-                  detailedInfoItem("Cargo Space:", listing["carObject"].space.name),
-                  detailedInfoItem("Number of Seats:", listing["carObject"].seatCount),
-                  detailedInfoItem("Power (new):", "${listing["carObject"].power} hp"),
-                  detailedInfoItem("Weight:", "${listing["carObject"].weight} kg"),
+                  detailedInfoItem(
+                      "Country:", listing["carObject"].country.name),
+                  detailedInfoItem(
+                      "Vehicle Type:", listing["carObject"].type.name),
+                  detailedInfoItem(
+                      "Engine Type:", listing["carObject"].engineType.fullName),
+                  detailedInfoItem("Displacement:",
+                      "${listing["carObject"].displacement.toStringAsFixed(1)} L"),
+                  detailedInfoItem("Engine Aspiration:",
+                      listing["carObject"].aspirationType.name),
+                  detailedInfoItem("Drivetrain Type:",
+                      listing["carObject"].drivetrainType.name),
+                  detailedInfoItem(
+                      "Cargo Space:", listing["carObject"].space.name),
+                  detailedInfoItem(
+                      "Number of Seats:", listing["carObject"].seatCount),
+                  detailedInfoItem(
+                      "Power (new):", "${listing["carObject"].power} hp"),
+                  detailedInfoItem(
+                      "Weight:", "${listing["carObject"].weight} kg"),
                   detailedInfoItem("Designer:", listing["carObject"].designer),
                 ],
               ),
@@ -230,5 +299,4 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
       ),
     );
   }
-
 }

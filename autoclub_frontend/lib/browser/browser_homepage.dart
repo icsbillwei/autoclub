@@ -15,6 +15,13 @@ class BrowserHomepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    /*
+    This is the Homepage SUBPAGE of the browser
+    This provides buttons for navigating onto other subpages, such as the used dealer
+
+    uses updateBrowserPage from parent
+     */
     return Align(
       alignment: Alignment.topCenter,
       child: Column(
@@ -26,7 +33,10 @@ class BrowserHomepage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
 
-              // Autosandauctions
+              /*
+              Autos And Auctions Page
+               */
+
               ElevatedButton(
                 onPressed: () {
                   updateBrowserPage(BrowserPages.autosandauctions);
@@ -51,7 +61,10 @@ class BrowserHomepage extends StatelessWidget {
 
               SizedBox(width: 20,),
 
-              // MotorPedia
+              /*
+              Motorpedia page (currently blank)
+               */
+
               ElevatedButton(
                 onPressed: () {
                   updateBrowserPage(BrowserPages.motorpedia);

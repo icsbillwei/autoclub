@@ -8,7 +8,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 class SideNav extends StatelessWidget {
   final TimeOfDay time;
-  final Location location;
+  final SelectedLocation location;
   final int money;
   final Weather weather;
 
@@ -32,7 +32,7 @@ class SideNav extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double widthFactor = 0.115;
+    double widthFactor = 0.155;
     double heightFactor = 0.925;
     // predefined colour
     final backgroundColour = theme == "dark"
@@ -67,10 +67,8 @@ class SideNav extends StatelessWidget {
             ),
 
             // SECTION: Time
-            Text(
-              "${time.hour}:${time.minute}",
-              style: Theme.of(context).textTheme.headlineMedium
-            ),
+            Text("${time.hour}:${time.minute}",
+                style: Theme.of(context).textTheme.headlineMedium),
 
             const SizedBox(
               height: 15,
@@ -79,8 +77,7 @@ class SideNav extends StatelessWidget {
             // SECTION: : time left in the day
             // note: & time left in the night as well?
             Text("${daytimeLeft()} hours",
-                style: Theme.of(context).textTheme.headlineSmall
-            ),
+                style: Theme.of(context).textTheme.headlineSmall),
             // Note: need `inherit: false` to get rid of default styling for some reason
             Text("of daytime left",
                 style: Theme.of(context).textTheme.displaySmall),
@@ -91,21 +88,24 @@ class SideNav extends StatelessWidget {
             Icon(Icons.location_on, color: textColour),
             const SizedBox(height: 5),
             Text(location.name,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontSize: 13
-                )),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontSize: 13)),
 
             Text("current location",
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontSize: 12
-                )),
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall
+                    ?.copyWith(fontSize: 12)),
 
             // SECTION: Money
             const SizedBox(height: 45),
             Text("\$ ${currencyFormat.format(money)}",
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontSize: 18
-                )),
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall
+                    ?.copyWith(fontSize: 18)),
 
             // SECTION: Profile Picture (Todo)
 
