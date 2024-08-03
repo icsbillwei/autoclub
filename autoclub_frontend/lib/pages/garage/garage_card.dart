@@ -8,62 +8,44 @@ class GarageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = 700;
-    double cardHeight = 200;
+    double imageHeight = 150; // Example fixed height for image
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      margin: EdgeInsets.only(bottom: 20),
-      child: Expanded(
-        child: Row(
-          children: [
-            Image.network(
-              car.imgLinks,
-              height: cardHeight,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    car.fullName(),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "${car.mileage} km",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.info_outline, color: Colors.white),
-                  onPressed: () {
-                    // TODO: Implement navigation to details page
-                  },
-                ),
-                Text('Details', style: TextStyle(color: Colors.white)),
-                SizedBox(height: 10),
-                IconButton(
-                  icon: Icon(Icons.drive_eta, color: Colors.white),
-                  onPressed: () {
-                    // TODO: Implement drive functionality
-                  },
-                ),
-                Text('Drive it!', style: TextStyle(color: Colors.white)),
-              ],
-            )
-          ],
+    return Row(
+      children: [
+        SizedBox(
+          height: imageHeight,
+          child: Image.network(
+            car.imgLinks,
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  car.fullName(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(color: Colors.white, fontSize: 20),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  "${car.mileage} km",
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall
+                      ?.copyWith(color: Colors.grey, fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

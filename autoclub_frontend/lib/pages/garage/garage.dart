@@ -10,15 +10,16 @@ class GaragePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double containerWidth = MediaQuery.of(context).size.height > 800
+    double containerWidth = MediaQuery.of(context).size.height > 1000
         ? MediaQuery.of(context).size.width * 0.8
         : MediaQuery.of(context).size.width * 0.9;
 
-    double containerHeight = MediaQuery.of(context).size.height > 800
+    double containerHeight = MediaQuery.of(context).size.height > 1000
         ? MediaQuery.of(context).size.height * 0.8
         : MediaQuery.of(context).size.height * 0.9;
 
-    double containerPadding = MediaQuery.of(context).size.height > 800 ? 30 : 8;
+    double containerPadding =
+        MediaQuery.of(context).size.height > 1000 ? 30 : 8;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -69,12 +70,14 @@ class GaragePage extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.all(containerPadding),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children:
-                        userCarList.map((car) => GarageCard(car: car)).toList(),
-                  ),
+                child: GridView.extent(
+                  childAspectRatio: 3,
+                  maxCrossAxisExtent: 800, // Max width for each card
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  padding: const EdgeInsets.all(20),
+                  children:
+                      userCarList.map((car) => GarageCard(car: car)).toList(),
                 ),
               ),
             ),
