@@ -70,15 +70,34 @@ class GaragePage extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.all(containerPadding),
-                child: GridView.extent(
-                  childAspectRatio: 3,
-                  maxCrossAxisExtent: 800, // Max width for each card
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  padding: const EdgeInsets.all(20),
-                  children:
-                      userCarList.map((car) => GarageCard(car: car)).toList(),
-                ),
+                child: userCarList.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            Image.asset(
+                              "images/no_cars.jpg",
+                              width: 300,
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              "Nothing to see here if you own no cars...",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ])
+                    : GridView.extent(
+                        childAspectRatio: 3,
+                        maxCrossAxisExtent: 800, // Max width for each card
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 20,
+                        padding: const EdgeInsets.all(20),
+                        children: userCarList
+                            .map((car) => GarageCard(car: car))
+                            .toList(),
+                      ),
               ),
             ),
           ),

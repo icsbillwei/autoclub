@@ -17,13 +17,12 @@ Body types of car objects
   hypercar(name: "Hypercar"),
 
   // For cars that do not fall under any of the above categories
-  special(name:"Special");
+  special(name: "Special");
 
   final String name;
   // possible todo: add icons
   const CarType({required this.name});
 }
-
 
 enum CarTag {
   /*
@@ -48,7 +47,6 @@ Used to specify attributes of the cars.
   const CarTag({required this.name});
 }
 
-
 enum Continent {
   /*
 Continents for the countries.
@@ -58,7 +56,6 @@ Continents for the countries.
   europe,
   northAmerica
 }
-
 
 enum Country {
   /*
@@ -83,7 +80,6 @@ Possible countries for the car objects.
   const Country({required this.cont, required this.name});
 }
 
-
 enum DrivetrainType {
 /*
 Types of drivetrains for the cars.
@@ -101,8 +97,6 @@ Types of drivetrains for the cars.
   final String acronym;
   const DrivetrainType({required this.name, required this.acronym});
 }
-
-
 
 enum EngineType {
   /*
@@ -127,7 +121,6 @@ Types of engines for the cars.
   const EngineType({required this.name, required this.fullName});
 }
 
-
 enum EngineAspiration {
   /*
 Types of engine aspiration for the car engines.
@@ -144,7 +137,6 @@ Types of engine aspiration for the car engines.
   final String name;
   const EngineAspiration({required this.name});
 }
-
 
 enum CargoSpace {
   /*
@@ -164,7 +156,6 @@ Used for mission requirements.
   const CargoSpace({required this.name, required this.size});
 }
 
-
 enum ComponentDamage {
   /*
   Damage levels for the individual components
@@ -182,9 +173,9 @@ enum ComponentDamage {
   // coefficient for the repair cost relative to the component price
   final double coef;
 
-  const ComponentDamage({required this.name, required this.coef, required this.level});
+  const ComponentDamage(
+      {required this.name, required this.coef, required this.level});
 }
-
 
 class Component {
   /*
@@ -206,4 +197,33 @@ class Component {
   String toString() => "$name (Damage: ${damage.toString()}, Ratio: $ratio)";
 }
 
-
+String getFlagAssetPath(Country country) {
+  switch (country) {
+    case Country.uk:
+      return 'images/flags/gb.svg';
+    case Country.japan:
+      return 'images/flags/jp.svg';
+    case Country.italy:
+      return 'images/flags/it.svg';
+    case Country.indonesia:
+      return 'images/flags/id.svg';
+    case Country.germany:
+      return 'images/flags/de.svg';
+    case Country.finland:
+      return 'images/flags/fi.svg';
+    case Country.estonia:
+      return 'images/flags/ee.svg';
+    case Country.poland:
+      return 'images/flags/pl.svg';
+    case Country.us:
+      return 'images/flags/us.svg';
+    case Country.china:
+      return 'images/flags/cn.svg';
+    case Country.malaysia:
+      return 'images/flags/my.svg';
+    case Country.canada:
+      return 'images/flags/ca.svg';
+    default:
+      return 'images/flags/fr.svg'; // Provide a default flag if needed
+  }
+}
