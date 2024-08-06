@@ -41,7 +41,14 @@ Used to specify attributes of the cars.
   race(name: "Race"),
   utility(name: "Utility"),
   sport(name: "Sport"),
-  none(name: "???"); // placeholder for cars with no tag
+  none(name: "None"), // placeholder for cars with no tag: 11
+  trackToy(name: "Track toy"),
+  extremeTrackToy(name: "Extreme track toy"),
+  homologation(name: "Homologation"),
+  preTuned(name: "Pre-tuned"),
+  hotHatch(name: "Hot hatch"),
+  rally(name: "Rally"),
+  offroad(name: "Off-road");
 
   final String name;
   const CarTag({required this.name});
