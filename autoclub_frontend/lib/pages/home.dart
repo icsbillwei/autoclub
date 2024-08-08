@@ -201,32 +201,42 @@ class _MyHomePageState extends State<MyHomePage> {
         alignment: Alignment.bottomRight,
         child: Padding(
           padding: const EdgeInsets.all(30),
-          child: FloatingActionButton.extended(
-            elevation: 5,
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    if (usedListings != [] && gameCarlist != []) {
-                      usedListings =
-                          generateUsedCarListings(usedDealerCount, gameCarlist);
-                      return BrowserWidget(
-                        gameCarList: gameCarlist,
-                        usedListings: usedListings,
-                        addUserCar: addUserCar,
-                        money: money,
-                      );
-                    } else {
-                      print("!!!!");
-                      return const SizedBox();
-                    }
-                  });
-            },
-            label: Text(
-              "Browser",
-              style: Theme.of(context).textTheme.labelMedium,
+          child: Container(
+            width: 180,
+            height: 60,
+            child: FloatingActionButton.extended(
+              elevation: 5,
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      if (usedListings != [] && gameCarlist != []) {
+                        usedListings = generateUsedCarListings(
+                            usedDealerCount, gameCarlist);
+                        return BrowserWidget(
+                          gameCarList: gameCarlist,
+                          usedListings: usedListings,
+                          addUserCar: addUserCar,
+                          money: money,
+                        );
+                      } else {
+                        print("!!!!");
+                        return const SizedBox();
+                      }
+                    });
+              },
+              label: Text(
+                "Browser",
+                style: Theme.of(context)
+                    .textTheme
+                    .labelMedium
+                    ?.copyWith(fontSize: 20),
+              ),
+              icon: const Icon(
+                Icons.language_rounded,
+                size: 24,
+              ),
             ),
-            icon: const Icon(Icons.language_rounded),
           ),
         ),
       )
@@ -371,7 +381,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 void transformView(controller) {
   // Zoom controller
-  const zoomFactor = 0.7;
+  const zoomFactor = 1;
   const xTranslate = 450.0;
   const yTranslate = 200.0;
   controller.value.setEntry(0, 0, zoomFactor);

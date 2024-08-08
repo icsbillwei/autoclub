@@ -243,8 +243,55 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
               )
             ],
           ),
+
           const SizedBox(
-            height: 100,
+            height: 80,
+          ),
+
+          Text(
+            "Tags",
+            style: Theme.of(context).primaryTextTheme.displayLarge,
+          ),
+
+          const SizedBox(
+            height: 20,
+          ),
+
+          // add here
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 120),
+            child: Wrap(
+              spacing: 10, // Horizontal spacing between items
+              runSpacing: 10, // Vertical spacing between lines
+              children: List.generate(
+                listing["carObject"].tags.length,
+                (index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: Color.fromARGB(255, 74, 165, 112),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: Text(
+                        listing["carObject"].tags[index].name,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          const SizedBox(
+            height: 80,
           ),
 
           Text(
