@@ -109,8 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                ATAutoPage(),
+            pageBuilder: (context, animation, secondaryAnimation) => ATAutoPage(
+              currentCar: currentCar,
+            ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return FadeTransition(

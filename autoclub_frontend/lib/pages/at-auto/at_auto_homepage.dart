@@ -1,61 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:autoclub_frontend/models/car.dart';
+import 'package:autoclub_frontend/components/current_car.dart';
 
 class ATAutoPage extends StatelessWidget {
+  final Car? currentCar;
+
+  ATAutoPage({required this.currentCar});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 100,
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: IconButton(
-            icon: Icon(Icons.close, size: 30, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
+    return Stack(children: [
+      Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          toolbarHeight: 100,
+          centerTitle: true,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: IconButton(
+              icon: Icon(Icons.close, size: 30, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
+          title: Padding(
+              padding: const EdgeInsets.all(30),
+              child: SimpleShadow(
+                  sigma: 8,
+                  child: Image.asset(
+                    'images/at-auto/at-auto-white.png',
+                    height: 40,
+                    filterQuality: FilterQuality.high,
+                  ))),
         ),
-        title: Padding(
-            padding: const EdgeInsets.all(30),
-            child: SimpleShadow(
-                sigma: 8,
-                child: Image.asset(
-                  'images/at-auto/at-auto-white.png',
-                  height: 40,
-                  filterQuality: FilterQuality.high,
-                ))),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/at-auto/at-auto-bg.png'),
-            fit: BoxFit.cover,
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/at-auto/at-auto-bg.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                EntryButton(
-                  title: 'Service & Repairs',
-                  imagePath: 'images/at-auto/service-entry.png',
-                ),
-                SizedBox(width: 50),
-                EntryButton(
-                  title: 'Upgrades',
-                  imagePath: 'images/at-auto/upgrades-entry.png',
-                ),
-              ],
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  EntryButton(
+                    title: 'Service & Repairs',
+                    imagePath: 'images/at-auto/service-entry.png',
+                  ),
+                  SizedBox(width: 50),
+                  EntryButton(
+                    title: 'Upgrades',
+                    imagePath: 'images/at-auto/upgrades-entry.png',
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    );
+      Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: CarDisplay(
+            currentCar: currentCar,
+          ),
+        ),
+      ),
+    ]);
   }
 }
 
