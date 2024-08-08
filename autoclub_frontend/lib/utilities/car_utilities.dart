@@ -48,7 +48,10 @@ Used to specify attributes of the cars.
   preTuned(name: "Pre-tuned"),
   hotHatch(name: "Hot hatch"),
   rally(name: "Rally"),
-  offroad(name: "Off-road");
+  offroad(name: "Off-road"),
+  comfortTaxi(name: "Comfort Taxi"),
+  luxurtTaxi(name: "Luxury Taxi"),
+  ;
 
   final String name;
   const CarTag({required this.name});
@@ -61,7 +64,9 @@ Continents for the countries.
 
   asia,
   europe,
-  northAmerica
+  northAmerica,
+  africa,
+  oceania,
 }
 
 enum Country {
@@ -80,7 +85,10 @@ Possible countries for the car objects.
   us(cont: Continent.northAmerica, name: "United States"),
   china(cont: Continent.asia, name: "China"),
   malaysia(cont: Continent.asia, name: "Malaysia"),
-  canada(cont: Continent.northAmerica, name: "Canada");
+  canada(cont: Continent.northAmerica, name: "Canada"),
+  france(cont: Continent.europe, name: "France"),
+  southAfrica(cont: Continent.africa, name: "South Africa"),
+  ;
 
   final Continent cont;
   final String name;

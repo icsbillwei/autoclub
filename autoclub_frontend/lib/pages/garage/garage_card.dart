@@ -4,8 +4,9 @@ import 'package:autoclub_frontend/pages/garage/garage_car_detail.dart';
 
 class GarageCard extends StatelessWidget {
   final Car car;
+  final Function updateCurrentCar;
 
-  GarageCard({required this.car});
+  GarageCard({required this.car, required this.updateCurrentCar});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class GarageCard extends StatelessWidget {
           child: Image.network(
             car.imgLinks,
             fit: BoxFit.cover,
+            filterQuality: FilterQuality.high,
           ),
         ),
         Expanded(
@@ -69,7 +71,8 @@ class GarageCard extends StatelessWidget {
                     SizedBox(width: 10),
                     TextButton.icon(
                       onPressed: () {
-                        // Add your onPressed code here!
+                        updateCurrentCar(car);
+                        Navigator.of(context).pop();
                       },
                       icon: Icon(Icons.directions_car, color: Colors.white),
                       label: Text(

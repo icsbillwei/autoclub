@@ -6,11 +6,13 @@ import 'package:autoclub_frontend/utilities/sheets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:autoclub_frontend/components/current_car.dart';
 
 import '../browser/browser_window.dart';
 import '../models/car.dart';
 import '../utilities/dealer_car_generation.dart';
 import 'garage/garage.dart';
+import '../pages/at-auto/at_auto_homepage.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -27,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int money = 20000;
   SelectedLocation location = SelectedLocation.undefined;
 
-  final usedDealerCount = 10; // adjust the number of used cars in the dealer
+  final usedDealerCount = 15; // adjust the number of used cars in the dealer
 
   // Is there a better way to set theme
   final theme = "light";
@@ -56,6 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
     print(userCarList.length);
   }
 
+  void updateCurrentCar(Car newCar) {
+    currentCar = newCar;
+    setState(() {});
+  }
+
   /*
     for handling location entries
   */
@@ -73,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
             pageBuilder: (context, animation, secondaryAnimation) => GaragePage(
               userCarList: userCarList,
               money: money,
+              updateCurrentCar: updateCurrentCar,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -97,6 +105,23 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case SelectedLocation.tuning:
         // Action for tuning
+        // Go into homepage with animation
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                ATAutoPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+            transitionDuration:
+                const Duration(seconds: 1), // Adjust the duration as needed
+          ),
+        );
         print('Tuning selected');
         break;
       case SelectedLocation.wharf:
@@ -158,6 +183,17 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
               margin: const EdgeInsets.only(bottom: 40),
               child: locationEntrance())),
+
+      // add top right here
+      Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: CarDisplay(
+            currentCar: currentCar,
+          ),
+        ),
+      ),
 
       // Browser
       Align(

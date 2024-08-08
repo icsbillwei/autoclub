@@ -5,8 +5,12 @@ import 'package:autoclub_frontend/pages/garage/garage_card.dart';
 class GaragePage extends StatelessWidget {
   final List<Car> userCarList;
   final int money;
+  final Function updateCurrentCar;
 
-  GaragePage({required this.userCarList, required this.money});
+  GaragePage(
+      {required this.userCarList,
+      required this.money,
+      required this.updateCurrentCar});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +99,8 @@ class GaragePage extends StatelessWidget {
                         crossAxisSpacing: 20,
                         padding: const EdgeInsets.all(20),
                         children: userCarList
-                            .map((car) => GarageCard(car: car))
+                            .map((car) => GarageCard(
+                                car: car, updateCurrentCar: updateCurrentCar))
                             .toList(),
                       ),
               ),
