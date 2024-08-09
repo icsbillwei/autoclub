@@ -388,7 +388,7 @@ class Car extends CarModel {
           imgLinks: model.imgLinks,
           designer: model.designer,
         ) {
-    updateUsedPerformance();
+    initRandomUsed();
   }
 
   void initRandomUsed() {
@@ -425,6 +425,7 @@ class Car extends CarModel {
     }
     initRandomDamage(qualityStar);
     valuation();
+    updateUsedPerformance();
   }
 
   void initRandomDamage(int star) {
@@ -570,7 +571,7 @@ class Car extends CarModel {
         [1, 1, 1, 1, 1], // handling1
         [1, 1, 1, 1, 1] // braking
       ],
-      "wheels and Tires": [
+      "Wheels and Tires": [
         [1, 1.05, 1.15, 1.5, 999], // 0-100
         [1, 1.01, 1.05, 1.2, 999], // qmile
         [1, 0.92, 0.8, 0.55, 0], // speed
@@ -580,11 +581,20 @@ class Car extends CarModel {
       ],
     };
 
+    // print("prevAccel: $accel");
+    // print("prevQmile: $qmile");
+    // print("prevVmax: $vmax");
+    // print("prevHandling0: $handling0");
+    // print("prevHandling1: $handling1");
+    // print("prevBraking: $braking");
+
     for (Component c in componentList) {
+      // print("name: ${c.name}");
       List<List<double>> damageRatio = damageRatioMatrix[c.name]!;
+      // print(damageRatio);
       currAccel = accel * damageRatio[0][c.damage.level];
       currQmile = qmile * damageRatio[1][c.damage.level];
-      currVmax = vmax * damageRatio[2][c.damage.level] as int;
+      currVmax = (vmax * damageRatio[2][c.damage.level]).toInt();
       currHandling0 = handling0 * damageRatio[3][c.damage.level];
       currHandling1 = handling1 * damageRatio[4][c.damage.level];
       currBraking = braking * damageRatio[5][c.damage.level];
@@ -597,15 +607,21 @@ class Car extends CarModel {
     currHandling1 = currHandling1 < 0 ? 0 : currHandling1;
     currBraking = currBraking > 99 ? 99 : currBraking;
 
-    updatePerfStats();
-    updatePerfPoint();
+    updateUsedPerfStats();
+    updateUsedPerfPoint();
   }
 
-  @override
-  void updatePerfStats() {
+  void updateUsedPerfStats() {
     /*
     Update stat values
      */
+    // print("accel: $currAccel");
+    // print("qmile: $currQmile");
+    // print("vmax: $currVmax");
+    // print("handling0: $currHandling0");
+    // print("handling1: $currHandling1");
+    // print("braking: $currBraking");
+
     currLaunchStat = 18 / currAccel;
     currAccelStat = 38.5 / (currQmile - 4) - 1;
     currSpeedStat = (currVmax - 60) / 44;
@@ -619,8 +635,7 @@ class Car extends CarModel {
     currBrakingStat = currBrakingStat < 0 ? 0 : currBrakingStat;
   }
 
-  @override
-  void updatePerfPoint(
+  void updateUsedPerfPoint(
       {
       // Default weightings for each stat
       double launchWeight = 0.15,

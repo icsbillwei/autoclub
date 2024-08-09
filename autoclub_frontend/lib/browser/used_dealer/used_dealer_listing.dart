@@ -338,6 +338,31 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                   detailedInfoItem(
                       "Weight:", "${listing["carObject"].weight} kg"),
                   detailedInfoItem("Designer:", listing["carObject"].designer),
+                  // temp info
+                  detailedInfoItem(
+                      "Acceleration (new):", "${listing["carObject"].accel} s"),
+                  detailedInfoItem(
+                      "Quarter Mile (new):", "${listing["carObject"].qmile} s"),
+                  detailedInfoItem(
+                      "Top Speed (new):", "${listing["carObject"].vmax} km/h"),
+                  detailedInfoItem(
+                      "Handling (new) 0:", "${listing["carObject"].handling0}"),
+                  detailedInfoItem(
+                      "Handling (new) 1:", "${listing["carObject"].handling1}"),
+                  detailedInfoItem(
+                      "Braking (new):", "${listing["carObject"].braking}"),
+                  detailedInfoItem("Current Acceleration:",
+                      "${listing["carObject"].currAccel} s"),
+                  detailedInfoItem("Current Quarter Mile:",
+                      "${listing["carObject"].currQmile} s"),
+                  detailedInfoItem("Current Top Speed:",
+                      "${listing["carObject"].currVmax} km/h"),
+                  detailedInfoItem("Current Handling 0:",
+                      "${listing["carObject"].currHandling0}"),
+                  detailedInfoItem("Current Handling 1:",
+                      "${listing["carObject"].currHandling1}"),
+                  detailedInfoItem("Current Braking:",
+                      "${listing["carObject"].currBraking}"),
                 ],
               ),
             ),
