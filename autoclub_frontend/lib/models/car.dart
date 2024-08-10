@@ -588,21 +588,30 @@ class Car extends CarModel {
     // print("prevHandling1: $handling1");
     // print("prevBraking: $braking");
 
+    currAccel = accel;
+    currQmile = qmile;
+    currVmax = vmax;
+    currHandling0 = handling0;
+    currHandling1 = handling1;
+    currBraking = braking;
+
     for (Component c in componentList) {
       // print("name: ${c.name}");
       List<List<double>> damageRatio = damageRatioMatrix[c.name]!;
       // print(damageRatio);
-      currAccel = accel * damageRatio[0][c.damage.level];
-      currQmile = qmile * damageRatio[1][c.damage.level];
-      currVmax = (vmax * damageRatio[2][c.damage.level]).toInt();
-      currHandling0 = handling0 * damageRatio[3][c.damage.level];
-      currHandling1 = handling1 * damageRatio[4][c.damage.level];
-      currBraking = braking * damageRatio[5][c.damage.level];
+      currAccel = currAccel * damageRatio[0][c.damage.level];
+      currQmile = currQmile * damageRatio[1][c.damage.level];
+      currVmax = (currVmax * damageRatio[2][c.damage.level]).toInt();
+      currHandling0 = currHandling0 * damageRatio[3][c.damage.level];
+      currHandling1 = currHandling1 * damageRatio[4][c.damage.level];
+      currBraking = currBraking * damageRatio[5][c.damage.level];
     }
 
     currAccel = currAccel > 99 ? 99 : currAccel;
     currQmile = currQmile > 99 ? 99 : currQmile;
     currVmax = currVmax < 0 ? 0 : currVmax;
+    // If top speed less than 100, 0-100 is infinite
+    currAccel = currVmax < 100 ? 99.99 : currAccel;
     currHandling0 = currHandling0 < 0 ? 0 : currHandling0;
     currHandling1 = currHandling1 < 0 ? 0 : currHandling1;
     currBraking = currBraking > 99 ? 99 : currBraking;

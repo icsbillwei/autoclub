@@ -25,6 +25,50 @@ class GarageCarDetail extends StatelessWidget {
     }
   }
 
+  Widget _buildStatColumn(BuildContext context, String label, double currStat,
+      double stat, int rounding, bool maxOverflow) {
+    String displayCurrStat;
+    if (maxOverflow && currStat >= 98) {
+      displayCurrStat = '--';
+    } else if (!maxOverflow && currStat == 0) {
+      displayCurrStat = '--';
+    } else {
+      displayCurrStat = currStat.toStringAsFixed(rounding);
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: '$displayCurrStat ',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              TextSpan(
+                text: " / ${stat.toStringAsFixed(rounding)} (new)",
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.orange,
+                      fontSize: 16,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double containerWidth = MediaQuery.of(context).size.height > 1000
@@ -366,6 +410,74 @@ class GarageCarDetail extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                ),
+
+                                SizedBox(height: 70),
+                                Center(
+                                  child: Text(
+                                    "Car Performance",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                // add here
+
+                                if (car.currVmax <= 1)
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.warning, color: Colors.red),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Critical component broken",
+                                        style: TextStyle(color: Colors.red),
+                                        softWrap: true,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                    ],
+                                  ),
+
+                                GridView.count(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 2.5,
+                                  children: [
+                                    _buildStatColumn(context, '0-100 km/h (s)',
+                                        car.currAccel, car.accel, 2, true),
+                                    _buildStatColumn(context, '1/4 Mile (s)',
+                                        car.currQmile, car.qmile, 1, true),
+                                    _buildStatColumn(
+                                        context,
+                                        'Top Speed (km/h)',
+                                        car.currVmax.toDouble(),
+                                        car.vmax.toDouble(),
+                                        0,
+                                        false),
+                                    _buildStatColumn(
+                                        context,
+                                        'Slow Handling (G)',
+                                        car.currHandling0,
+                                        car.handling0,
+                                        2,
+                                        false),
+                                    _buildStatColumn(
+                                        context,
+                                        'Fast Handling (G)',
+                                        car.currHandling1,
+                                        car.handling1,
+                                        2,
+                                        false),
+                                    _buildStatColumn(
+                                        context,
+                                        '100-0 Braking (m)',
+                                        car.currBraking,
+                                        car.braking,
+                                        1,
+                                        true),
+                                  ],
                                 ),
                               ],
                             ),
