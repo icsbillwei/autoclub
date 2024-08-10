@@ -13,8 +13,6 @@ List<Car> pickRandomCars(List<CarModel> list, int count) {
     final car = Car.fromModel(
       model: model,
     );
-    print(car.currAccel);
-    print(car.accel);
     return car;
   }).toList();
 }

@@ -106,7 +106,8 @@ Types of drivetrains for the cars.
   rr(name: "Rear engine, rear wheel drive", acronym: "RR"),
   fourwd(name: "Four wheel drive", acronym: "4WD"),
   fawd(name: "Front engine, all wheel drive", acronym: "F-AWD"),
-  mawd(name: "Mid engine, all wheel drive", acronym: "M-AWD");
+  mawd(name: "Mid engine, all wheel drive", acronym: "M-AWD"),
+  rawd(name: "Rear engine, all wheel drive", acronym: "R-AWD");
 
   final String name;
   final String acronym;
@@ -129,7 +130,8 @@ Types of engines for the cars.
   v16(name: "V16", fullName: "V16"),
   b4(name: "B4", fullName: "Flat 4"),
   b6(name: "B6", fullName: "Flat 6"),
-  ev(name: "EV", fullName: "Electric drive");
+  ev(name: "EV", fullName: "Electric drive"),
+  i8(name: "I8", fullName: "Inline 8");
 
   final String name;
   final String fullName;
@@ -180,7 +182,7 @@ enum ComponentDamage {
   light(name: "Light", level: 1, coef: 0.15),
   medium(name: "Medium", level: 2, coef: 0.35),
   severe(name: "Severe", level: 3, coef: 0.6),
-  broken(name: "Broken", level: 4, coef: 0.9);
+  broken(name: "Broken!", level: 4, coef: 0.9);
 
   final String name;
   final int level;

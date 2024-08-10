@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:autoclub_frontend/utilities/car_utilities.dart';
 import 'package:gsheets/gsheets.dart';
 import 'sheets_api_secret.dart';
@@ -26,7 +23,7 @@ Future<List<CarModel>> getCarList() async {
   }
    */
   for (final row in rows!) {
-    if (row["id"] == null) {
+    if (row["id"] == "" || row["id"] == null) {
       break;
     }
 
