@@ -107,23 +107,47 @@ class CarModel {
   /*
   Various components for the car2
    */
-  Component engine =
-      Component(name: "Engine", damage: ComponentDamage.none, ratio: 0.3);
+  Component engine = Component(
+      name: "Engine",
+      damage: ComponentDamage.none,
+      ratio: 0.3,
+      description:
+          "Engine component\nMajorly affects acceleration and speed\nIt is a critical component");
 
-  Component drivetrain =
-      Component(name: "Drivetrain", damage: ComponentDamage.none, ratio: 0.2);
+  Component drivetrain = Component(
+      name: "Drivetrain",
+      damage: ComponentDamage.none,
+      ratio: 0.2,
+      description:
+          "Drivetrain component\nAffects acceleration and slightly affects speed\nIt is a critical component");
 
-  Component suspension =
-      Component(name: "Suspension", damage: ComponentDamage.none, ratio: 0.15);
+  Component suspension = Component(
+      name: "Suspension",
+      damage: ComponentDamage.none,
+      ratio: 0.15,
+      description:
+          "Suspension component\nAffects handling and slightly affects braking\nIt is a critical component");
 
-  Component bodywork =
-      Component(name: "Bodywork", damage: ComponentDamage.none, ratio: 0.15);
+  Component bodywork = Component(
+      name: "Bodywork",
+      damage: ComponentDamage.none,
+      ratio: 0.15,
+      description:
+          "Bodywork component\nSomewhat affects speed and fast handling\nJobs might have body condition requirements");
 
-  Component interior =
-      Component(name: "Interior", damage: ComponentDamage.none, ratio: 0.08);
+  Component interior = Component(
+      name: "Interior",
+      damage: ComponentDamage.none,
+      ratio: 0.08,
+      description:
+          "Interior of the car\nDoes not affect performance\nJobs might have interior condition requirements");
 
   Component wheelsTires = Component(
-      name: "Wheels and Tires", damage: ComponentDamage.none, ratio: 0.12);
+      name: "Wheels and Tires",
+      damage: ComponentDamage.none,
+      ratio: 0.12,
+      description:
+          "Wheels and Tires component\nAffects everything\nIt is a critical component");
 
   String imgLinks;
   late List<Component> componentList;

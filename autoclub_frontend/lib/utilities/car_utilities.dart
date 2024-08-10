@@ -207,8 +207,14 @@ class Component {
   // Price of component relative to new price of car
   final double ratio;
 
+  final String description;
+
   // TODO: Implement component link to performance
-  Component({required this.name, required this.damage, required this.ratio});
+  Component(
+      {required this.name,
+      required this.damage,
+      required this.ratio,
+      this.description = ""});
 
   @override
   String toString() => "$name (Damage: ${damage.toString()}, Ratio: $ratio)";

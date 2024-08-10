@@ -377,35 +377,38 @@ class GarageCarDetail extends StatelessWidget {
                                       shrinkWrap: true,
                                       children: [
                                         for (var component in car.componentList)
-                                          Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                'images/icons/${component.name.toLowerCase().replaceAll(' ', '')}.svg',
-                                                color: getDamageColor(
-                                                    component.damage),
-                                                width: 50,
-                                                height: 50,
-                                              ),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                component.damage.name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .displayMedium
-                                                    ?.copyWith(
-                                                      color: getDamageColor(
-                                                          component.damage),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                              ),
-                                            ],
+                                          Tooltip(
+                                            message: component.description,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'images/icons/${component.name.toLowerCase().replaceAll(' ', '')}.svg',
+                                                  color: getDamageColor(
+                                                      component.damage),
+                                                  width: 50,
+                                                  height: 50,
+                                                ),
+                                                SizedBox(height: 5),
+                                                Text(
+                                                  component.damage.name,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium
+                                                      ?.copyWith(
+                                                        color: getDamageColor(
+                                                            component.damage),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                       ],
                                     ),
