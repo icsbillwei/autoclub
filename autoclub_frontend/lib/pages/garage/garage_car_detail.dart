@@ -422,7 +422,53 @@ class GarageCarDetail extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: 20),
-                                // add here
+
+                                // Performance Point
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.bolt,
+                                      color: Colors.yellow,
+                                      size: 24,
+                                    ),
+                                    Text(
+                                      "Perf. Index",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    SizedBox(width: 20),
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                '${car.currPerformancePoint} ',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium
+                                                ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                          TextSpan(
+                                            text: " / ${car.performancePoint}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium
+                                                ?.copyWith(
+                                                  color: Colors.orange,
+                                                  fontSize: 16,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(height: 20),
 
                                 if (car.currVmax <= 1)
                                   Row(
@@ -476,7 +522,7 @@ class GarageCarDetail extends StatelessWidget {
                                         car.currBraking,
                                         car.braking,
                                         1,
-                                        true),
+                                        false),
                                   ],
                                 ),
                               ],

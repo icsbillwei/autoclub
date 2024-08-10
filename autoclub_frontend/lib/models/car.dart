@@ -190,11 +190,12 @@ class CarModel {
       double speedWeight = 0.2,
       double handlingWeight = 0.25,
       double brakingWeight = 0.10}) {
-    performancePoint = (launchStat * launchWeight +
-            accelStat * accelWeight +
-            speedStat * speedWeight +
-            handlingStat * handlingWeight +
-            brakingStat * brakingWeight)
+    performancePoint = ((launchStat * launchWeight +
+                accelStat * accelWeight +
+                speedStat * speedWeight +
+                handlingStat * handlingWeight +
+                brakingStat * brakingWeight) *
+            100)
         .toInt();
   }
 
@@ -408,19 +409,19 @@ class Car extends CarModel {
       case (> 5000 && <= 15000):
         qualityStar = (cointoss) ? 6 : 5;
 
-      case (> 15000 && <= 50000):
+      case (> 15000 && <= 100000):
         qualityStar = (cointoss) ? 5 : 4;
 
-      case (> 50000 && <= 100000):
+      case (> 100000 && <= 150000):
         qualityStar = (cointoss) ? 4 : 3;
 
-      case (> 100000 && <= 150000):
+      case (> 150000 && <= 220000):
         qualityStar = (cointoss) ? 3 : 2;
 
-      case (> 150000 && <= 250000):
+      case (> 220000 && <= 300000):
         qualityStar = (cointoss) ? 2 : 1;
 
-      case (> 250000):
+      case (> 300000):
         qualityStar = 1;
     }
     initRandomDamage(qualityStar);
@@ -434,11 +435,11 @@ class Car extends CarModel {
     6 star - 3% light
     97% no damage
 
-    5 star - 20% light, 5% medium
+    5 star - 15% light, 3% medium
     75% no damage
 
-    4 star - 40% light, 10% medium, 3% heavy,
-    46% no damage
+    4 star - 30% light, 10% medium, 3% heavy,
+    56% no damage
 
     3 star - 30% light, 30% medium, 15% heavy, 1% broken
     24% no damage
@@ -459,9 +460,9 @@ class Car extends CarModel {
           }
 
         case 5:
-          if (rng <= 5) {
+          if (rng <= 3) {
             c.damage = ComponentDamage.medium;
-          } else if (rng <= 25) {
+          } else if (rng <= 18) {
             c.damage = ComponentDamage.light;
           }
 
@@ -470,7 +471,7 @@ class Car extends CarModel {
             c.damage = ComponentDamage.severe;
           } else if (rng <= 13) {
             c.damage = ComponentDamage.medium;
-          } else if (rng <= 53) {
+          } else if (rng <= 43) {
             c.damage = ComponentDamage.light;
           }
 
@@ -652,13 +653,14 @@ class Car extends CarModel {
       double speedWeight = 0.2,
       double handlingWeight = 0.25,
       double brakingWeight = 0.10}) {
-    currPerformancePoint = (currLaunchStat * launchWeight +
-            currAccelStat * accelWeight +
-            currSpeedStat * speedWeight +
-            currHandlingStat * handlingWeight +
-            currBrakingStat * brakingWeight)
+    currPerformancePoint = ((currLaunchStat * launchWeight +
+                currAccelStat * accelWeight +
+                currSpeedStat * speedWeight +
+                currHandlingStat * handlingWeight +
+                currBrakingStat * brakingWeight) *
+            100)
         .toInt();
-
+    // print("$name: $currPerformancePoint");
     if (currPerformancePoint < 0) {
       currPerformancePoint = 0;
     }
