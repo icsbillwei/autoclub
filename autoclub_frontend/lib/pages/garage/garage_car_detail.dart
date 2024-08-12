@@ -11,9 +11,9 @@ class GarageCarDetail extends StatelessWidget {
   Color getDamageColor(ComponentDamage damage) {
     switch (damage) {
       case ComponentDamage.none:
-        return Color.fromARGB(255, 204, 249, 255);
+        return const Color.fromARGB(255, 204, 249, 255);
       case ComponentDamage.light:
-        return Color.fromARGB(255, 130, 233, 147);
+        return const Color.fromARGB(255, 130, 233, 147);
       case ComponentDamage.medium:
         return Colors.yellow;
       case ComponentDamage.severe:
@@ -60,10 +60,10 @@ class GarageCarDetail extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           label,
-          style: TextStyle(color: Colors.white, fontSize: 16),
+          style: const TextStyle(color: Colors.white, fontSize: 16),
         ),
       ],
     );
@@ -87,7 +87,7 @@ class GarageCarDetail extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.only(left: 20),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, size: 30),
+            icon: const Icon(Icons.arrow_back, size: 30),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -105,7 +105,7 @@ class GarageCarDetail extends StatelessWidget {
         toolbarHeight: 100, // Increased toolbar height
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/garage-bg.png'),
             fit: BoxFit.cover, // Ensures the image covers the full background
@@ -142,34 +142,34 @@ class GarageCarDetail extends StatelessWidget {
                                       width: 24,
                                       height: 24,
                                     ),
-                                    SizedBox(width: 10),
+                                    const SizedBox(width: 10),
                                     Text(
                                       car.brandName,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   car.name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${car.mileage} km',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 22,
                                   ),
                                 ),
-                                SizedBox(height: 25),
+                                const SizedBox(height: 25),
                                 RichText(
                                   text: TextSpan(
                                     children: [
@@ -198,7 +198,7 @@ class GarageCarDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 RichText(
                                   text: TextSpan(
                                     children: [
@@ -228,7 +228,7 @@ class GarageCarDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 15),
+                                const SizedBox(height: 15),
                                 RichText(
                                   // Engine
                                   text: TextSpan(
@@ -259,7 +259,7 @@ class GarageCarDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 RichText(
                                   // Power / Weight
                                   text: TextSpan(
@@ -290,7 +290,7 @@ class GarageCarDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 RichText(
                                   text: TextSpan(
                                     children: [
@@ -319,7 +319,7 @@ class GarageCarDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 15),
+                                const SizedBox(height: 15),
                                 RichText(
                                   // Designer
                                   text: TextSpan(
@@ -349,9 +349,9 @@ class GarageCarDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 70),
+                                const SizedBox(height: 70),
 
-                                Center(
+                                const Center(
                                   child: Text(
                                     "Component Damages",
                                     style: TextStyle(
@@ -360,7 +360,7 @@ class GarageCarDetail extends StatelessWidget {
                                   ),
                                 ),
 
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
 
                                 // Components
                                 Center(
@@ -393,7 +393,7 @@ class GarageCarDetail extends StatelessWidget {
                                                   width: 50,
                                                   height: 50,
                                                 ),
-                                                SizedBox(height: 5),
+                                                const SizedBox(height: 5),
                                                 Text(
                                                   component.damage.name,
                                                   style: Theme.of(context)
@@ -415,8 +415,8 @@ class GarageCarDetail extends StatelessWidget {
                                   ),
                                 ),
 
-                                SizedBox(height: 70),
-                                Center(
+                                const SizedBox(height: 70),
+                                const Center(
                                   child: Text(
                                     "Car Performance",
                                     style: TextStyle(
@@ -424,22 +424,22 @@ class GarageCarDetail extends StatelessWidget {
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
 
                                 // Performance Point
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.bolt,
                                       color: Colors.yellow,
                                       size: 24,
                                     ),
-                                    Text(
+                                    const Text(
                                       "Perf. Index",
                                       style: TextStyle(fontSize: 14),
                                     ),
-                                    SizedBox(width: 20),
+                                    const SizedBox(width: 20),
                                     RichText(
                                       text: TextSpan(
                                         children: [
@@ -471,10 +471,10 @@ class GarageCarDetail extends StatelessWidget {
                                   ],
                                 ),
 
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
 
                                 if (car.currVmax <= 1)
-                                  Row(
+                                  const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.warning, color: Colors.red),
@@ -525,7 +525,7 @@ class GarageCarDetail extends StatelessWidget {
                                         car.currBraking,
                                         car.braking,
                                         1,
-                                        false),
+                                        true),
                                   ],
                                 ),
                               ],

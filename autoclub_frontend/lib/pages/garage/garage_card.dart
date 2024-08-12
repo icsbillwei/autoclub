@@ -39,7 +39,7 @@ class GarageCard extends StatelessWidget {
                         ?.copyWith(color: Colors.white, fontSize: 20),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Text(
@@ -50,7 +50,7 @@ class GarageCard extends StatelessWidget {
                         ?.copyWith(color: Colors.grey, fontSize: 16),
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   children: [
                     TextButton.icon(
@@ -62,20 +62,20 @@ class GarageCard extends StatelessWidget {
                           ),
                         );
                       },
-                      icon: Icon(Icons.info, color: Colors.white),
-                      label: Text(
+                      icon: const Icon(Icons.info, color: Colors.white),
+                      label: const Text(
                         'Details',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     TextButton.icon(
                       onPressed: () {
                         updateCurrentCar(car);
                         Navigator.of(context).pop();
                       },
-                      icon: Icon(Icons.directions_car, color: Colors.white),
-                      label: Text(
+                      icon: const Icon(Icons.directions_car, color: Colors.white),
+                      label: const Text(
                         'Drive it!',
                         style: TextStyle(color: Colors.white),
                       ),

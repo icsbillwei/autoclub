@@ -64,7 +64,7 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
             // Website navbar
             children: [
               SvgPicture.asset("images/autosandauctions-long.svg", width: 200),
-              SizedBox(
+              const SizedBox(
                 width: 50,
               ),
               TextButton(

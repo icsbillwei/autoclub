@@ -64,7 +64,7 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                         title: const Text('Insufficient funds'),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('OK'),
+                            child: const Text('OK'),
                             onPressed: () {
                               Navigator.of(context)
                                   .pop(); // Dismiss the error dialog
@@ -89,7 +89,7 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
   Widget detailedInfoItem(String desc, dynamic info) {
     return Container(
       decoration: BoxDecoration(border: Border.all(width: 0.5, color: dark)),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
         children: [
           Text(
@@ -269,15 +269,15 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
-                      color: Color.fromARGB(255, 74, 165, 112),
+                      color: const Color.fromARGB(255, 74, 165, 112),
                     ),
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                     child: Padding(
-                      padding: EdgeInsets.all(2.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: Text(
                         listing["carObject"].tags[index].name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                           color: Colors.white,
                           fontWeight: FontWeight.w600,

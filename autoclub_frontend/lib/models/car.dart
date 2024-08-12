@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'brands.dart';
 import '../utilities/car_utilities.dart';
 
 double usedCarDamagePriceRatio = 1.0;

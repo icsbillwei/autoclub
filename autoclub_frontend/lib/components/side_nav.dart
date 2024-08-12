@@ -52,7 +52,7 @@ class SideNav extends StatelessWidget {
         // decoration (colour and border radius)
         decoration: BoxDecoration(
             color: backgroundColour,
-            borderRadius: BorderRadius.all(Radius.circular(30))),
+            borderRadius: const BorderRadius.all(Radius.circular(30))),
         child: Column(
           children: [
             // SECTION: Weather Icon

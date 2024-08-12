@@ -14,7 +14,7 @@ class CarDisplay extends StatelessWidget {
       child: Container(
         height: currentCar == null ? 50 : 80,
         width: currentCar == null ? 300 : 450,
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
@@ -35,7 +35,7 @@ class CarDisplay extends StatelessWidget {
                     width: 120.0,
                     height: 80.0,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(12.0),
                         bottomLeft: Radius.circular(12.0),
                       ),
@@ -49,8 +49,8 @@ class CarDisplay extends StatelessWidget {
                   // Right half with text
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 8, 8, 8),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.fromLTRB(15, 8, 8, 8),
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(12.0),
@@ -71,7 +71,7 @@ class CarDisplay extends StatelessWidget {
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(height: 4.0),
+                          const SizedBox(height: 4.0),
                           Text(
                             currentCar!.fullName(),
                             style: Theme.of(context)

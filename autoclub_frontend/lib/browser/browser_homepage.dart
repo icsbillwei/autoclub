@@ -59,7 +59,7 @@ class BrowserHomepage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(width: 20,),
+              const SizedBox(width: 20,),
 
               /*
               Motorpedia page (currently blank)

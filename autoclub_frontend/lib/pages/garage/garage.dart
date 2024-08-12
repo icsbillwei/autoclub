@@ -31,7 +31,7 @@ class GaragePage extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.only(left: 20),
           child: IconButton(
-            icon: Icon(Icons.close, size: 30),
+            icon: const Icon(Icons.close, size: 30),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -40,8 +40,8 @@ class GaragePage extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.garage, size: 30, color: Colors.white), // Garage icon
-              SizedBox(width: 10), // Space between icon and title
+              const Icon(Icons.garage, size: 30, color: Colors.white), // Garage icon
+              const SizedBox(width: 10), // Space between icon and title
               Text('Home',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
@@ -56,7 +56,7 @@ class GaragePage extends StatelessWidget {
         toolbarHeight: 100, // Increased toolbar height
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/garage-bg.png'),
             fit: BoxFit.cover, // Ensures the image covers the full background
@@ -82,8 +82,8 @@ class GaragePage extends StatelessWidget {
                               "images/no_cars.jpg",
                               width: 300,
                             ),
-                            SizedBox(height: 20),
-                            Text(
+                            const SizedBox(height: 20),
+                            const Text(
                               "Nothing to see here if you own no cars...",
                               style: TextStyle(
                                 color: Colors.white,

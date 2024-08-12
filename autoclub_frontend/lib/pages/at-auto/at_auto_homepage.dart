@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/models/car.dart';
 import 'package:autoclub_frontend/components/current_car.dart';
+import 'package:autoclub_frontend/pages/at-auto/at_auto_repairs.dart';
 
 class ATAutoPage extends StatelessWidget {
   final Car? currentCar;
@@ -21,7 +22,7 @@ class ATAutoPage extends StatelessWidget {
           leading: Padding(
             padding: const EdgeInsets.only(left: 20),
             child: IconButton(
-              icon: Icon(Icons.close, size: 30, color: Colors.white),
+              icon: const Icon(Icons.close, size: 30, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -36,7 +37,7 @@ class ATAutoPage extends StatelessWidget {
                   ))),
         ),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('images/at-auto/at-auto-bg.png'),
               fit: BoxFit.cover,
@@ -48,14 +49,65 @@ class ATAutoPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // Repairs
                   EntryButton(
                     title: 'Service & Repairs',
                     imagePath: 'images/at-auto/service-entry.png',
+                    onTap: () {
+                      print(currentCar);
+                      if (currentCar == null) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            // No car selected dialog
+                            return AlertDialog(
+                              title: const Text('No Car Selected',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              content: const Text(
+                                  'Please select a car from your garage before visiting us.',
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.black)),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    ATAutoRepair(car: currentCar!),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                            transitionDuration: const Duration(
+                                seconds: 1), // Adjust the duration as needed
+                          ),
+                        );
+                      }
+                    },
                   ),
-                  SizedBox(width: 50),
+                  const SizedBox(width: 50),
+                  // Upgrades
                   EntryButton(
                     title: 'Upgrades',
                     imagePath: 'images/at-auto/upgrades-entry.png',
+                    onTap: () {
+                      // Add onTap callback
+                    },
                   ),
                 ],
               ),
@@ -79,9 +131,14 @@ class ATAutoPage extends StatelessWidget {
 class EntryButton extends StatefulWidget {
   final String title;
   final String imagePath;
+  final VoidCallback onTap; // Add onTap callback
 
-  const EntryButton({Key? key, required this.title, required this.imagePath})
-      : super(key: key);
+  const EntryButton({
+    Key? key,
+    required this.title,
+    required this.imagePath,
+    required this.onTap, // Add onTap callback
+  }) : super(key: key);
 
   @override
   _EntryButtonState createState() => _EntryButtonState();
@@ -101,13 +158,11 @@ class _EntryButtonState extends State<EntryButton> {
       onEnter: (event) => setState(() => isHovered = true),
       onExit: (event) => setState(() => isHovered = false),
       child: GestureDetector(
-        onTap: () {
-          // Define your onTap action here
-        },
+        onTap: widget.onTap, // Use the onTap callback from the widget
         child: SimpleShadow(
           sigma: 8,
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 600),
             curve: Curves.easeInOut,
             width: width,
             height: height,
@@ -119,15 +174,12 @@ class _EntryButtonState extends State<EntryButton> {
               ),
             ),
             child: Center(
-              child: SimpleShadow(
-                sigma: 4,
-                child: Text(
-                  widget.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
