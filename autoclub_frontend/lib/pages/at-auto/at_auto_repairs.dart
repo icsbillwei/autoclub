@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/models/car.dart';
@@ -5,10 +7,49 @@ import 'package:autoclub_frontend/components/current_car.dart';
 import 'package:autoclub_frontend/utilities/car_utilities.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ATAutoRepair extends StatelessWidget {
-  final Car car;
+class ATAutoRepair extends StatefulWidget {
+  Car car;
+  Car? updatedCar;
+  Component? selectedComponent;
+  int repairCost = 0;
 
   ATAutoRepair({required this.car});
+
+  @override
+  _ATAutoRepairState createState() => _ATAutoRepairState();
+}
+
+class _ATAutoRepairState extends State<ATAutoRepair> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void selectComponent(Component component) {
+    setState(() {
+      widget.selectedComponent = component;
+      widget.updatedCar = cloneCarWithReducedDamage(widget.car, component);
+    });
+    widget.repairCost = (widget.selectedComponent!.damage.coef *
+            widget.selectedComponent!.ratio *
+            widget.car.currPrice)
+        .toInt();
+  }
+
+  Car cloneCarWithReducedDamage(Car car, Component component) {
+    // Create a clone of the car with one less damage level on the selected component
+    Car clonedCar = Car.clone(car);
+    Component clonedComponent =
+        clonedCar.componentList.firstWhere((c) => c.name == component.name);
+    // Adjust the damage level of the cloned component
+    if (clonedComponent.damage.level > 0) {
+      clonedComponent.damage =
+          ComponentDamage.values[clonedComponent.damage.level - 1];
+    }
+    // Update the car's stats based on the new damage level
+    clonedCar.updateUsedPerformance();
+    return clonedCar;
+  }
 
   Color getDamageColor(ComponentDamage damage) {
     switch (damage) {
@@ -73,13 +114,6 @@ class ATAutoRepair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double tempAccel = car.currAccel;
-    double tempQmile = car.currQmile;
-    int tempVmax = car.currVmax;
-    double tempHandling0 = car.currHandling0;
-    double tempHandling1 = car.currHandling1;
-    double tempBraking = car.currBraking;
-
     double componentPadding =
         MediaQuery.of(context).size.width > 1600 ? 250 : 40;
 
@@ -89,8 +123,21 @@ class ATAutoRepair extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          scrolledUnderElevation: 0,
           toolbarHeight: 100,
           centerTitle: true,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.9),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
           leading: Padding(
             padding: const EdgeInsets.only(left: 20),
             child: IconButton(
@@ -143,16 +190,19 @@ class ATAutoRepair extends StatelessWidget {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(
+                              height: 200,
+                            ),
                             Row(
                               children: [
                                 SvgPicture.asset(
-                                  getFlagAssetPath(car.country),
+                                  getFlagAssetPath(widget.car.country),
                                   width: 24,
                                   height: 24,
                                 ),
                                 const SizedBox(width: 10),
                                 Text(
-                                  car.brandName,
+                                  widget.car.brandName,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -162,7 +212,7 @@ class ATAutoRepair extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              car.name,
+                              widget.car.name,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 30,
@@ -181,61 +231,165 @@ class ATAutoRepair extends StatelessWidget {
                             GridView.count(
                               clipBehavior: Clip.none,
                               padding: EdgeInsets.zero,
-                              childAspectRatio: 1.5,
+                              childAspectRatio: 1.2,
                               crossAxisCount: 3,
                               mainAxisSpacing: 25,
-                              crossAxisSpacing: 25,
+                              crossAxisSpacing: 40,
                               shrinkWrap: true,
                               children: [
-                                for (var component in car.componentList)
+                                for (var component in widget.car.componentList)
                                   GestureDetector(
                                     onTap: () {
-                                      // Handle onClick event here
-                                      print(
-                                          'Component ${component.name} clicked');
+                                      if (component.damage.level == 0) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  'Component in already in Excellent Condition'),
+                                              actions: [
+                                                TextButton(
+                                                  child: Text('OK'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        selectComponent(component);
+                                        print(
+                                            'Component ${component.name} selected');
+                                      }
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.black.withOpacity(0.5),
                                         borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color:
+                                              widget.selectedComponent?.name ==
+                                                      component.name
+                                                  ? Colors.orange
+                                                  : Colors.transparent,
+                                          width: 2,
+                                        ),
                                       ),
                                       padding: const EdgeInsets.all(5),
-                                      child: Tooltip(
-                                        message: component.description,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SvgPicture.asset(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Tooltip(
+                                            message: component.description,
+                                            child: SvgPicture.asset(
                                               'images/icons/${component.name.toLowerCase().replaceAll(' ', '')}.svg',
                                               color: getDamageColor(
                                                   component.damage),
                                               width: 50,
                                               height: 50,
                                             ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              component.damage.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displayMedium
-                                                  ?.copyWith(
-                                                    color: getDamageColor(
-                                                        component.damage),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            component.damage.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium
+                                                ?.copyWith(
+                                                  color: getDamageColor(
+                                                      component.damage),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                               ],
                             ),
+
+                            const SizedBox(height: 50),
+
+                            // ################## Repair Menu
+                            if (widget.selectedComponent != null &&
+                                widget.updatedCar != null)
+                              Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'images/icons/${widget.selectedComponent!.name.toLowerCase().replaceAll(' ', '')}.svg',
+                                        color: getDamageColor(
+                                            widget.selectedComponent!.damage),
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Icon(
+                                        Icons.double_arrow,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                                      SizedBox(width: 20),
+                                      SvgPicture.asset(
+                                        'images/icons/${widget.selectedComponent!.name.toLowerCase().replaceAll(' ', '')}.svg',
+                                        color: getDamageColor(
+                                            ComponentDamage.values[widget
+                                                    .selectedComponent!
+                                                    .damage
+                                                    .level -
+                                                1]),
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Repair ${widget.selectedComponent!.name} by 1 level",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 5),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Cost of repair: ",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              "\$${widget.repairCost.toString()}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineSmall
+                                              ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              const SizedBox(height: 50),
+
+                            const SizedBox(height: 100),
                           ]),
                     ),
                   ),
@@ -248,7 +402,7 @@ class ATAutoRepair extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        if (car.currVmax <= 1)
+                        if (widget.car.currVmax <= 1)
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -268,23 +422,48 @@ class ATAutoRepair extends StatelessWidget {
                           crossAxisCount: 3,
                           childAspectRatio: 2,
                           children: [
-                            _buildStatColumn(context, '0-100 km/h (s)',
-                                car.currAccel, car.accel, 2, true),
-                            _buildStatColumn(context, '1/4 Mile (s)',
-                                car.currQmile, car.qmile, 1, true),
+                            _buildStatColumn(
+                                context,
+                                '0-100 km/h (s)',
+                                widget.car.currAccel,
+                                widget.car.accel,
+                                2,
+                                true),
+                            _buildStatColumn(
+                                context,
+                                '1/4 Mile (s)',
+                                widget.car.currQmile,
+                                widget.car.qmile,
+                                1,
+                                true),
                             _buildStatColumn(
                                 context,
                                 'Top Speed (km/h)',
-                                car.currVmax.toDouble(),
-                                car.vmax.toDouble(),
+                                widget.car.currVmax.toDouble(),
+                                widget.car.vmax.toDouble(),
                                 0,
                                 false),
-                            _buildStatColumn(context, 'Slow Handling (G)',
-                                car.currHandling0, car.handling0, 2, false),
-                            _buildStatColumn(context, 'Fast Handling (G)',
-                                car.currHandling1, car.handling1, 2, false),
-                            _buildStatColumn(context, '100-0 Braking (m)',
-                                car.currBraking, car.braking, 1, true),
+                            _buildStatColumn(
+                                context,
+                                'Slow Handling (G)',
+                                widget.car.currHandling0,
+                                widget.car.handling0,
+                                2,
+                                false),
+                            _buildStatColumn(
+                                context,
+                                'Fast Handling (G)',
+                                widget.car.currHandling1,
+                                widget.car.handling1,
+                                2,
+                                false),
+                            _buildStatColumn(
+                                context,
+                                '100-0 Braking (m)',
+                                widget.car.currBraking,
+                                widget.car.braking,
+                                1,
+                                true),
                           ],
                         ),
                       ],
@@ -301,7 +480,7 @@ class ATAutoRepair extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: CarDisplay(
-            currentCar: car,
+            currentCar: widget.car,
           ),
         ),
       ),

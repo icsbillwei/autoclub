@@ -101,6 +101,7 @@ class GarageCarDetail extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         toolbarHeight: 100, // Increased toolbar height
       ),

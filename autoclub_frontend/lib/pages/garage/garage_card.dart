@@ -16,10 +16,14 @@ class GarageCard extends StatelessWidget {
       children: [
         SizedBox(
           height: imageHeight,
-          child: Image.network(
-            car.imgLinks,
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.high,
+          child: ClipRRect(
+            borderRadius:
+                BorderRadius.circular(5.0), // Adjust the radius as needed
+            child: Image.network(
+              car.imgLinks,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
+            ),
           ),
         ),
         Expanded(
@@ -74,7 +78,8 @@ class GarageCard extends StatelessWidget {
                         updateCurrentCar(car);
                         Navigator.of(context).pop();
                       },
-                      icon: const Icon(Icons.directions_car, color: Colors.white),
+                      icon:
+                          const Icon(Icons.directions_car, color: Colors.white),
                       label: const Text(
                         'Drive it!',
                         style: TextStyle(color: Colors.white),

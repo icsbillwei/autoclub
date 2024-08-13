@@ -364,7 +364,7 @@ class Car extends CarModel {
           imgLinks: imgLinks,
           designer: designer,
         ) {
-    updateUsedPerformance();
+    initRandomUsed();
   }
 
   Car.fromModel({
@@ -413,6 +413,55 @@ class Car extends CarModel {
         ) {
     initRandomUsed();
   }
+
+  /*
+  Copy constructor
+   */
+  Car.clone(Car car)
+      : currPrice = car.currPrice,
+        mileage = car.mileage,
+        qualityStar = car.qualityStar,
+        currAccel = car.currAccel,
+        currQmile = car.currQmile,
+        currVmax = car.currVmax,
+        currHandling0 = car.currHandling0,
+        currHandling1 = car.currHandling1,
+        currBraking = car.currBraking,
+        currLaunchStat = car.currLaunchStat,
+        currAccelStat = car.currAccelStat,
+        currSpeedStat = car.currSpeedStat,
+        currHandlingStat = car.currHandlingStat,
+        currBrakingStat = car.currBrakingStat,
+        currPerformancePoint = car.currPerformancePoint,
+        super(
+          id: car.id,
+          name: car.name,
+          brandName: car.brandName,
+          year: car.year,
+          newPrice: car.newPrice,
+          type: car.type,
+          tags: car.tags,
+          country: car.country,
+          drivetrainType: car.drivetrainType,
+          engineType: car.engineType,
+          displacement: car.displacement,
+          aspirationType: car.aspirationType,
+          space: car.space,
+          power: car.power,
+          weight: car.weight,
+          seatCount: car.seatCount,
+          accel: car.accel,
+          qmile: car.qmile,
+          vmax: car.vmax,
+          handling0: car.handling0,
+          handling1: car.handling1,
+          braking: car.braking,
+          depCurve: car.depCurve,
+          maxMileage: car.maxMileage,
+          minMileage: car.minMileage,
+          imgLinks: car.imgLinks,
+          designer: car.designer,
+        );
 
   void initRandomUsed() {
     final random = Random();

@@ -26,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // TODO: Add listener to update date time accordingly
   final time = const TimeOfDay(hour: 12, minute: 23);
-  int money = 20000;
+  int money = 100000;
   SelectedLocation location = SelectedLocation.undefined;
 
   final usedDealerCount = 15; // adjust the number of used cars in the dealer
