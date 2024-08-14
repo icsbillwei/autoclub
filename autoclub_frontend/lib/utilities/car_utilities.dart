@@ -251,6 +251,10 @@ String getFlagAssetPath(Country country) {
       return 'images/flags/my.svg';
     case Country.canada:
       return 'images/flags/ca.svg';
+    case Country.france:
+      return 'images/flags/fr.svg';
+    case Country.southAfrica:
+      return 'images/flags/za.svg';
     default:
       return 'images/flags/fr.svg'; // Provide a default flag if needed
   }

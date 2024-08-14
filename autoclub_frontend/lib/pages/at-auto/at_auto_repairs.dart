@@ -1,3 +1,4 @@
+import 'package:autoclub_frontend/components/current_money.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/models/car.dart';
@@ -69,6 +70,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
 
   void onRepairComponent(int cost) {
     widget.updateMoney(widget.money - cost);
+    widget.money -= cost;
     widget.updateUserCar(widget.updatedCar);
     widget.car = widget.updatedCar!;
     widget.selectedComponent = null;
@@ -430,11 +432,59 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                       // Repair Button
 
                                       ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.orange),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ),
                                         onPressed: () {
                                           if (widget.money >=
                                               widget.repairCost) {
-                                            onRepairComponent(
-                                                widget.repairCost);
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    'Confirm Repair',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  content: const Text(
+                                                    'Are you sure you want to perform this repair?',
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child:
+                                                          const Text('Cancel'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child:
+                                                          const Text('Confirm'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        onRepairComponent(
+                                                            widget.repairCost);
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
                                           } else {
                                             showDialog(
                                               context: context,
@@ -462,11 +512,13 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                           }
                                         },
                                         child: Padding(
-                                            padding: EdgeInsets.all(3),
+                                            padding: EdgeInsets.all(6),
                                             child: const Text(
                                               'Repair',
                                               style: TextStyle(
-                                                  color: Colors.orange),
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
                                             )),
                                       ),
                                     ]),
@@ -564,9 +616,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
         alignment: Alignment.topRight,
         child: Padding(
           padding: const EdgeInsets.all(30),
-          child: CarDisplay(
-            currentCar: widget.car,
-          ),
+          child: MoneyDisplay(money: widget.money),
         ),
       ),
     ]);
