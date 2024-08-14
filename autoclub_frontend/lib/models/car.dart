@@ -466,7 +466,7 @@ class Car extends CarModel {
           designer: car.designer,
         ) {
     componentList = List.from(car.componentList);
-    print("cloned car: $name");
+    // print("cloned car: $name");
     print(toString());
   }
 
@@ -611,17 +611,17 @@ class Car extends CarModel {
       //      0-100, qmile, spd, hdl, brk
       "Engine": [
         // None Light Medium Severe Broken
-        [1, 1.1, 1.3, 1.9, 999], // 0-100
-        [1, 1.08, 1.2, 1.6, 999], // qmile
-        [1, 0.9, 0.75, 0.5, 0], // speed
+        [1, 1.05, 1.2, 1.6, 999], // 0-100
+        [1, 1.04, 1.12, 1.3, 999], // qmile
+        [1, 0.97, 0.9, 0.75, 0], // speed
         [1, 1, 1, 1, 0], // handling0
         [1, 1, 1, 1, 0], // handling1
         [1, 1, 1, 1, 999] // braking
       ],
       "Drivetrain": [
-        [1, 1.1, 1.3, 1.9, 999], // 0-100
-        [1, 1.05, 1.12, 1.4, 999], // qmile
-        [1, 0.98, 0.94, 0.88, 0], // speed
+        [1, 1.05, 1.2, 1.4, 999], // 0-100
+        [1, 1.02, 1.08, 1.2, 999], // qmile
+        [1, 0.99, 0.97, 0.95, 0], // speed
         [1, 1, 1, 1, 0], // handling0
         [1, 1, 1, 1, 0], // handling1
         [1, 1, 1, 1, 999] // braking
@@ -639,7 +639,7 @@ class Car extends CarModel {
         [1, 1, 1, 1, 1], // qmile
         [1, 1, 0.99, 0.95, 0.9], // speed
         [1, 1, 1, 1, 1], // handling0
-        [1, 1, 0.95, 0.88, 0.80], // handling1
+        [1, 1, 0.98, 0.96, 0.9], // handling1
         [1, 1, 1, 1, 1] // braking
       ],
       "Interior": [

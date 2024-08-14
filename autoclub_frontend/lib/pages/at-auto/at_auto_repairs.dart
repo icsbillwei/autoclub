@@ -2,7 +2,6 @@ import 'package:autoclub_frontend/components/current_money.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/models/car.dart';
-import 'package:autoclub_frontend/components/current_car.dart';
 import 'package:autoclub_frontend/utilities/car_utilities.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -34,7 +33,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
     super.initState();
   }
 
-  void selectComponent(Component component) {
+  void onSelectComponent(Component component) {
     setState(() {
       widget.selectedComponent = component;
       widget.updatedCar = cloneCarWithReducedDamage(widget.car, component);
@@ -68,6 +67,13 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
     return clonedCar;
   }
 
+  void resetRepair() {
+    widget.selectedComponent = null;
+    widget.updatedCar = null;
+    widget.repairCost = 0;
+    setState(() {});
+  }
+
   void onRepairComponent(int cost) {
     widget.updateMoney(widget.money - cost);
     widget.money -= cost;
@@ -98,14 +104,17 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
   }
 
   Widget _buildStatColumn(BuildContext context, String label, double currStat,
-      double stat, int rounding, bool maxOverflow) {
+      double stat, int rounding, bool maxOverflow,
+      {double? previewStat}) {
     String displayCurrStat;
-    if (maxOverflow && currStat >= 98) {
+    double statToDisplay = previewStat ?? currStat;
+
+    if (maxOverflow && statToDisplay >= 98) {
       displayCurrStat = '--';
-    } else if (!maxOverflow && currStat == 0) {
+    } else if (!maxOverflow && statToDisplay == 0) {
       displayCurrStat = '--';
     } else {
-      displayCurrStat = currStat.toStringAsFixed(rounding);
+      displayCurrStat = statToDisplay.toStringAsFixed(rounding);
     }
 
     return Column(
@@ -117,7 +126,9 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
               TextSpan(
                 text: '$displayCurrStat ',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
+                      color: (previewStat != null && previewStat != currStat)
+                          ? Color.fromARGB(255, 83, 206, 144)
+                          : Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -291,7 +302,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                           },
                                         );
                                       } else {
-                                        selectComponent(component);
+                                        onSelectComponent(component);
                                         print(
                                             'Component ${component.name} selected');
                                       }
@@ -431,95 +442,143 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                       const SizedBox(width: 50),
                                       // Repair Button
 
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.orange),
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                      Column(
+                                        children: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      const Color.fromARGB(
+                                                          150, 255, 153, 0)),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
                                             ),
+                                            onPressed: () {
+                                              if (widget.money >=
+                                                  widget.repairCost) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                        'Confirm Repair',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      content: const Text(
+                                                        'Are you sure you want to perform this repair?',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child: const Text(
+                                                              'Cancel'),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                        TextButton(
+                                                          child: const Text(
+                                                              'Confirm'),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            onRepairComponent(
+                                                                widget
+                                                                    .repairCost);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          'Insufficient Funds'),
+                                                      content: const Text(
+                                                        'You do not have enough money to repair this component.',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          child:
+                                                              const Text('OK'),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            child: Padding(
+                                                padding: EdgeInsets.all(6),
+                                                child: const Text(
+                                                  'Repair',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )),
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          if (widget.money >=
-                                              widget.repairCost) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: const Text(
-                                                    'Confirm Repair',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  content: const Text(
-                                                    'Are you sure you want to perform this repair?',
-                                                    style: TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child:
-                                                          const Text('Cancel'),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                    TextButton(
-                                                      child:
-                                                          const Text('Confirm'),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        onRepairComponent(
-                                                            widget.repairCost);
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          } else {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: const Text(
-                                                      'Insufficient Funds'),
-                                                  content: const Text(
-                                                    'You do not have enough money to repair this component.',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child: const Text('OK'),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          }
-                                        },
-                                        child: Padding(
-                                            padding: EdgeInsets.all(6),
-                                            child: const Text(
-                                              'Repair',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
+                                          const SizedBox(height: 10),
+                                          // Cancel Button
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      const Color.fromARGB(
+                                                          120, 97, 129, 145)),
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              resetRepair();
+                                            },
+                                            child: Padding(
+                                                padding: EdgeInsets.all(6),
+                                                child: const Text(
+                                                  'Cancel',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )),
+                                          ),
+                                        ],
                                       ),
                                     ]),
                               )
@@ -539,6 +598,57 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.bolt,
+                              color: Colors.yellow,
+                              size: 24,
+                            ),
+                            const Text(
+                              "Perf. Index",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            const SizedBox(width: 20),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '${widget.updatedCar?.currPerformancePoint ?? widget.car.currPerformancePoint} ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(
+                                          color: (widget.updatedCar != null &&
+                                                  widget.updatedCar
+                                                          ?.currPerformancePoint !=
+                                                      widget.car
+                                                          .currPerformancePoint)
+                                              ? Color.fromARGB(
+                                                  255, 83, 206, 144)
+                                              : Colors.white,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  TextSpan(
+                                    text: " / ${widget.car.performancePoint}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(
+                                          color: Colors.orange,
+                                          fontSize: 16,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                         if (widget.car.currVmax <= 1)
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -559,48 +669,45 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                           crossAxisCount: 3,
                           childAspectRatio: 2,
                           children: [
-                            _buildStatColumn(
-                                context,
-                                '0-100 km/h (s)',
-                                widget.car.currAccel,
-                                widget.car.accel,
-                                2,
-                                true),
-                            _buildStatColumn(
-                                context,
-                                '1/4 Mile (s)',
-                                widget.car.currQmile,
-                                widget.car.qmile,
-                                1,
-                                true),
+                            _buildStatColumn(context, '0-100 km/h (s)',
+                                widget.car.currAccel, widget.car.accel, 2, true,
+                                previewStat: widget.updatedCar?.currAccel),
+                            _buildStatColumn(context, '1/4 Mile (s)',
+                                widget.car.currQmile, widget.car.qmile, 1, true,
+                                previewStat: widget.updatedCar?.currQmile),
                             _buildStatColumn(
                                 context,
                                 'Top Speed (km/h)',
                                 widget.car.currVmax.toDouble(),
                                 widget.car.vmax.toDouble(),
                                 0,
-                                false),
+                                false,
+                                previewStat:
+                                    (widget.updatedCar?.currVmax)?.toDouble()),
                             _buildStatColumn(
                                 context,
                                 'Slow Handling (G)',
                                 widget.car.currHandling0,
                                 widget.car.handling0,
                                 2,
-                                false),
+                                false,
+                                previewStat: widget.updatedCar?.currHandling0),
                             _buildStatColumn(
                                 context,
                                 'Fast Handling (G)',
                                 widget.car.currHandling1,
                                 widget.car.handling1,
                                 2,
-                                false),
+                                false,
+                                previewStat: widget.updatedCar?.currHandling1),
                             _buildStatColumn(
                                 context,
                                 '100-0 Braking (m)',
                                 widget.car.currBraking,
                                 widget.car.braking,
                                 1,
-                                true),
+                                true,
+                                previewStat: widget.updatedCar?.currBraking),
                           ],
                         ),
                       ],
