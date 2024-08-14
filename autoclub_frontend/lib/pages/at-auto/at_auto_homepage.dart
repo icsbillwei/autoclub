@@ -6,8 +6,16 @@ import 'package:autoclub_frontend/pages/at-auto/at_auto_repairs.dart';
 
 class ATAutoPage extends StatelessWidget {
   final Car? currentCar;
+  int money;
 
-  ATAutoPage({required this.currentCar});
+  Function updateMoney;
+  Function updateUserCar;
+
+  ATAutoPage(
+      {required this.currentCar,
+      required this.money,
+      required this.updateMoney,
+      required this.updateUserCar});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +62,7 @@ class ATAutoPage extends StatelessWidget {
                     title: 'Service & Repairs',
                     imagePath: 'images/at-auto/service-entry.png',
                     onTap: () {
-                      print(currentCar);
+                      // print(currentCar);
                       if (currentCar == null) {
                         showDialog(
                           context: context,
@@ -83,9 +91,13 @@ class ATAutoPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    ATAutoRepair(car: currentCar!),
+                            pageBuilder: (context, animation,
+                                    secondaryAnimation) =>
+                                ATAutoRepair(
+                                    car: currentCar!,
+                                    money: money,
+                                    updateMoney: updateMoney,
+                                    updateUserCar: updateUserCar),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               return FadeTransition(

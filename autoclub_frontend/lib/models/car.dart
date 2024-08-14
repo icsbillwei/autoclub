@@ -301,6 +301,8 @@ class Car extends CarModel {
 
   late int currPerformancePoint;
 
+  late int userCarID;
+
   Car({
     required int id,
     required String name,
@@ -433,6 +435,7 @@ class Car extends CarModel {
         currHandlingStat = car.currHandlingStat,
         currBrakingStat = car.currBrakingStat,
         currPerformancePoint = car.currPerformancePoint,
+        userCarID = car.userCarID,
         super(
           id: car.id,
           name: car.name,
@@ -461,7 +464,11 @@ class Car extends CarModel {
           minMileage: car.minMileage,
           imgLinks: car.imgLinks,
           designer: car.designer,
-        );
+        ) {
+    componentList = List.from(car.componentList);
+    print("cloned car: $name");
+    print(toString());
+  }
 
   void initRandomUsed() {
     final random = Random();
@@ -739,11 +746,57 @@ class Car extends CarModel {
 
   @override
   String toString() {
-    return '''
-    ${super.toString()}
-        Current price: $currPrice
-        Mileage: $mileage
-        Damage star: $qualityStar
+    final componentsString = componentList.map((component) {
+      return '''
+      Component: ${component.name}
+        Damage: ${component.damage.name}
     ''';
+    }).join('\n');
+
+    final tagsString = tags.map((tag) => tag.name).join(', ');
+
+    return '''
+    CarModel Details:
+      ID: $id
+      Name: $name
+      Brand Name: $brandName
+      Year: $year
+      New Price: $newPrice
+      Type: ${type.name}
+      Tags: $tagsString
+      Country: ${country.name}
+      Drivetrain Type: ${drivetrainType.acronym}
+      Engine Type: ${engineType.name}
+      Aspiration Type: ${aspirationType.name}
+      Space: ${space.name}
+      Power: $power
+      Weight: $weight
+      Seat Count: $seatCount
+      Acceleration (0-100 km/h): $accel s
+      Quarter Mile Time: $qmile s
+      Top Speed: $vmax km/h
+      Short Radius Handling: $handling0 G
+      Long Radius Handling: $handling1 G
+      Braking Distance: $braking m
+      Depreciation Curve: $depCurve
+      Max Mileage: $maxMileage
+      Min Mileage: $minMileage
+      Performance Point: $performancePoint
+      Power-to-Weight Ratio: ${pwRatio.toString()}
+      Designer: $designer
+      currPrice: $currPrice
+      Mileage: $mileage
+      Quality Star: $qualityStar
+      carID: $userCarID
+      Components:
+        $componentsString
+      Current Stats:
+        Current Acceleration (0-100 km/h): $currAccel s
+        Current Quarter Mile Time: $currQmile s
+        Current Top Speed: $currVmax km/h
+        Current Short Radius Handling: $currHandling0 G
+        Current Long Radius Handling: $currHandling1 G
+        Current Braking Distance: $currBraking m
+  ''';
   }
 }

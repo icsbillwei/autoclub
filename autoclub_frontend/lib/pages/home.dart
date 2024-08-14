@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // Is there a better way to set theme
   final theme = "light";
 
-  List<CarModel> gameCarlist = [];
+  List<CarModel> gameCarList = [];
   List<Map<String, dynamic>> usedListings = [];
 
   /*
@@ -42,25 +42,49 @@ class _MyHomePageState extends State<MyHomePage> {
    */
   Car? currentCar;
   List<Car> userCarList = [];
+  // Number to track the id of the user's car
+  int currUserCarId = 0;
 
   /*
  This calls getCarList from sheets.dart, which returns a list of CarModels
   */
   void getGameCarList() async {
-    gameCarlist = await getCarList();
+    gameCarList = await getCarList();
+  }
+
+  void updateMoney(int newMoney) {
+    money = newMoney;
+    setState(() {});
   }
 
   void addUserCar(Car newCar, int price) {
+    newCar.userCarID = currUserCarId;
+    currUserCarId++;
     userCarList.add(newCar);
     money -= price;
     setState(() {});
     print("User car added");
-    print(userCarList.length);
+    print("${userCarList.length} cars in userCarList");
+    print("User car ID: ${newCar.userCarID}");
+    print(userCarList[0].userCarID);
   }
 
   void updateCurrentCar(Car newCar) {
     currentCar = newCar;
     setState(() {});
+  }
+
+  void replaceUserCar(Car newCar) {
+    int index =
+        userCarList.indexWhere((car) => car.userCarID == newCar.userCarID);
+    if (index != -1) {
+      setState(() {
+        userCarList[index] = newCar;
+      });
+      print("Car replaced in gameCarList");
+    } else {
+      print("Target car not found in gameCarList");
+    }
   }
 
   /*
@@ -111,6 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ATAutoPage(
               currentCar: currentCar,
+              money: money,
+              updateMoney: updateMoney,
+              updateUserCar: replaceUserCar,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -210,11 +237,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      if (usedListings != [] && gameCarlist != []) {
+                      if (usedListings != [] && gameCarList != []) {
                         usedListings = generateUsedCarListings(
-                            usedDealerCount, gameCarlist);
+                            usedDealerCount, gameCarList);
                         return BrowserWidget(
-                          gameCarList: gameCarlist,
+                          gameCarList: gameCarList,
                           usedListings: usedListings,
                           addUserCar: addUserCar,
                           money: money,

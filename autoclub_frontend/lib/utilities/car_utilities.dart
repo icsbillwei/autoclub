@@ -209,12 +209,17 @@ class Component {
 
   final String description;
 
-  // TODO: Implement component link to performance
   Component(
       {required this.name,
       required this.damage,
       required this.ratio,
       this.description = ""});
+
+  Component.clone(Component component)
+      : name = component.name,
+        damage = component.damage,
+        ratio = component.ratio,
+        description = component.description;
 
   @override
   String toString() => "$name (Damage: ${damage.toString()}, Ratio: $ratio)";
