@@ -1,9 +1,60 @@
 import 'package:autoclub_frontend/components/current_money.dart';
+import 'package:autoclub_frontend/components/stat_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/models/car.dart';
 import 'package:autoclub_frontend/utilities/car_utilities.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+class StatRow extends StatelessWidget {
+  final String label;
+  final double currentStat;
+  final double newStat;
+  final double? improveStat;
+
+  StatRow({
+    required this.label,
+    required this.currentStat,
+    required this.newStat,
+    this.improveStat,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 150,
+          child: Text(
+            label,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+        ),
+        SizedBox(
+          width: 2,
+        ),
+        Expanded(
+          child: StatBar(
+            currentStat: currentStat,
+            newStat: newStat,
+            improveStat: improveStat,
+          ),
+        ),
+        SizedBox(width: 20),
+        SizedBox(
+          width: 80,
+          child: Text(
+            '${currentStat.toStringAsFixed(1)}',
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class ATAutoRepair extends StatefulWidget {
   Car car;
@@ -513,12 +564,17 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                                       (BuildContext context) {
                                                     return AlertDialog(
                                                       title: const Text(
-                                                          'Insufficient Funds'),
+                                                        'Insufficient Funds',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
                                                       content: const Text(
                                                         'You do not have enough money to repair this component.',
                                                         style: TextStyle(
                                                             color:
-                                                                Colors.white),
+                                                                Colors.black),
                                                       ),
                                                       actions: <Widget>[
                                                         TextButton(
@@ -601,14 +657,15 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            // Performance Index
                             const Icon(
                               Icons.bolt,
                               color: Colors.yellow,
-                              size: 24,
+                              size: 28,
                             ),
                             const Text(
                               "Perf. Index",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 18),
                             ),
                             const SizedBox(width: 20),
                             RichText(
@@ -629,7 +686,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                               ? Color.fromARGB(
                                                   255, 83, 206, 144)
                                               : Colors.white,
-                                          fontSize: 24,
+                                          fontSize: 26,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -640,7 +697,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                                         .headlineMedium
                                         ?.copyWith(
                                           color: Colors.orange,
-                                          fontSize: 16,
+                                          fontSize: 18,
                                         ),
                                   ),
                                 ],
@@ -648,7 +705,47 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+
+                        const SizedBox(height: 50),
+
+                        // Performance Bars
+                        StatRow(
+                          label: "Launch",
+                          currentStat: widget.car.currLaunchStat,
+                          newStat: widget.car.launchStat,
+                          improveStat: widget.updatedCar?.currLaunchStat,
+                        ),
+                        SizedBox(height: 10),
+                        StatRow(
+                          label: "Accel.",
+                          currentStat: widget.car.currAccelStat,
+                          newStat: widget.car.accelStat,
+                          improveStat: widget.updatedCar?.currAccelStat,
+                        ),
+                        SizedBox(height: 10),
+                        StatRow(
+                          label: "Speed",
+                          currentStat: widget.car.currSpeedStat,
+                          newStat: widget.car.speedStat,
+                          improveStat: widget.updatedCar?.currSpeedStat,
+                        ),
+                        SizedBox(height: 10),
+                        StatRow(
+                          label: "Handling",
+                          currentStat: widget.car.currHandlingStat,
+                          newStat: widget.car.handlingStat,
+                          improveStat: widget.updatedCar?.currHandlingStat,
+                        ),
+                        SizedBox(height: 10),
+                        StatRow(
+                          label: "Braking",
+                          currentStat: widget.car.currBrakingStat,
+                          newStat: widget.car.brakingStat,
+                          improveStat: widget.updatedCar?.currBrakingStat,
+                        ),
+
+                        // Warning
+                        const SizedBox(height: 50),
                         if (widget.car.currVmax <= 1)
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -663,6 +760,8 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                               ),
                             ],
                           ),
+
+                        // Stat grid
                         GridView.count(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
