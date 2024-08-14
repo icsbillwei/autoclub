@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/models/car.dart';
@@ -16,12 +14,14 @@ class ATAutoRepair extends StatefulWidget {
 
   Function updateMoney;
   Function updateUserCar;
+  Function updateCurrentCar;
 
   ATAutoRepair(
       {required this.car,
       required this.money,
       required this.updateMoney,
-      required this.updateUserCar});
+      required this.updateUserCar,
+      required this.updateCurrentCar});
 
   @override
   _ATAutoRepairState createState() => _ATAutoRepairState();
@@ -74,6 +74,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
     widget.selectedComponent = null;
     widget.updatedCar = null;
     widget.repairCost = 0;
+    widget.updateCurrentCar(widget.car);
     setState(() {});
   }
 
@@ -168,7 +169,10 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
             padding: const EdgeInsets.only(left: 20),
             child: IconButton(
               icon: const Icon(Icons.close, size: 30, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
             ),
           ),
           title: Padding(
@@ -346,111 +350,127 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                             // ################## Repair Menu
                             if (widget.selectedComponent != null &&
                                 widget.updatedCar != null)
-                              Row(children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'images/icons/${widget.selectedComponent!.name.toLowerCase().replaceAll(' ', '')}.svg',
-                                          color: getDamageColor(
-                                              widget.selectedComponent!.damage),
-                                          width: 60,
-                                          height: 60,
-                                        ),
-                                        SizedBox(width: 20),
-                                        Icon(
-                                          Icons.double_arrow,
-                                          color: Colors.white,
-                                          size: 30,
-                                        ),
-                                        SizedBox(width: 20),
-                                        SvgPicture.asset(
-                                          'images/icons/${widget.selectedComponent!.name.toLowerCase().replaceAll(' ', '')}.svg',
-                                          color: getDamageColor(
-                                              ComponentDamage.values[widget
-                                                      .selectedComponent!
-                                                      .damage
-                                                      .level -
-                                                  1]),
-                                          width: 60,
-                                          height: 60,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20),
-                                    Text(
-                                      "Repair ${widget.selectedComponent!.name} by 1 level",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 5),
-                                    RichText(
-                                      text: TextSpan(
+                              Center(
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Column(
                                         children: [
-                                          TextSpan(
-                                            text: "Cost of repair: ",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey,
-                                            ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                'images/icons/${widget.selectedComponent!.name.toLowerCase().replaceAll(' ', '')}.svg',
+                                                color: getDamageColor(widget
+                                                    .selectedComponent!.damage),
+                                                width: 60,
+                                                height: 60,
+                                              ),
+                                              SizedBox(width: 20),
+                                              Icon(
+                                                Icons.double_arrow,
+                                                color: Colors.white,
+                                                size: 30,
+                                              ),
+                                              SizedBox(width: 20),
+                                              SvgPicture.asset(
+                                                'images/icons/${widget.selectedComponent!.name.toLowerCase().replaceAll(' ', '')}.svg',
+                                                color: getDamageColor(
+                                                    ComponentDamage
+                                                        .values[widget
+                                                            .selectedComponent!
+                                                            .damage
+                                                            .level -
+                                                        1]),
+                                                width: 60,
+                                                height: 60,
+                                              ),
+                                            ],
                                           ),
-                                          TextSpan(
-                                            text:
-                                                "\$${widget.repairCost.toString()}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineSmall
-                                                ?.copyWith(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                          SizedBox(height: 20),
+                                          Text(
+                                            "Repair ${widget.selectedComponent!.name} by 1 level",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(height: 5),
+                                          RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: "Cost of repair: ",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      "\$${widget.repairCost.toString()}",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall
+                                                      ?.copyWith(
+                                                          color: Colors.white,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
 
-                                const SizedBox(width: 50),
-                                // Repair Button
+                                      const SizedBox(width: 50),
+                                      // Repair Button
 
-                                ElevatedButton(
-                                  onPressed: () {
-                                    if (widget.money >= widget.repairCost) {
-                                      onRepairComponent(widget.repairCost);
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                                'Insufficient Funds'),
-                                            content: const Text(
-                                              'You do not have enough money to repair this component.',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text('OK'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (widget.money >=
+                                              widget.repairCost) {
+                                            onRepairComponent(
+                                                widget.repairCost);
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      'Insufficient Funds'),
+                                                  content: const Text(
+                                                    'You do not have enough money to repair this component.',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: const Text('OK'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  child: const Text('Repair'),
-                                ),
-                              ])
+                                        child: Padding(
+                                            padding: EdgeInsets.all(3),
+                                            child: const Text(
+                                              'Repair',
+                                              style: TextStyle(
+                                                  color: Colors.orange),
+                                            )),
+                                      ),
+                                    ]),
+                              )
                             else
                               const SizedBox(height: 50),
 

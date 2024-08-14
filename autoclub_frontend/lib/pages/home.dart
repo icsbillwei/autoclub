@@ -138,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
               money: money,
               updateMoney: updateMoney,
               updateUserCar: replaceUserCar,
+              updateCurrentCar: updateCurrentCar,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {

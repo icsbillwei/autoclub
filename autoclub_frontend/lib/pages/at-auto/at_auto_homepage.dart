@@ -10,12 +10,14 @@ class ATAutoPage extends StatelessWidget {
 
   Function updateMoney;
   Function updateUserCar;
+  Function updateCurrentCar;
 
   ATAutoPage(
       {required this.currentCar,
       required this.money,
       required this.updateMoney,
-      required this.updateUserCar});
+      required this.updateUserCar,
+      required this.updateCurrentCar});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +99,8 @@ class ATAutoPage extends StatelessWidget {
                                     car: currentCar!,
                                     money: money,
                                     updateMoney: updateMoney,
-                                    updateUserCar: updateUserCar),
+                                    updateUserCar: updateUserCar,
+                                    updateCurrentCar: updateCurrentCar),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               return FadeTransition(
