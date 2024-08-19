@@ -189,14 +189,18 @@ class _MyHomePageState extends State<MyHomePage> {
               Image.asset("images/game-bg.png"),
 
               // Items on map
-              mapItem(
-                  1600, 700, "images/downtown.svg", SelectedLocation.downtown),
-              mapItem(2150, 950, "images/home.svg", SelectedLocation.home),
-              mapItem(2000, 450, "images/hotel.svg", SelectedLocation.hotel),
-              mapItem(
-                  2350, 600, "images/showroom.svg", SelectedLocation.showroom),
-              mapItem(2760, 1200, "images/tuning.svg", SelectedLocation.tuning),
-              mapItem(950, 600, "images/wharf.svg", SelectedLocation.wharf),
+              mapItem(1600, 700, "images/downtown.svg",
+                  SelectedLocation.downtown, location),
+              mapItem(2150, 950, "images/home.svg", SelectedLocation.home,
+                  location),
+              mapItem(2000, 450, "images/hotel.svg", SelectedLocation.hotel,
+                  location),
+              mapItem(2350, 600, "images/showroom.svg",
+                  SelectedLocation.showroom, location),
+              mapItem(2760, 1200, "images/tuning.svg", SelectedLocation.tuning,
+                  location),
+              mapItem(950, 600, "images/wharf.svg", SelectedLocation.wharf,
+                  location),
             ])),
       )),
 
@@ -271,33 +275,51 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  Widget mapItem(
-      double posX, double posY, String img, SelectedLocation toggle) {
+  Widget mapItem(double posX, double posY, String img, SelectedLocation toggle,
+      SelectedLocation current) {
     bool thisToggled = location == toggle;
     return AnimatedPositioned(
         left: (thisToggled) ? posX - 15 : posX,
         top: (thisToggled) ? posY - 26 : posY,
         duration: const Duration(milliseconds: 450),
         curve: Curves.ease,
+        height: 620,
         child: GestureDetector(
             onTap: () {
               setState(() {
                 location = toggle;
               });
             },
-            child: AnimatedContainer(
-                duration: const Duration(milliseconds: 450),
-                width: ((thisToggled) ? 280 : 250) +
-                    ((toggle == SelectedLocation.tuning) ? 30 : 0),
-                height: (thisToggled) ? 280 : 250,
-                curve: Curves.ease,
-                child: SimpleShadow(
-                    color: Colors.black,
-                    sigma: 8,
-                    child: SvgPicture.asset(
-                      img,
-                      fit: BoxFit.contain,
-                    )))));
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                AnimatedContainer(
+                    duration: const Duration(milliseconds: 450),
+                    width: ((thisToggled) ? 280 : 250) +
+                        ((toggle == SelectedLocation.tuning) ? 30 : 0),
+                    height: (thisToggled) ? 480 : 450,
+                    curve: Curves.ease,
+                    child: SimpleShadow(
+                        color: Colors.black,
+                        sigma: 8,
+                        child: SvgPicture.asset(
+                          img,
+                          fit: BoxFit.contain,
+                          height: 400,
+                        ))),
+                if (toggle == current)
+                  Positioned(
+                    top: 0,
+                    child: SimpleShadow(
+                      sigma: 4,
+                      child: Image.asset(
+                        "images/icons/current-location.png",
+                        height: 100,
+                      ),
+                    ),
+                  ),
+              ],
+            )));
   }
 
   Widget locationEntrance() {

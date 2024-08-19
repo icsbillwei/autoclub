@@ -717,7 +717,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
                         ),
                         SizedBox(height: 10),
                         StatRow(
-                          label: "Accel.",
+                          label: "Acceleration",
                           currentStat: widget.car.currAccelStat,
                           newStat: widget.car.accelStat,
                           improveStat: widget.updatedCar?.currAccelStat,
