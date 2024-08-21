@@ -744,6 +744,18 @@ class Car extends CarModel {
     }
   }
 
+  bool hasBrokenComponents() {
+    for (Component component in componentList) {
+      if (component.name == "Bodywork" || component.name == "Interior") {
+        continue;
+      }
+      if (component.damage == ComponentDamage.broken) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   String toString() {
     final componentsString = componentList.map((component) {

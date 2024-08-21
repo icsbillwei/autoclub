@@ -297,7 +297,121 @@ class _MyHomePageState extends State<MyHomePage> {
     bool thisToggled = location == toggle;
 
     void showTravelDialog(BuildContext context) {
+      if (toggle == current) {
+        return;
+      }
+
       final travelTime = getTravelTime(current, toggle);
+
+      // Check if the user has a car
+      if (currentCar == null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              icon: Icon(Icons.warning_rounded),
+              actionsAlignment: MainAxisAlignment.end,
+              title: Text('No Car Available'),
+              content: Text(
+                'You do not have a car selected in your garage. Please select or buy a car to travel.',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'OK',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
+
+      // Check if the car has broken components
+      bool hasBrokenComponents = currentCar!.hasBrokenComponents();
+
+      if (hasBrokenComponents) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              icon: Icon(Icons.build_rounded),
+              actionsAlignment: MainAxisAlignment.end,
+              title: Text('Car Needs Repair'),
+              content: Text(
+                'Your current car has broken components. Please repair it before traveling.',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                if (toggle == SelectedLocation.tuning)
+                  TextButton(
+                    child: Text(
+                      'Flatbed to Tuning (\$500)',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    onPressed: () {
+                      if (money >= 500) {
+                        setState(() {
+                          money -= 500;
+                          location = toggle;
+                          updateTime(
+                              hour: travelTime['hours']!,
+                              minute: travelTime['minutes']!);
+                        });
+                        Navigator.of(context).pop();
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              icon: Icon(Icons.error_rounded),
+                              actionsAlignment: MainAxisAlignment.end,
+                              title: Text('Insufficient Funds'),
+                              content: Text(
+                                'You do not have enough money to flatbed the car.',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(
+                                    'OK',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+              ],
+            );
+          },
+        );
+        return;
+      }
+
+      // If no issues, proceed with travel confirmation
       showDialog(
         context: context,
         builder: (BuildContext context) {
