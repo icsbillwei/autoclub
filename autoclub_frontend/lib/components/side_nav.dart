@@ -67,8 +67,10 @@ class SideNav extends StatelessWidget {
             ),
 
             // SECTION: Time
-            Text("${time.hour}:${time.minute}",
-                style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
 
             const SizedBox(
               height: 15,

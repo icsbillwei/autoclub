@@ -8,6 +8,29 @@ enum SelectedLocation {
   wharf
 }
 
+extension SelectedLocationExtension on SelectedLocation {
+  String get name {
+    switch (this) {
+      case SelectedLocation.undefined:
+        return 'Undefined';
+      case SelectedLocation.downtown:
+        return 'Downtown';
+      case SelectedLocation.home:
+        return 'Home';
+      case SelectedLocation.hotel:
+        return 'Hotel';
+      case SelectedLocation.showroom:
+        return 'Showroom';
+      case SelectedLocation.tuning:
+        return 'AT Auto';
+      case SelectedLocation.wharf:
+        return 'Wharf';
+      default:
+        return '';
+    }
+  }
+}
+
 /*
 Map matrix representing the distances between each places
 */
@@ -58,4 +81,18 @@ final Map<SelectedLocation, Map<SelectedLocation, int>> locationDistances = {
 
 int getDistance(SelectedLocation from, SelectedLocation to) {
   return locationDistances[from]?[to] ?? 0;
+}
+
+Map<String, int> getTravelTime(SelectedLocation from, SelectedLocation to) {
+  const double averageSpeed = 50.0; // km/h
+  int distance = getDistance(from, to);
+  double timeInHours = distance / averageSpeed;
+
+  int hours = timeInHours.floor();
+  int minutes = ((timeInHours - hours) * 60).round();
+
+  return {
+    'hours': hours,
+    'minutes': minutes,
+  };
 }

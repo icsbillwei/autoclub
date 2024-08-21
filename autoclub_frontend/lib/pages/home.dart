@@ -23,11 +23,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
+  // final GlobalKey<SideNavState> _sideNavKey = GlobalKey<SideNavState>();
 
   // TODO: Add listener to update date time accordingly
-  final time = const TimeOfDay(hour: 12, minute: 23);
+  var time = const TimeOfDay(hour: 9, minute: 00);
   int money = 100000;
-  SelectedLocation location = SelectedLocation.undefined;
+  SelectedLocation location = SelectedLocation.home;
 
   final usedDealerCount = 15; // adjust the number of used cars in the dealer
 
@@ -44,6 +45,22 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Car> userCarList = [];
   // Number to track the id of the user's car
   int currUserCarId = 0;
+
+  void updateTime({int hour = 0, int minute = 0}) {
+    setState(() {
+      int totalMinutes = time.minute + minute;
+      int newHour = time.hour + hour + totalMinutes ~/ 60;
+      int newMinute = totalMinutes % 60;
+      bool dayPassed = newHour >= 24;
+      newHour = newHour % 24; // Ensure the hour is within 0-23 range
+
+      if (dayPassed) {
+        // onDayPassed(); // Placeholder function to call when a day passes
+      }
+
+      time = TimeOfDay(hour: newHour, minute: newMinute);
+    });
+  }
 
   /*
  This calls getCarList from sheets.dart, which returns a list of CarModels
@@ -278,6 +295,49 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget mapItem(double posX, double posY, String img, SelectedLocation toggle,
       SelectedLocation current) {
     bool thisToggled = location == toggle;
+
+    void showTravelDialog(BuildContext context) {
+      final travelTime = getTravelTime(current, toggle);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            icon: Icon(Icons.directions_rounded),
+            actionsAlignment: MainAxisAlignment.end,
+            title: Text('Travel Confirmation'),
+            content: Text(
+              'Driving from ${current.name} to ${toggle.name}\nIt will be ${getDistance(current, toggle)} km and will take ${travelTime['hours']} hours and ${travelTime['minutes']} minutes.',
+              style: TextStyle(color: Colors.black),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Confirm',
+                    style: TextStyle(fontWeight: FontWeight.w600)),
+                onPressed: () {
+                  setState(() {
+                    location = toggle;
+                    updateTime(
+                        hour: travelTime['hours']!,
+                        minute: travelTime['minutes']!);
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return AnimatedPositioned(
         left: (thisToggled) ? posX - 15 : posX,
         top: (thisToggled) ? posY - 26 : posY,
@@ -287,7 +347,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: GestureDetector(
             onTap: () {
               setState(() {
-                location = toggle;
+                showTravelDialog(context);
               });
             },
             child: Stack(
@@ -311,7 +371,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Positioned(
                     top: 0,
                     child: SimpleShadow(
-                      sigma: 4,
+                      sigma: 6,
                       child: Image.asset(
                         "images/icons/current-location.png",
                         height: 100,
@@ -346,72 +406,55 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        icon: Icon(Icons.close_rounded,
-                            color: Theme.of(context).colorScheme.secondary),
-                        onPressed: () {
-                          setState(() {
-                            location = SelectedLocation.undefined;
-                          });
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          children: [
-                            Text(
-                              homepageLocation[location.index],
-                              style: Theme.of(context).textTheme.displayMedium,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              homepageDescription[location.index],
-                              style: Theme.of(context).textTheme.displaySmall,
-                            ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            SizedBox(
-                              width: 150,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: blue),
-                                  onPressed: () {
-                                    handleEnterPress();
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.login_rounded,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        "Enter",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
-                                      )
-                                    ],
-                                  )),
-                            )
-                          ],
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        Text(
+                          homepageLocation[location.index],
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
-                      ),
-                    )
-                  ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          homepageDescription[location.index],
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        SizedBox(
+                          width: 150,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: blue),
+                              onPressed: () {
+                                handleEnterPress();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.login_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Enter",
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  )
+                                ],
+                              )),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
