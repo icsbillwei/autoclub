@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/components/current_car.dart';
+import 'package:autoclub_frontend/models/job.dart';
+import 'package:autoclub_frontend/pages/location_job_page.dart';
 
 import '../browser/browser_window.dart';
 import '../models/car.dart';
@@ -45,6 +47,17 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Car> userCarList = [];
   // Number to track the id of the user's car
   int currUserCarId = 0;
+
+  /*
+  Job data
+  */
+  Map<SelectedLocation, List<TempJob>> jobList = {
+    SelectedLocation.downtown: [],
+    SelectedLocation.hotel: [],
+    SelectedLocation.showroom: [],
+    SelectedLocation.tuning: [],
+    SelectedLocation.wharf: [],
+  };
 
   void updateTime({int hour = 0, int minute = 0}) {
     setState(() {
@@ -111,6 +124,16 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (location) {
       case SelectedLocation.downtown:
         // Action for downtown
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return LocationJobPage(
+              name: 'Downtown',
+              imagePath: 'images/locations/job-downtown.png',
+              jobs: [], // Pass the list of TempJob here
+            );
+          },
+        );
         print('Downtown selected');
         break;
       case SelectedLocation.home:
@@ -138,10 +161,31 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case SelectedLocation.hotel:
         // Action for hotel
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return LocationJobPage(
+              name: 'Hotel',
+              imagePath: 'images/locations/job-hotel.png',
+              jobs: [], // Pass the list of TempJob here
+            );
+          },
+        );
         print('Hotel selected');
         break;
       case SelectedLocation.showroom:
         // Action for showroom
+        // TODO: showroom page
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return LocationJobPage(
+              name: 'Auto Showroom',
+              imagePath: 'images/locations/job-showroom.png',
+              jobs: [], // Pass the list of TempJob here
+            );
+          },
+        );
         print('Showroom selected');
         break;
       case SelectedLocation.tuning:
@@ -172,6 +216,16 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case SelectedLocation.wharf:
         // Action for wharf
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return LocationJobPage(
+              name: 'The Wharf',
+              imagePath: 'images/locations/job-wharf.png',
+              jobs: [], // Pass the list of TempJob here
+            );
+          },
+        );
         print('Wharf selected');
         break;
       default:
