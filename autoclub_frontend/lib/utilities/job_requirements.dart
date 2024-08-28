@@ -41,6 +41,13 @@ final CarRequirement fiveSeats = CarRequirement(
   },
 );
 
+final CarRequirement sixSeats = CarRequirement(
+  name: "Vehicle has at least 6 seats",
+  check: (Car car) {
+    return car.seatCount >= 6;
+  },
+);
+
 // damage utils
 
 final CarRequirement noBrokenComponents = CarRequirement(
@@ -112,6 +119,34 @@ final CarRequirement noMediumBodyDamage = CarRequirement(
     for (var component in car.componentList) {
       if (component.damage == ComponentDamage.light &&
           component.name == "Bodywork") {
+        return false;
+      }
+    }
+    return true;
+  },
+);
+
+// interior damage utils
+
+final CarRequirement noInteriorDamage = CarRequirement(
+  name: "Vehicle has no interior damage",
+  check: (Car car) {
+    for (var component in car.componentList) {
+      if (component.damage != ComponentDamage.none &&
+          component.name == "Interior") {
+        return false;
+      }
+    }
+    return true;
+  },
+);
+
+final CarRequirement noMediumInteriorDamage = CarRequirement(
+  name: "Vehicle has no medium interior damage",
+  check: (Car car) {
+    for (var component in car.componentList) {
+      if (component.damage == ComponentDamage.light &&
+          component.name == "Interior") {
         return false;
       }
     }
