@@ -26,8 +26,8 @@ Body types of car objects
 
 enum CarTag {
   /*
-Tags for car objects.
-Used to specify attributes of the cars.
+  Tags for car objects.
+  Used to specify attributes of the cars.
  */
 
   classic(name: "Classic"),
@@ -50,7 +50,7 @@ Used to specify attributes of the cars.
   rally(name: "Rally"),
   offroad(name: "Off-road"),
   comfortTaxi(name: "Comfort Taxi"),
-  luxurtTaxi(name: "Luxury Taxi"),
+  luxuryTaxi(name: "Luxury Taxi"),
   ;
 
   final String name;
@@ -166,7 +166,7 @@ Used for mission requirements.
   m(name: "M", size: 3),
   l(name: "L", size: 4),
   xl(name: "XL", size: 5),
-  xxl(name: "XL", size: 6);
+  xxl(name: "XXL", size: 6);
 
   final String name;
   final int size;
