@@ -2,6 +2,7 @@ import 'package:autoclub_frontend/code_assets/texts.dart';
 import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:autoclub_frontend/models/location.dart';
 import 'package:autoclub_frontend/components/side_nav.dart';
+import 'package:autoclub_frontend/utilities/job_generation.dart';
 import 'package:autoclub_frontend/utilities/sheets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -75,6 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void updateAllJobs() {
+    jobList[SelectedLocation.downtown] = generateDowntownJobs();
+  }
+
   /*
  This calls getCarList from sheets.dart, which returns a list of CarModels
   */
@@ -130,7 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
             return LocationJobPage(
               name: 'Downtown',
               imagePath: 'images/locations/job-downtown.png',
-              jobs: [], // Pass the list of TempJob here
+              jobs: jobList[
+                  SelectedLocation.downtown]!, // Pass the list of TempJob here
+              userCar: currentCar!,
             );
           },
         );
@@ -168,6 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
               name: 'Hotel',
               imagePath: 'images/locations/job-hotel.png',
               jobs: [], // Pass the list of TempJob here
+              userCar: currentCar!,
             );
           },
         );
@@ -183,6 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
               name: 'Auto Showroom',
               imagePath: 'images/locations/job-showroom.png',
               jobs: [], // Pass the list of TempJob here
+              userCar: currentCar!,
             );
           },
         );
@@ -223,6 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
               name: 'The Wharf',
               imagePath: 'images/locations/job-wharf.png',
               jobs: [], // Pass the list of TempJob here
+              userCar: currentCar!,
             );
           },
         );
@@ -239,6 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
     transformView(viewTransformationController);
     super.initState();
     getGameCarList();
+    updateAllJobs();
   }
 
   @override

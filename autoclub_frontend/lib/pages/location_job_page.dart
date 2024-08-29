@@ -1,16 +1,21 @@
+import 'package:autoclub_frontend/components/job_card.dart';
+import 'package:autoclub_frontend/models/car.dart';
 import 'package:flutter/material.dart';
 import 'package:autoclub_frontend/models/job.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'dart:math';
 
 class LocationJobPage extends StatefulWidget {
   final String name;
   final String imagePath;
   final List<TempJob> jobs;
+  final Car userCar;
 
   LocationJobPage({
     required this.name,
     required this.imagePath,
     required this.jobs,
+    required this.userCar,
   });
 
   @override
@@ -18,6 +23,13 @@ class LocationJobPage extends StatefulWidget {
 }
 
 class _LocationJobPageState extends State<LocationJobPage> {
+  double getRandomSpeed() {
+    final random = Random();
+    final chance = random.nextInt(100); // Generates a number between 0 and 99
+
+    return 1; // Default speed
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -79,17 +91,44 @@ class _LocationJobPageState extends State<LocationJobPage> {
                   bottomRight: Radius.circular(20.0),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 40), // Space for the exit button
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ListView.builder(
+                              itemCount: widget.jobs.length,
+                              itemBuilder: (context, index) {
+                                final job = widget.jobs[index];
+                                final speed = getRandomSpeed();
+                                return JobCard(
+                                  job: job,
+                                  car: widget.userCar,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: IconButton(
+                      icon: Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

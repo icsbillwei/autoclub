@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:autoclub_frontend/models/car.dart';
 import 'package:autoclub_frontend/utilities/job_requirements.dart';
 
 import 'location.dart'; // Assuming location.dart is in the same directory
@@ -43,6 +44,7 @@ class TempJob {
   final String companyLogo;
   final int distance;
   final int extraDistance;
+  final String endLocationName;
 
   TempJob({
     required this.title,
@@ -55,6 +57,7 @@ class TempJob {
     required this.companyLogo,
     this.distance = 0,
     this.extraDistance = 0,
+    this.endLocationName = "",
   });
 
   // Factory constructor for randomizing job from JobType
@@ -71,7 +74,7 @@ class TempJob {
     final reward = (jobType.baseReward * distance * rewardMultiplier).toInt();
 
     return TempJob(
-      title: "${endLocation.name} - ${jobType.name}",
+      title: "${jobType.name} - to ${endLocation.name}",
       description: jobType.defaultDescription,
       requirements: jobType.requirements,
       reward: reward,
@@ -80,6 +83,7 @@ class TempJob {
       company: jobType.company,
       companyLogo: jobType.companyLogo,
       distance: distance,
+      endLocationName: endLocation.name,
     );
   }
 
@@ -118,8 +122,17 @@ class TempJob {
     );
   }
 
-  int getTravelTime(int averageSpeed) {
-    return (distance / averageSpeed).ceil();
+  bool checkAllRequirements(Car car) {
+    for (var requirement in requirements) {
+      if (!requirement.check(car)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  int getTravelTime(double averageSpeed) {
+    return ((distance / averageSpeed) * 60).ceil();
   }
 
   @override
