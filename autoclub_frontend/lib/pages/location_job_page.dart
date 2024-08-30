@@ -10,12 +10,14 @@ class LocationJobPage extends StatefulWidget {
   final String imagePath;
   final List<TempJob> jobs;
   final Car userCar;
+  final Function handleJobAcceptance;
 
   LocationJobPage({
     required this.name,
     required this.imagePath,
     required this.jobs,
     required this.userCar,
+    required this.handleJobAcceptance,
   });
 
   @override
@@ -110,6 +112,8 @@ class _LocationJobPageState extends State<LocationJobPage> {
                                 return JobCard(
                                   job: job,
                                   car: widget.userCar,
+                                  handleJobAcceptance:
+                                      widget.handleJobAcceptance,
                                 );
                               },
                             ),

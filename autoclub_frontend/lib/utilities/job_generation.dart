@@ -4,6 +4,8 @@ import 'package:autoclub_frontend/models/job.dart';
 import 'package:autoclub_frontend/models/location.dart';
 import 'package:autoclub_frontend/utilities/job_requirements.dart';
 
+const double _globalRewardMultiplier = 2.0;
+
 final uberJobs = [
   youberDriver,
   youberXLDriver,
@@ -41,7 +43,7 @@ JobType youberDriver = JobType(
     requirements: [hasCar, noBrokenComponents, smallCargoSpace],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1,
-    baseReward: 1,
+    baseReward: 1 * _globalRewardMultiplier,
     defaultDescription:
         "The most basic youber service that goes from A to B. Show up with a working car and you should be fine.");
 
@@ -52,7 +54,7 @@ JobType youberXLDriver = JobType(
     requirements: [hasCar, noBrokenComponents, largeCargoSpace, fiveSeats],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1,
-    baseReward: 1.4,
+    baseReward: 1.4 * _globalRewardMultiplier,
     defaultDescription:
         "Youber XL is a service for larger groups of people. You need a car with at least 5 seats and a large cargo space.");
 
@@ -71,7 +73,7 @@ JobType privateTaxi = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.2,
-    baseReward: 2.5,
+    baseReward: 2.5 * _globalRewardMultiplier,
     defaultDescription:
         "Private Taxi for people who wants a comfortable ride. You will need a comfortable car in decent condition.");
 
@@ -90,7 +92,7 @@ JobType privateTaxiFamily = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.2,
-    baseReward: 2.8,
+    baseReward: 2.8 * _globalRewardMultiplier,
     defaultDescription:
         "Private Taxi for families who wants a comfortable ride. You will need a comfortable car in decent condition with adequate space.");
 
@@ -106,7 +108,7 @@ JobType courierFurnitureSmall = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.1,
-    baseReward: 1.5,
+    baseReward: 1.5 * _globalRewardMultiplier,
     defaultDescription:
         "Courier service for small number of furniture pieces. You will need a car with at least XL cargo space.");
 
@@ -122,7 +124,7 @@ JobType courierFurnitureLarge = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.1,
-    baseReward: 2,
+    baseReward: 2 * _globalRewardMultiplier,
     defaultDescription:
         "Courier service for moving many furnitures. You will need a car with at least XXL cargo space.");
 
@@ -138,7 +140,7 @@ JobType courierGardenSupplies = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.1,
-    baseReward: 2,
+    baseReward: 2 * _globalRewardMultiplier,
     defaultDescription:
         "Courier service for garden supplies. You will need a car with at least XXL cargo space.");
 
@@ -154,7 +156,7 @@ JobType courierElectronics = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.1,
-    baseReward: 1.5,
+    baseReward: 1.5 * _globalRewardMultiplier,
     defaultDescription:
         "Courier service for computer parts. You will need a car with at least XL cargo space.");
 
@@ -170,7 +172,7 @@ JobType courierTuningParts = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.1,
-    baseReward: 2.2,
+    baseReward: 2.2 * _globalRewardMultiplier,
     defaultDescription:
         "Courier service for car tuning parts. You will need a car with at least XXL cargo space.");
 
@@ -188,7 +190,7 @@ JobType hotelVIPShuttle = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.2,
-    baseReward: 4,
+    baseReward: 4 * _globalRewardMultiplier,
     defaultDescription:
         "Shuttle service for VIP guests. You will need a prestigious and luxurious car in immaculate condition.");
 
@@ -206,7 +208,7 @@ JobType hotelVIPShuttleXL = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.2,
-    baseReward: 4.5,
+    baseReward: 4.5 * _globalRewardMultiplier,
     defaultDescription:
         "Shuttle service for a group of VIP guests. The only possible kind of car for this job is a large and luxurious minivan.");
 

@@ -1,5 +1,6 @@
 import 'package:autoclub_frontend/components/job_req_check.dart';
 import 'package:autoclub_frontend/models/car.dart';
+import 'package:autoclub_frontend/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:autoclub_frontend/models/job.dart';
@@ -7,10 +8,12 @@ import 'package:autoclub_frontend/models/job.dart';
 class JobCard extends StatelessWidget {
   final TempJob job;
   final Car car;
+  final Function handleJobAcceptance;
 
   JobCard({
     required this.job,
     required this.car,
+    required this.handleJobAcceptance,
   });
 
   @override
@@ -119,7 +122,9 @@ class JobCard extends StatelessWidget {
               ),
               requirementsMet
                   ? ElevatedButton(
-                      onPressed: () {}, // Handle job acceptance
+                      onPressed: () {
+                        handleJobAcceptance(job);
+                      }, // Handle job acceptance
                       child: Text(
                         'Take Job',
                         style: TextStyle(color: Colors.white),

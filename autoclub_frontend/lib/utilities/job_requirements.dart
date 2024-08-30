@@ -117,8 +117,7 @@ final CarRequirement noMediumBodyDamage = CarRequirement(
   name: "Vehicle has no Medium or worse body damage",
   check: (Car car) {
     for (var component in car.componentList) {
-      if (component.damage == ComponentDamage.light &&
-          component.name == "Bodywork") {
+      if (component.damage.level >= 2 && component.name == "Bodywork") {
         return false;
       }
     }
@@ -145,8 +144,7 @@ final CarRequirement noMediumInteriorDamage = CarRequirement(
   name: "Vehicle has no medium or worse interior damage",
   check: (Car car) {
     for (var component in car.componentList) {
-      if (component.damage == ComponentDamage.light &&
-          component.name == "Interior") {
+      if (component.damage.level >= 2 && component.name == "Interior") {
         return false;
       }
     }

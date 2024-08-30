@@ -21,16 +21,16 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
   // final GlobalKey<SideNavState> _sideNavKey = GlobalKey<SideNavState>();
 
   // TODO: Add listener to update date time accordingly
   var time = const TimeOfDay(hour: 9, minute: 00);
-  int money = 100000;
+  int money = 10000;
   SelectedLocation location = SelectedLocation.home;
 
   final usedDealerCount = 15; // adjust the number of used cars in the dealer
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
     SelectedLocation.wharf: [],
   };
 
-  void updateTime({int hour = 0, int minute = 0}) {
+  void progressTime({int hour = 0, int minute = 0}) {
     setState(() {
       int totalMinutes = time.minute + minute;
       int newHour = time.hour + hour + totalMinutes ~/ 60;
@@ -89,6 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void updateMoney(int newMoney) {
     money = newMoney;
+    setState(() {});
+  }
+
+  void updateLocation(SelectedLocation newLocation) {
+    location = newLocation;
     setState(() {});
   }
 
@@ -122,6 +127,42 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void handleJobAcceptance(TempJob job) {
+    setState(() {
+      location = job.endLocation;
+    });
+
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Text(
+                'Job in Progress',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionDuration: Duration(seconds: 1),
+    ));
+
+    int travelTimeInMinutes = job.getTravelTime(50);
+    int hours = travelTimeInMinutes ~/ 60;
+    int minutes = travelTimeInMinutes % 60;
+
+    progressTime(hour: hours, minute: minutes);
+
+    money += job.reward;
+    Future.delayed(Duration(seconds: 4), () {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
+  }
+
   /*
     for handling location entries
   */
@@ -138,6 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
               jobs: jobList[
                   SelectedLocation.downtown]!, // Pass the list of TempJob here
               userCar: currentCar!,
+              handleJobAcceptance: handleJobAcceptance,
             );
           },
         );
@@ -176,6 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
               imagePath: 'images/locations/job-hotel.png',
               jobs: [], // Pass the list of TempJob here
               userCar: currentCar!,
+              handleJobAcceptance: handleJobAcceptance,
             );
           },
         );
@@ -192,6 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
               imagePath: 'images/locations/job-showroom.png',
               jobs: [], // Pass the list of TempJob here
               userCar: currentCar!,
+              handleJobAcceptance: handleJobAcceptance,
             );
           },
         );
@@ -233,6 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
               imagePath: 'images/locations/job-wharf.png',
               jobs: [], // Pass the list of TempJob here
               userCar: currentCar!,
+              handleJobAcceptance: handleJobAcceptance,
             );
           },
         );
@@ -434,7 +479,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           money -= 500;
                           location = toggle;
-                          updateTime(
+                          progressTime(
                               hour: travelTime['hours']!,
                               minute: travelTime['minutes']!);
                         });
@@ -504,7 +549,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   setState(() {
                     location = toggle;
-                    updateTime(
+                    progressTime(
                         hour: travelTime['hours']!,
                         minute: travelTime['minutes']!);
                   });
