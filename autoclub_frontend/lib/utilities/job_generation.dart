@@ -69,7 +69,7 @@ JobType privateTaxi = JobType(
       medCargoSpace,
       fourSeats,
       isComfortTaxi,
-      noMediumBodyDamage
+      noMediumInteriorDamage
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.2,
@@ -208,7 +208,7 @@ JobType hotelVIPShuttleXL = JobType(
     ],
     rewardMultiplierRangeStart: 1,
     rewardMultiplierRangeEnd: 1.2,
-    baseReward: 4.5 * _globalRewardMultiplier,
+    baseReward: 5 * _globalRewardMultiplier,
     defaultDescription:
         "Shuttle service for a group of VIP guests. The only possible kind of car for this job is a large and luxurious minivan.");
 
@@ -220,7 +220,7 @@ List<TempJob> generateDowntownJobs() {
 
   // Ensure at least 2 regular uberJobs
   for (int i = 0; i < 2; i++) {
-    final jobType = uberJobs[random.nextInt(uberJobs.length)];
+    final jobType = uberJobs[0];
     jobs.add(TempJob.randomizeJobFromType(
       jobType: jobType,
       startLocation: SelectedLocation.downtown,
@@ -272,6 +272,130 @@ List<TempJob> generateDowntownJobs() {
       possibleEndLocations: SelectedLocation.values
           .where((loc) =>
               loc != SelectedLocation.downtown &&
+              loc != SelectedLocation.undefined &&
+              loc != SelectedLocation.home)
+          .toList(),
+    ));
+  }
+
+  return jobs;
+}
+
+List<TempJob> generateHotelJobs() {
+  final random = Random();
+  List<TempJob> jobs = [];
+
+  // Add 1 guaranteed standard youber job
+  jobs.add(TempJob.randomizeJobFromType(
+    jobType: youberDriver,
+    startLocation: SelectedLocation.hotel,
+    possibleEndLocations: SelectedLocation.values
+        .where((loc) =>
+            loc != SelectedLocation.hotel &&
+            loc != SelectedLocation.undefined &&
+            loc != SelectedLocation.home)
+        .toList(),
+  ));
+
+  // Add 2 random jobs from the youber list
+  for (int i = 0; i < 2; i++) {
+    final jobType = uberJobs[random.nextInt(uberJobs.length)];
+    jobs.add(TempJob.randomizeJobFromType(
+      jobType: jobType,
+      startLocation: SelectedLocation.hotel,
+      possibleEndLocations: SelectedLocation.values
+          .where((loc) =>
+              loc != SelectedLocation.hotel &&
+              loc != SelectedLocation.undefined &&
+              loc != SelectedLocation.home)
+          .toList(),
+    ));
+  }
+
+  // Add 3 random jobs from the taxiJobs list
+  for (int i = 0; i < 3; i++) {
+    final jobType = taxiJobs[random.nextInt(taxiJobs.length)];
+    jobs.add(TempJob.randomizeJobFromType(
+      jobType: jobType,
+      startLocation: SelectedLocation.hotel,
+      possibleEndLocations: SelectedLocation.values
+          .where((loc) =>
+              loc != SelectedLocation.hotel &&
+              loc != SelectedLocation.undefined &&
+              loc != SelectedLocation.home)
+          .toList(),
+    ));
+  }
+
+  // Add 4 random jobs from the hotelJobs list
+  for (int i = 0; i < 4; i++) {
+    final jobType = hotelJobs[random.nextInt(hotelJobs.length)];
+    jobs.add(TempJob.randomizeJobFromType(
+      jobType: jobType,
+      startLocation: SelectedLocation.hotel,
+      possibleEndLocations: SelectedLocation.values
+          .where((loc) =>
+              loc != SelectedLocation.hotel &&
+              loc != SelectedLocation.undefined &&
+              loc != SelectedLocation.home)
+          .toList(),
+    ));
+  }
+
+  return jobs;
+}
+
+List<TempJob> generateWharfJobs() {
+  final random = Random();
+  List<TempJob> jobs = [];
+
+  // Add 1 guaranteed standard youber job
+  jobs.add(TempJob.randomizeJobFromType(
+    jobType: youberDriver,
+    startLocation: SelectedLocation.wharf,
+    possibleEndLocations: SelectedLocation.values
+        .where((loc) =>
+            loc != SelectedLocation.wharf &&
+            loc != SelectedLocation.undefined &&
+            loc != SelectedLocation.home)
+        .toList(),
+  ));
+
+  // Add 1 random job from the youber list
+  final youberJobType = uberJobs[random.nextInt(uberJobs.length)];
+  jobs.add(TempJob.randomizeJobFromType(
+    jobType: youberJobType,
+    startLocation: SelectedLocation.wharf,
+    possibleEndLocations: SelectedLocation.values
+        .where((loc) =>
+            loc != SelectedLocation.wharf &&
+            loc != SelectedLocation.undefined &&
+            loc != SelectedLocation.home)
+        .toList(),
+  ));
+
+  // Add 1 random job from the taxiJobs list
+  final taxiJobType = taxiJobs[random.nextInt(taxiJobs.length)];
+  jobs.add(TempJob.randomizeJobFromType(
+    jobType: taxiJobType,
+    startLocation: SelectedLocation.wharf,
+    possibleEndLocations: SelectedLocation.values
+        .where((loc) =>
+            loc != SelectedLocation.wharf &&
+            loc != SelectedLocation.undefined &&
+            loc != SelectedLocation.home)
+        .toList(),
+  ));
+
+  // Add 6 random jobs from the courierJobs list
+  for (int i = 0; i < 6; i++) {
+    final courierJobType = courierJobs[random.nextInt(courierJobs.length)];
+    jobs.add(TempJob.randomizeJobFromType(
+      jobType: courierJobType,
+      startLocation: SelectedLocation.wharf,
+      possibleEndLocations: SelectedLocation.values
+          .where((loc) =>
+              loc != SelectedLocation.wharf &&
               loc != SelectedLocation.undefined &&
               loc != SelectedLocation.home)
           .toList(),

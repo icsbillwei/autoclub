@@ -11,6 +11,7 @@ class SideNav extends StatelessWidget {
   final SelectedLocation location;
   final int money;
   final Weather weather;
+  final int currentDay;
 
   // colors
   final theme = "light"; // light or dark
@@ -21,11 +22,23 @@ class SideNav extends StatelessWidget {
     required this.location,
     required this.money,
     this.weather = Weather.sunny,
+    required this.currentDay,
   });
 
-  int daytimeLeft() {
-    // determine logic here (placeholder now)
-    return 11;
+  String daytimeLeft() {
+    final endOfDay = TimeOfDay(hour: 21, minute: 0);
+    final nowInMinutes = time.hour * 60 + time.minute;
+    final endOfDayInMinutes = endOfDay.hour * 60 + endOfDay.minute;
+    final remainingMinutes = endOfDayInMinutes - nowInMinutes;
+
+    if (remainingMinutes <= 0) {
+      return "00:00";
+    }
+
+    final hoursLeft = remainingMinutes ~/ 60;
+    final minutesLeft = remainingMinutes % 60;
+
+    return "${hoursLeft.toString().padLeft(2, '0')}:${minutesLeft.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -76,12 +89,18 @@ class SideNav extends StatelessWidget {
               height: 15,
             ),
 
-            // SECTION: : time left in the day
-            // note: & time left in the night as well?
-            Text("${daytimeLeft()} hours",
+            // SECTION: Time left in the day
+            Text(daytimeLeft(),
                 style: Theme.of(context).textTheme.headlineSmall),
-            // Note: need `inherit: false` to get rid of default styling for some reason
             Text("of daytime left",
+                style: Theme.of(context).textTheme.displaySmall),
+
+            const SizedBox(height: 15),
+
+            // SECTION: Current Day
+            Text("Day $currentDay",
+                style: Theme.of(context).textTheme.headlineSmall),
+            Text("current day",
                 style: Theme.of(context).textTheme.displaySmall),
 
             const SizedBox(height: 50),

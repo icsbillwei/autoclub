@@ -132,7 +132,7 @@ class TempJob {
   }
 
   int getTravelTime(double averageSpeed) {
-    const double timeMultiplier = 1.8;
+    const double timeMultiplier = 2;
     return ((distance / averageSpeed) * 60 * timeMultiplier).ceil();
   }
 

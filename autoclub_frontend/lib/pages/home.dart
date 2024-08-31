@@ -28,12 +28,15 @@ class MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
   // final GlobalKey<SideNavState> _sideNavKey = GlobalKey<SideNavState>();
 
-  // TODO: Add listener to update date time accordingly
+  /*
+  ---------- Game information -------------
+  */
   var time = const TimeOfDay(hour: 9, minute: 00);
+  int currentDay = 1;
   int money = 10000;
   SelectedLocation location = SelectedLocation.home;
 
-  final usedDealerCount = 15; // adjust the number of used cars in the dealer
+  final usedDealerCount = 21; // adjust the number of used cars in the dealer
 
   // Is there a better way to set theme
   final theme = "light";
@@ -65,19 +68,64 @@ class MyHomePageState extends State<MyHomePage> {
       int totalMinutes = time.minute + minute;
       int newHour = time.hour + hour + totalMinutes ~/ 60;
       int newMinute = totalMinutes % 60;
-      bool dayPassed = newHour >= 24;
-      newHour = newHour % 24; // Ensure the hour is within 0-23 range
+      bool dayPassed = newHour >= 21;
 
       if (dayPassed) {
-        // onDayPassed(); // Placeholder function to call when a day passes
+        progressDay();
+      } else {
+        newHour = newHour % 24; // Ensure the hour is within 0-23 range
+        time = TimeOfDay(hour: newHour, minute: newMinute);
       }
+    });
+  }
 
-      time = TimeOfDay(hour: newHour, minute: newMinute);
+  void progressDay({bool extraPop = false}) {
+    if (extraPop) {
+      Navigator.of(context).pop();
+    }
+
+    setState(() {
+      currentDay += 1;
+      time = const TimeOfDay(hour: 9, minute: 0);
+      location = SelectedLocation.home; // Reset location to home
+    });
+
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(
+                Icons.bedtime_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: Text(
+                  'Next Day...',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
+              ),
+            ]),
+          ),
+        );
+      },
+      transitionDuration: Duration(seconds: 1),
+    ));
+
+    Future.delayed(Duration(seconds: 4), () {
+      Navigator.of(context).pop();
     });
   }
 
   void updateAllJobs() {
     jobList[SelectedLocation.downtown] = generateDowntownJobs();
+    jobList[SelectedLocation.hotel] = generateHotelJobs();
+    jobList[SelectedLocation.wharf] = generateWharfJobs();
   }
 
   /*
@@ -132,6 +180,8 @@ class MyHomePageState extends State<MyHomePage> {
       location = job.endLocation;
     });
 
+    Navigator.of(context).pop();
+
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
         return FadeTransition(
@@ -154,13 +204,15 @@ class MyHomePageState extends State<MyHomePage> {
     int hours = travelTimeInMinutes ~/ 60;
     int minutes = travelTimeInMinutes % 60;
 
-    progressTime(hour: hours, minute: minutes);
+    // refresh jobs
+    updateAllJobs();
 
     money += job.reward;
-    Future.delayed(Duration(seconds: 4), () {
-      Navigator.of(context).pop();
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
+
+    progressTime(hour: hours, minute: minutes);
   }
 
   /*
@@ -216,7 +268,8 @@ class MyHomePageState extends State<MyHomePage> {
             return LocationJobPage(
               name: 'Hotel',
               imagePath: 'images/locations/job-hotel.png',
-              jobs: [], // Pass the list of TempJob here
+              jobs: jobList[
+                  SelectedLocation.hotel]!, // Pass the list of TempJob here
               userCar: currentCar!,
               handleJobAcceptance: handleJobAcceptance,
             );
@@ -275,7 +328,8 @@ class MyHomePageState extends State<MyHomePage> {
             return LocationJobPage(
               name: 'The Wharf',
               imagePath: 'images/locations/job-wharf.png',
-              jobs: [], // Pass the list of TempJob here
+              jobs: jobList[
+                  SelectedLocation.wharf]!, // Pass the list of TempJob here
               userCar: currentCar!,
               handleJobAcceptance: handleJobAcceptance,
             );
@@ -334,7 +388,11 @@ class MyHomePageState extends State<MyHomePage> {
       Align(
           alignment: Alignment.centerLeft,
           child: screenWidth > 700 && screenHeight > 600
-              ? SideNav(time: time, location: location, money: money)
+              ? SideNav(
+                  time: time,
+                  location: location,
+                  money: money,
+                  currentDay: currentDay)
               : null),
 
       // Location Entry Prompt
@@ -547,13 +605,23 @@ class MyHomePageState extends State<MyHomePage> {
                 child: Text('Confirm',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 onPressed: () {
+                  // Travel to the location
                   setState(() {
                     location = toggle;
-                    progressTime(
-                        hour: travelTime['hours']!,
-                        minute: travelTime['minutes']!);
+                    int totalMinutes = time.minute + travelTime['minutes']!;
+                    int newHour =
+                        time.hour + travelTime['hours']! + totalMinutes ~/ 60;
+                    int newMinute = totalMinutes % 60;
+
+                    if (newHour >= 21) {
+                      progressDay(extraPop: true);
+                    } else {
+                      newHour =
+                          newHour % 24; // Ensure the hour is within 0-23 range
+                      time = TimeOfDay(hour: newHour, minute: newMinute);
+                      Navigator.of(context).pop();
+                    }
                   });
-                  Navigator.of(context).pop();
                 },
               ),
             ],
