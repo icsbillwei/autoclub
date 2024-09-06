@@ -221,6 +221,24 @@ class Component {
         ratio = component.ratio,
         description = component.description;
 
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'damage': damage.name,
+      'ratio': ratio,
+      'description': description,
+    };
+  }
+
+  factory Component.fromMap(Map<String, dynamic> map) {
+    return Component(
+      name: map['name'],
+      damage: ComponentDamage.values.firstWhere((e) => e.name == map['damage']),
+      ratio: map['ratio'],
+      description: map['description'],
+    );
+  }
+
   @override
   String toString() => "$name (Damage: ${damage.toString()}, Ratio: $ratio)";
 }

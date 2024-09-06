@@ -4,6 +4,7 @@ import 'package:autoclub_frontend/models/location.dart';
 import 'package:autoclub_frontend/components/side_nav.dart';
 import 'package:autoclub_frontend/utilities/job_generation.dart';
 import 'package:autoclub_frontend/utilities/sheets.dart';
+import 'package:autoclub_frontend/utilities/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simple_shadow/simple_shadow.dart';
@@ -28,12 +29,30 @@ class MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
   // final GlobalKey<SideNavState> _sideNavKey = GlobalKey<SideNavState>();
 
+  UserData userData = UserData(
+    time: const TimeOfDay(hour: 9, minute: 00),
+    currentDay: 1,
+    money: 10000,
+    currentCar: null,
+    userCarList: [],
+    currUserCarId: 0,
+    usedListings: [],
+  );
+
   /*
-  ---------- Game information -------------
+  ---------- Temp Game information -------------
   */
-  var time = const TimeOfDay(hour: 9, minute: 00);
-  int currentDay = 1;
-  int money = 10000;
+  // var time = const TimeOfDay(hour: 9, minute: 00);
+  // int currentDay = 1;
+  // int money = 10000;
+
+  // Car? currentCar;
+  // List<Car> userCarList = [];
+  // // Number to track the id of the user's car
+  // int currUserCarId = 0;
+
+  // End of temp game information ----------------
+
   SelectedLocation location = SelectedLocation.home;
 
   final usedDealerCount = 21; // adjust the number of used cars in the dealer
@@ -47,10 +66,6 @@ class MyHomePageState extends State<MyHomePage> {
   /*
   ---------- Temp user data -------------
    */
-  Car? currentCar;
-  List<Car> userCarList = [];
-  // Number to track the id of the user's car
-  int currUserCarId = 0;
 
   /*
   Job data
@@ -65,8 +80,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   void progressTime({int hour = 0, int minute = 0}) {
     setState(() {
-      int totalMinutes = time.minute + minute;
-      int newHour = time.hour + hour + totalMinutes ~/ 60;
+      int totalMinutes = userData.time.minute + minute;
+      int newHour = userData.time.hour + hour + totalMinutes ~/ 60;
       int newMinute = totalMinutes % 60;
       bool dayPassed = newHour >= 21;
 
@@ -74,7 +89,7 @@ class MyHomePageState extends State<MyHomePage> {
         progressDay();
       } else {
         newHour = newHour % 24; // Ensure the hour is within 0-23 range
-        time = TimeOfDay(hour: newHour, minute: newMinute);
+        userData.time = TimeOfDay(hour: newHour, minute: newMinute);
       }
     });
   }
@@ -85,8 +100,8 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     setState(() {
-      currentDay += 1;
-      time = const TimeOfDay(hour: 9, minute: 0);
+      userData.currentDay += 1;
+      userData.time = const TimeOfDay(hour: 9, minute: 0);
       location = SelectedLocation.home; // Reset location to home
     });
 
@@ -136,7 +151,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   void updateMoney(int newMoney) {
-    money = newMoney;
+    userData.money = newMoney;
     setState(() {});
   }
 
@@ -146,28 +161,28 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   void addUserCar(Car newCar, int price) {
-    newCar.userCarID = currUserCarId;
-    currUserCarId++;
-    userCarList.add(newCar);
-    money -= price;
+    newCar.userCarID = userData.currUserCarId;
+    userData.currUserCarId++;
+    userData.userCarList.add(newCar);
+    userData.money -= price;
     setState(() {});
     print("User car added");
-    print("${userCarList.length} cars in userCarList");
+    print("${userData.userCarList.length} cars in userCarList");
     print("User car ID: ${newCar.userCarID}");
-    print(userCarList[0].userCarID);
+    print(userData.userCarList[0].userCarID);
   }
 
   void updateCurrentCar(Car newCar) {
-    currentCar = newCar;
+    userData.currentCar = newCar;
     setState(() {});
   }
 
   void replaceUserCar(Car newCar) {
-    int index =
-        userCarList.indexWhere((car) => car.userCarID == newCar.userCarID);
+    int index = userData.userCarList
+        .indexWhere((car) => car.userCarID == newCar.userCarID);
     if (index != -1) {
       setState(() {
-        userCarList[index] = newCar;
+        userData.userCarList[index] = newCar;
       });
       print("Car replaced in gameCarList");
     } else {
@@ -190,7 +205,7 @@ class MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.black,
             body: Center(
               child: Text(
-                'Job in Progress',
+                'Job to ${job.endLocationName} in Progress',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
@@ -207,7 +222,7 @@ class MyHomePageState extends State<MyHomePage> {
     // refresh jobs
     updateAllJobs();
 
-    money += job.reward;
+    userData.money += job.reward;
     Future.delayed(Duration(seconds: 2), () {
       Navigator.of(context).pop();
     });
@@ -230,7 +245,7 @@ class MyHomePageState extends State<MyHomePage> {
               imagePath: 'images/locations/job-downtown.png',
               jobs: jobList[
                   SelectedLocation.downtown]!, // Pass the list of TempJob here
-              userCar: currentCar!,
+              userCar: userData.currentCar!,
               handleJobAcceptance: handleJobAcceptance,
             );
           },
@@ -243,8 +258,8 @@ class MyHomePageState extends State<MyHomePage> {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => GaragePage(
-              userCarList: userCarList,
-              money: money,
+              userCarList: userData.userCarList,
+              money: userData.money,
               updateCurrentCar: updateCurrentCar,
             ),
             transitionsBuilder:
@@ -270,7 +285,7 @@ class MyHomePageState extends State<MyHomePage> {
               imagePath: 'images/locations/job-hotel.png',
               jobs: jobList[
                   SelectedLocation.hotel]!, // Pass the list of TempJob here
-              userCar: currentCar!,
+              userCar: userData.currentCar!,
               handleJobAcceptance: handleJobAcceptance,
             );
           },
@@ -287,7 +302,7 @@ class MyHomePageState extends State<MyHomePage> {
               name: 'Auto Showroom',
               imagePath: 'images/locations/job-showroom.png',
               jobs: [], // Pass the list of TempJob here
-              userCar: currentCar!,
+              userCar: userData.currentCar!,
               handleJobAcceptance: handleJobAcceptance,
             );
           },
@@ -301,8 +316,8 @@ class MyHomePageState extends State<MyHomePage> {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ATAutoPage(
-              currentCar: currentCar,
-              money: money,
+              currentCar: userData.currentCar,
+              money: userData.money,
               updateMoney: updateMoney,
               updateUserCar: replaceUserCar,
               updateCurrentCar: updateCurrentCar,
@@ -330,7 +345,7 @@ class MyHomePageState extends State<MyHomePage> {
               imagePath: 'images/locations/job-wharf.png',
               jobs: jobList[
                   SelectedLocation.wharf]!, // Pass the list of TempJob here
-              userCar: currentCar!,
+              userCar: userData.currentCar!,
               handleJobAcceptance: handleJobAcceptance,
             );
           },
@@ -389,10 +404,10 @@ class MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.centerLeft,
           child: screenWidth > 700 && screenHeight > 600
               ? SideNav(
-                  time: time,
+                  time: userData.time,
                   location: location,
-                  money: money,
-                  currentDay: currentDay)
+                  money: userData.money,
+                  currentDay: userData.currentDay)
               : null),
 
       // Location Entry Prompt
@@ -408,7 +423,7 @@ class MyHomePageState extends State<MyHomePage> {
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: CarDisplay(
-            currentCar: currentCar,
+            currentCar: userData.currentCar,
           ),
         ),
       ),
@@ -434,7 +449,7 @@ class MyHomePageState extends State<MyHomePage> {
                           gameCarList: gameCarList,
                           usedListings: usedListings,
                           addUserCar: addUserCar,
-                          money: money,
+                          money: userData.money,
                         );
                       } else {
                         print("!!!!");
@@ -462,6 +477,10 @@ class MyHomePageState extends State<MyHomePage> {
 
   Widget mapItem(double posX, double posY, String img, SelectedLocation toggle,
       SelectedLocation current) {
+    /*
+    Map item widget
+    */
+
     bool thisToggled = location == toggle;
 
     void showTravelDialog(BuildContext context) {
@@ -472,7 +491,7 @@ class MyHomePageState extends State<MyHomePage> {
       final travelTime = getTravelTime(current, toggle);
 
       // Check if the user has a car
-      if (currentCar == null) {
+      if (userData.currentCar == null) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -502,7 +521,7 @@ class MyHomePageState extends State<MyHomePage> {
       }
 
       // Check if the car has broken components
-      bool hasBrokenComponents = currentCar!.hasBrokenComponents();
+      bool hasBrokenComponents = userData.currentCar!.hasBrokenComponents();
 
       if (hasBrokenComponents) {
         showDialog(
@@ -533,9 +552,9 @@ class MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     onPressed: () {
-                      if (money >= 500) {
+                      if (userData.money >= 500) {
                         setState(() {
-                          money -= 500;
+                          userData.money -= 500;
                           location = toggle;
                           progressTime(
                               hour: travelTime['hours']!,
@@ -608,9 +627,11 @@ class MyHomePageState extends State<MyHomePage> {
                   // Travel to the location
                   setState(() {
                     location = toggle;
-                    int totalMinutes = time.minute + travelTime['minutes']!;
-                    int newHour =
-                        time.hour + travelTime['hours']! + totalMinutes ~/ 60;
+                    int totalMinutes =
+                        userData.time.minute + travelTime['minutes']!;
+                    int newHour = userData.time.hour +
+                        travelTime['hours']! +
+                        totalMinutes ~/ 60;
                     int newMinute = totalMinutes % 60;
 
                     if (newHour >= 21) {
@@ -618,7 +639,8 @@ class MyHomePageState extends State<MyHomePage> {
                     } else {
                       newHour =
                           newHour % 24; // Ensure the hour is within 0-23 range
-                      time = TimeOfDay(hour: newHour, minute: newMinute);
+                      userData.time =
+                          TimeOfDay(hour: newHour, minute: newMinute);
                       Navigator.of(context).pop();
                     }
                   });

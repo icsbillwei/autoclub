@@ -470,6 +470,112 @@ class Car extends CarModel {
     print(toString());
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'brandName': brandName,
+      'year': year,
+      'newPrice': newPrice,
+      'type': type.name,
+      'tags': tags.map((tag) => tag.name).toList(),
+      'country': country.name,
+      'drivetrainType': drivetrainType.acronym,
+      'engineType': engineType.name,
+      'displacement': displacement,
+      'aspirationType': aspirationType.name,
+      'space': space.name,
+      'power': power,
+      'weight': weight,
+      'seatCount': seatCount,
+      'accel': accel,
+      'qmile': qmile,
+      'vmax': vmax,
+      'handling0': handling0,
+      'handling1': handling1,
+      'braking': braking,
+      'depCurve': depCurve,
+      'maxMileage': maxMileage,
+      'minMileage': minMileage,
+      'performancePoint': performancePoint,
+      'imgLinks': imgLinks,
+      'designer': designer,
+      'currPrice': currPrice,
+      'mileage': mileage,
+      'qualityStar': qualityStar,
+      'currAccel': currAccel,
+      'currQmile': currQmile,
+      'currVmax': currVmax,
+      'currHandling0': currHandling0,
+      'currHandling1': currHandling1,
+      'currBraking': currBraking,
+      'currLaunchStat': currLaunchStat,
+      'currAccelStat': currAccelStat,
+      'currSpeedStat': currSpeedStat,
+      'currHandlingStat': currHandlingStat,
+      'currBrakingStat': currBrakingStat,
+      'currPerformancePoint': currPerformancePoint,
+      'userCarID': userCarID,
+      'components':
+          componentList.map((component) => component.toMap()).toList(),
+    };
+  }
+
+  factory Car.fromMap(Map<String, dynamic> map) {
+    return Car(
+      id: map['id'],
+      name: map['name'],
+      brandName: map['brandName'],
+      year: map['year'],
+      newPrice: map['newPrice'],
+      type: CarType.values.firstWhere((e) => e.name == map['type']),
+      tags: List<CarTag>.from(map['tags']
+          .map((tag) => CarTag.values.firstWhere((e) => e.name == tag))),
+      country: Country.values.firstWhere((e) => e.name == map['country']),
+      drivetrainType: DrivetrainType.values
+          .firstWhere((e) => e.acronym == map['drivetrainType']),
+      engineType:
+          EngineType.values.firstWhere((e) => e.name == map['engineType']),
+      displacement: map['displacement'],
+      aspirationType: EngineAspiration.values
+          .firstWhere((e) => e.name == map['aspirationType']),
+      space: CargoSpace.values.firstWhere((e) => e.name == map['space']),
+      power: map['power'],
+      weight: map['weight'],
+      seatCount: map['seatCount'],
+      accel: map['accel'],
+      qmile: map['qmile'],
+      vmax: map['vmax'],
+      handling0: map['handling0'],
+      handling1: map['handling1'],
+      braking: map['braking'],
+      depCurve: map['depCurve'],
+      maxMileage: map['maxMileage'],
+      minMileage: map['minMileage'],
+      performancePoint: map['performancePoint'],
+      imgLinks: map['imgLinks'],
+      designer: map['designer'],
+      currPrice: map['currPrice'],
+      mileage: map['mileage'],
+      qualityStar: map['qualityStar'],
+    )
+      ..currAccel = map['currAccel']
+      ..currQmile = map['currQmile']
+      ..currVmax = map['currVmax']
+      ..currHandling0 = map['currHandling0']
+      ..currHandling1 = map['currHandling1']
+      ..currBraking = map['currBraking']
+      ..currLaunchStat = map['currLaunchStat']
+      ..currAccelStat = map['currAccelStat']
+      ..currSpeedStat = map['currSpeedStat']
+      ..currHandlingStat = map['currHandlingStat']
+      ..currBrakingStat = map['currBrakingStat']
+      ..currPerformancePoint = map['currPerformancePoint']
+      ..userCarID = map['userCarID']
+      ..componentList = List<Component>.from(
+          map['components'].map((component) => Component.fromMap(component)));
+  }
+
   void initRandomUsed() {
     final random = Random();
     // generates a mileage count based on given min and max values for specific car
