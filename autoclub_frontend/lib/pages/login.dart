@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'package:autoclub_frontend/pages/home.dart';
 import 'package:autoclub_frontend/utilities/sheets.dart';
 import 'package:autoclub_frontend/utilities/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:autoclub_frontend/models/car.dart';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,19 +22,36 @@ class _LoginPageState extends State<LoginPage>
   List<CarModel> _carList = [];
   List<CarModel> shuffledCarList = [];
   bool _isLoading = true;
-  PageController _pageController = PageController();
-  bool _isPasswordVisible = false; // Add this line
-  bool _isSignupPasswordVisible = false; // Add this line for signup
-  final _supabaseClient = Supabase.instance.client;
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _signupUsernameController = TextEditingController();
-  final _signupEmailController = TextEditingController();
-  final _signupPasswordController = TextEditingController();
+
+  int currPage = 0;
+
+  String _userId = '';
+
+  final supabase = Supabase.instance.client;
 
   @override
   void initState() {
     super.initState();
+    supabase.auth.onAuthStateChange.listen((data) async {
+      print("Auth state changed");
+      final session = data.session;
+      final user = session?.user;
+
+      if (user != null) {
+        setState(() {
+          _userId = user.id;
+        });
+
+        // Check if the user already has a username set
+        await _checkUserProfile();
+      } else {
+        // Handle the case where the user is not authenticated
+        print("null user");
+        // _showDialog('Error', 'User is not authenticated.');
+      }
+    });
+
     _fetchCarList();
     updateKeepAlive(); // Ensure the state is kept alive
   }
@@ -50,6 +69,105 @@ class _LoginPageState extends State<LoginPage>
     });
   }
 
+  Future<void> _checkUserProfile() async {
+    print("check user profile");
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select(
+              'username, time, currentDay, money, currentCar, userCarList, currUserCarId')
+          .eq('id', _userId)
+          .single();
+
+      if (response.isEmpty) {
+        print("1");
+        setState(() {
+          currPage = 1;
+        });
+      } else if (response['username'] == null) {
+        print("2");
+        setState(() {
+          currPage = 1;
+        });
+      } else {
+        print("3");
+        // User exists, create UserData from the response
+        UserData existingUserData;
+        try {
+          existingUserData = UserData.fromMap(response);
+        } catch (e) {
+          print("User data not yet created");
+          existingUserData = UserData(
+            username: response['username'],
+            time: const TimeOfDay(hour: 9, minute: 00),
+            currentDay: 1,
+            money: 10000,
+            currentCar: null,
+            userCarList: [],
+            currUserCarId: 0,
+          );
+        }
+
+        // Navigate to the main app page or dashboard with the existing UserData object
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(
+              userData: existingUserData,
+              supabase: supabase,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      _showDialog('Error', 'Failed to fetch user profile1: $e');
+    }
+  }
+
+  Future<void> _usernameInitialize() async {
+    print("User Initialize");
+    final username = _signupUsernameController.text.trim();
+
+    if (username.isEmpty) {
+      _showDialog('Error', 'Username cannot be empty!');
+      return;
+    }
+
+    try {
+      try {
+        await supabase.from('profiles').upsert({
+          'id': _userId,
+          'username': username,
+        });
+      } on PostgrestException catch (e) {
+        e.code;
+      }
+
+      UserData newUserData = UserData(
+        username: username,
+        time: const TimeOfDay(hour: 9, minute: 00),
+        currentDay: 1,
+        money: 10000,
+        currentCar: null,
+        userCarList: [],
+        currUserCarId: 0,
+      );
+
+      // Navigate to the main app page or dashboard
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(
+            userData: newUserData,
+            supabase: supabase,
+          ),
+        ),
+      );
+    } catch (e) {
+      _showDialog('Error', 'Failed to set username1: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,13 +176,9 @@ class _LoginPageState extends State<LoginPage>
           : Stack(
               children: [
                 _buildBackgroundGrid(),
-                PageView(
-                  controller: _pageController,
-                  children: [
-                    _buildLoginContainer(),
-                    _buildSignupContainer(),
-                  ],
-                ),
+                currPage == 0
+                    ? _buildGoogleSignInContainer()
+                    : _usernameCreationContainer(),
               ],
             ),
     );
@@ -93,6 +207,10 @@ class _LoginPageState extends State<LoginPage>
                 imageUrl: car.imgLinks, // Use lower resolution URL if available
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Icon(Icons.error),
+                placeholder: (context, url) => Container(
+                  color: const Color.fromARGB(
+                      255, 209, 231, 248), // Light grey placeholder
+                ),
               );
             },
             shrinkWrap: true, // Ensure the grid takes only the necessary space
@@ -110,7 +228,8 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildLoginContainer() {
+  Widget _buildGoogleSignInContainer() {
+    print("Google Sign In Container");
     final screenWidth = MediaQuery.of(context).size.width;
     final containerWidth =
         screenWidth < 1000 ? screenWidth * 0.9 : screenWidth * 0.6;
@@ -152,83 +271,29 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
               SizedBox(height: 50),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: TextStyle(color: Colors.black),
-                controller: _usernameController,
-              ),
-              SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-                obscureText: !_isPasswordVisible,
-                style: TextStyle(color: Colors.black),
-                controller: _passwordController,
-              ),
-              SizedBox(height: 50),
               ElevatedButton(
-                onPressed: () {
-                  // Implement login functionality here
+                onPressed: () async {
+                  // Google Sign-In functionality
+                  await supabase.auth.signInWithOAuth(OAuthProvider.google);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text('Login',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600)),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.login, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text('Sign in with Google',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600)),
+                      ]),
                 ),
-              ),
-              SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  _pageController.animateToPage(1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut);
-                },
-                child: Text('Don\'t have an account? Sign up'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue, // Background color
+                ),
               ),
             ],
           ),
@@ -237,7 +302,8 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildSignupContainer() {
+  Widget _usernameCreationContainer() {
+    print("Username Creation Container");
     final screenWidth = MediaQuery.of(context).size.width;
     final containerWidth =
         screenWidth < 1000 ? screenWidth * 0.9 : screenWidth * 0.6;
@@ -248,7 +314,7 @@ class _LoginPageState extends State<LoginPage>
         sigma: 10,
         child: Container(
           width: containerWidth,
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.6,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.90), // Semi-transparent white
             borderRadius: BorderRadius.circular(20), // Rounded corners
@@ -258,7 +324,7 @@ class _LoginPageState extends State<LoginPage>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Sign Up',
+                'Set Your Username',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -286,89 +352,41 @@ class _LoginPageState extends State<LoginPage>
                 controller: _signupUsernameController,
               ),
               SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Email for verification code',
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                ),
-                style: TextStyle(color: Colors.black),
-                controller: _signupEmailController,
-              ),
-              SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isSignupPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isSignupPasswordVisible = !_isSignupPasswordVisible;
-                      });
-                    },
-                  ),
-                ),
-                obscureText: !_isSignupPasswordVisible,
-                style: TextStyle(color: Colors.black),
-                controller: _signupPasswordController,
-              ),
-              SizedBox(height: 50),
               ElevatedButton(
-                onPressed: () {
-                  // Implement signup functionality here
-                },
+                onPressed: _usernameInitialize,
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text('Sign Up',
+                  child: Text('Save and Enter Game',
                       style: TextStyle(
                           color: Colors.blue,
                           fontSize: 16,
                           fontWeight: FontWeight.w600)),
                 ),
               ),
-              SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  _pageController.animateToPage(0,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut);
-                },
-                child: Text(
-                  'Already have an account? Login',
-                ),
-              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(
+          message,
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
       ),
     );
   }

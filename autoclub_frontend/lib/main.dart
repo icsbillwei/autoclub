@@ -4,14 +4,16 @@ import 'package:autoclub_frontend/pages/login.dart';
 import 'package:autoclub_frontend/utilities/sheets_api_secret.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
+  usePathUrlStrategy();
+
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: supabaseURL,
     anonKey: supabaseKey,
   );
-
   runApp(const MyApp());
 }
 

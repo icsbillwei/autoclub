@@ -467,7 +467,7 @@ class Car extends CarModel {
         ) {
     componentList = List.from(car.componentList);
     // print("cloned car: $name");
-    print(toString());
+    // print(toString());
   }
 
   Map<String, dynamic> toMap() {

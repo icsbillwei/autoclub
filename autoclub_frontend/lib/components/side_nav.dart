@@ -12,6 +12,8 @@ class SideNav extends StatelessWidget {
   final int money;
   final Weather weather;
   final int currentDay;
+  final String username;
+  final Function logout;
 
   // colors
   final theme = "light"; // light or dark
@@ -23,6 +25,8 @@ class SideNav extends StatelessWidget {
     required this.money,
     this.weather = Weather.sunny,
     required this.currentDay,
+    required this.username,
+    required this.logout,
   });
 
   String daytimeLeft() {
@@ -132,7 +136,23 @@ class SideNav extends StatelessWidget {
 
             // SECTION: Username (Todo)
 
+            Text(username,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontSize: 13)),
+
             // SECTION: Settings and Log Out
+            const SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: logout(),
+                child: Row(
+                  children: [
+                    // Logout button
+                    Icon(Icons.logout, color: Colors.white),
+                    const SizedBox(width: 10),
+                  ],
+                ))
           ],
         ),
       ),

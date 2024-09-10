@@ -2,6 +2,7 @@ import 'package:autoclub_frontend/code_assets/texts.dart';
 import 'package:autoclub_frontend/code_assets/style.dart';
 import 'package:autoclub_frontend/models/location.dart';
 import 'package:autoclub_frontend/components/side_nav.dart';
+import 'package:autoclub_frontend/pages/login.dart';
 import 'package:autoclub_frontend/utilities/job_generation.dart';
 import 'package:autoclub_frontend/utilities/sheets.dart';
 import 'package:autoclub_frontend/utilities/user_info.dart';
@@ -11,6 +12,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 import 'package:autoclub_frontend/components/current_car.dart';
 import 'package:autoclub_frontend/models/job.dart';
 import 'package:autoclub_frontend/pages/location_job_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../browser/browser_window.dart';
 import '../models/car.dart';
@@ -19,7 +21,9 @@ import 'garage/garage.dart';
 import '../pages/at-auto/at_auto_homepage.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final UserData userData;
+  final SupabaseClient supabase;
+  const MyHomePage({super.key, required this.userData, required this.supabase});
 
   @override
   State<MyHomePage> createState() => MyHomePageState();
@@ -27,32 +31,8 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   final viewTransformationController = TransformationController();
-  // final GlobalKey<SideNavState> _sideNavKey = GlobalKey<SideNavState>();
 
-  UserData userData = UserData(
-    time: const TimeOfDay(hour: 9, minute: 00),
-    currentDay: 1,
-    money: 10000,
-    currentCar: null,
-    userCarList: [],
-    currUserCarId: 0,
-    usedListings: [],
-  );
-
-  /*
-  ---------- Temp Game information -------------
-  */
-  // var time = const TimeOfDay(hour: 9, minute: 00);
-  // int currentDay = 1;
-  // int money = 10000;
-
-  // Car? currentCar;
-  // List<Car> userCarList = [];
-  // // Number to track the id of the user's car
-  // int currUserCarId = 0;
-
-  // End of temp game information ----------------
-
+  late UserData userData = widget.userData;
   SelectedLocation location = SelectedLocation.home;
 
   final usedDealerCount = 21; // adjust the number of used cars in the dealer
@@ -77,6 +57,15 @@ class MyHomePageState extends State<MyHomePage> {
     SelectedLocation.tuning: [],
     SelectedLocation.wharf: [],
   };
+
+  void _logout() async {
+    await widget.supabase.auth.signOut();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+      (route) => false,
+    );
+  }
 
   void progressTime({int hour = 0, int minute = 0}) {
     setState(() {
@@ -360,6 +349,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    userData = widget.userData;
     transformView(viewTransformationController);
     super.initState();
     getGameCarList();
@@ -404,10 +394,13 @@ class MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.centerLeft,
           child: screenWidth > 700 && screenHeight > 600
               ? SideNav(
+                  username: userData.username,
                   time: userData.time,
                   location: location,
                   money: userData.money,
-                  currentDay: userData.currentDay)
+                  currentDay: userData.currentDay,
+                  logout: _logout,
+                )
               : null),
 
       // Location Entry Prompt
