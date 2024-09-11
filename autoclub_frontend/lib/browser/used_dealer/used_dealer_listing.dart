@@ -116,7 +116,7 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
 
   @override
   Widget build(BuildContext context) {
-    // print("### ${widget.listing["salePrice"]}");
+    // // print("### ${widget.listing["salePrice"]}");
     final Map<String, dynamic> listing = widget.listing;
     String? gotUrl = listing["thumbnailLink"];
     String imageUrl = (gotUrl != null)
@@ -271,8 +271,8 @@ class _UsedDealerListingState extends State<UsedDealerListing> {
                       borderRadius: BorderRadius.circular(12.0),
                       color: const Color.fromARGB(255, 74, 165, 112),
                     ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 4.0),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Text(

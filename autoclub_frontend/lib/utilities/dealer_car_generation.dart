@@ -65,10 +65,10 @@ List<Map<String, dynamic>> generateUsedCarListings(
 
   /*
   for (final uc in usedCarListings) {
-    print(uc["carObject"]);
-    print("saleprice: ${uc["salePrice"]}");
-    print("title desc: ${uc["titleDescription"]}");
-    print("\n\n\n");
+    // print(uc["carObject"]);
+    // print("saleprice: ${uc["salePrice"]}");
+    // print("title desc: ${uc["titleDescription"]}");
+    // print("\n\n\n");
   }
    */
   return usedCarListings;

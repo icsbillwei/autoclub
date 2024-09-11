@@ -23,7 +23,12 @@ import '../pages/at-auto/at_auto_homepage.dart';
 class MyHomePage extends StatefulWidget {
   final UserData userData;
   final SupabaseClient supabase;
-  const MyHomePage({super.key, required this.userData, required this.supabase});
+  final String userId;
+  const MyHomePage(
+      {super.key,
+      required this.userData,
+      required this.supabase,
+      required this.userId});
 
   @override
   State<MyHomePage> createState() => MyHomePageState();
@@ -58,6 +63,30 @@ class MyHomePageState extends State<MyHomePage> {
     SelectedLocation.wharf: [],
   };
 
+  Future<void> updateUserData() async {
+    try {
+      await widget.supabase
+          .from('profiles')
+          .update(userData.toMap())
+          .eq('id', widget.userId);
+    } catch (e) {
+      print('Failed to update user data: $e');
+      return;
+    }
+    print('User data updated');
+  }
+
+  /*
+    UserData layout:
+    String username;
+    TimeOfDay time;
+    int currentDay;
+    int money;
+    Car? currentCar;
+    List<Car> userCarList;
+    int currUserCarId;
+  */
+
   void _logout() async {
     await widget.supabase.auth.signOut();
     Navigator.pushAndRemoveUntil(
@@ -80,6 +109,7 @@ class MyHomePageState extends State<MyHomePage> {
         newHour = newHour % 24; // Ensure the hour is within 0-23 range
         userData.time = TimeOfDay(hour: newHour, minute: newMinute);
       }
+      updateUserData();
     });
   }
 
@@ -93,6 +123,8 @@ class MyHomePageState extends State<MyHomePage> {
       userData.time = const TimeOfDay(hour: 9, minute: 0);
       location = SelectedLocation.home; // Reset location to home
     });
+
+    updateUserData();
 
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -142,6 +174,7 @@ class MyHomePageState extends State<MyHomePage> {
   void updateMoney(int newMoney) {
     userData.money = newMoney;
     setState(() {});
+    updateUserData();
   }
 
   void updateLocation(SelectedLocation newLocation) {
@@ -155,15 +188,20 @@ class MyHomePageState extends State<MyHomePage> {
     userData.userCarList.add(newCar);
     userData.money -= price;
     setState(() {});
-    print("User car added");
-    print("${userData.userCarList.length} cars in userCarList");
-    print("User car ID: ${newCar.userCarID}");
-    print(userData.userCarList[0].userCarID);
+    updateUserData();
+    // print("User car added");
+    // print("${userData.userCarList.length} cars in userCarList");
+    // print("User car ID: ${newCar.userCarID}");
+    // print(userData.userCarList[0].userCarID);
   }
 
   void updateCurrentCar(Car newCar) {
     userData.currentCar = newCar;
     setState(() {});
+    // delay 0.5s
+    Future.delayed(Duration(milliseconds: 500), () {
+      updateUserData();
+    });
   }
 
   void replaceUserCar(Car newCar) {
@@ -173,10 +211,11 @@ class MyHomePageState extends State<MyHomePage> {
       setState(() {
         userData.userCarList[index] = newCar;
       });
-      print("Car replaced in gameCarList");
+      // print("Car replaced in gameCarList");
     } else {
-      print("Target car not found in gameCarList");
+      // print("Target car not found in gameCarList");
     }
+    updateUserData();
   }
 
   void handleJobAcceptance(TempJob job) {
@@ -217,6 +256,7 @@ class MyHomePageState extends State<MyHomePage> {
     });
 
     progressTime(hour: hours, minute: minutes);
+    updateUserData();
   }
 
   /*
@@ -239,7 +279,7 @@ class MyHomePageState extends State<MyHomePage> {
             );
           },
         );
-        print('Downtown selected');
+        // print('Downtown selected');
         break;
       case SelectedLocation.home:
         // Go into homepage with animation
@@ -262,7 +302,7 @@ class MyHomePageState extends State<MyHomePage> {
                 const Duration(seconds: 1), // Adjust the duration as needed
           ),
         );
-        print('Home selected');
+        // print('Home selected');
         break;
       case SelectedLocation.hotel:
         // Action for hotel
@@ -279,7 +319,7 @@ class MyHomePageState extends State<MyHomePage> {
             );
           },
         );
-        print('Hotel selected');
+        // print('Hotel selected');
         break;
       case SelectedLocation.showroom:
         // Action for showroom
@@ -296,7 +336,7 @@ class MyHomePageState extends State<MyHomePage> {
             );
           },
         );
-        print('Showroom selected');
+        // print('Showroom selected');
         break;
       case SelectedLocation.tuning:
         // Action for tuning
@@ -322,7 +362,7 @@ class MyHomePageState extends State<MyHomePage> {
                 const Duration(seconds: 1), // Adjust the duration as needed
           ),
         );
-        print('Tuning selected');
+        // print('Tuning selected');
         break;
       case SelectedLocation.wharf:
         // Action for wharf
@@ -339,11 +379,11 @@ class MyHomePageState extends State<MyHomePage> {
             );
           },
         );
-        print('Wharf selected');
+        // print('Wharf selected');
         break;
       default:
-        // Default action
-        print('No location selected');
+      // Default action
+      // print('No location selected');
     }
   }
 
@@ -445,7 +485,7 @@ class MyHomePageState extends State<MyHomePage> {
                           money: userData.money,
                         );
                       } else {
-                        print("!!!!");
+                        // print("!!!!");
                         return const SizedBox();
                       }
                     });

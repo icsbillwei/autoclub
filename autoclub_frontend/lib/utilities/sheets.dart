@@ -11,7 +11,7 @@ Future<List<CarModel>> getCarList() async {
   final gsheets = GSheets(credentials);
   final ss = await gsheets.spreadsheet(spreadsheetId);
 
-  print("!! getCarList");
+  // print("!! getCarList");
   List<CarModel> carList = [];
   final sheet = ss.worksheetByTitle("carlist");
 
@@ -19,7 +19,7 @@ Future<List<CarModel>> getCarList() async {
   /*
   debug u
   for (var x in rows!) {
-    print("> ${x}");
+    // print("> ${x}");
   }
    */
   for (final row in rows!) {

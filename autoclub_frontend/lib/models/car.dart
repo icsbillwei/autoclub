@@ -466,8 +466,8 @@ class Car extends CarModel {
           designer: car.designer,
         ) {
     componentList = List.from(car.componentList);
-    // print("cloned car: $name");
-    // print(toString());
+    // // print("cloned car: $name");
+    // // print(toString());
   }
 
   Map<String, dynamic> toMap() {
@@ -698,7 +698,7 @@ class Car extends CarModel {
   void valuation() {
     int newCurrPrice =
         (newPrice * (1 / (0.000001 * depCurve * mileage + 1))).toInt();
-    // print("$name:  $newCurrPrice");
+    // // print("$name:  $newCurrPrice");
     int tempCurrPrice = newCurrPrice;
     for (Component comp in componentList) {
       newCurrPrice -= (tempCurrPrice *
@@ -707,7 +707,7 @@ class Car extends CarModel {
               usedCarDamagePriceRatio)
           .toInt();
     }
-    // print("$name new:  $newCurrPrice");
+    // // print("$name new:  $newCurrPrice");
     currPrice = newCurrPrice;
   }
 
@@ -766,12 +766,12 @@ class Car extends CarModel {
       ],
     };
 
-    // print("prevAccel: $accel");
-    // print("prevQmile: $qmile");
-    // print("prevVmax: $vmax");
-    // print("prevHandling0: $handling0");
-    // print("prevHandling1: $handling1");
-    // print("prevBraking: $braking");
+    // // print("prevAccel: $accel");
+    // // print("prevQmile: $qmile");
+    // // print("prevVmax: $vmax");
+    // // print("prevHandling0: $handling0");
+    // // print("prevHandling1: $handling1");
+    // // print("prevBraking: $braking");
 
     currAccel = accel;
     currQmile = qmile;
@@ -781,9 +781,9 @@ class Car extends CarModel {
     currBraking = braking;
 
     for (Component c in componentList) {
-      // print("name: ${c.name}");
+      // // print("name: ${c.name}");
       List<List<double>> damageRatio = damageRatioMatrix[c.name]!;
-      // print(damageRatio);
+      // // print(damageRatio);
       currAccel = currAccel * damageRatio[0][c.damage.level];
       currQmile = currQmile * damageRatio[1][c.damage.level];
       currVmax = (currVmax * damageRatio[2][c.damage.level]).toInt();
@@ -809,12 +809,12 @@ class Car extends CarModel {
     /*
     Update stat values
      */
-    // print("accel: $currAccel");
-    // print("qmile: $currQmile");
-    // print("vmax: $currVmax");
-    // print("handling0: $currHandling0");
-    // print("handling1: $currHandling1");
-    // print("braking: $currBraking");
+    // // print("accel: $currAccel");
+    // // print("qmile: $currQmile");
+    // // print("vmax: $currVmax");
+    // // print("handling0: $currHandling0");
+    // // print("handling1: $currHandling1");
+    // // print("braking: $currBraking");
 
     currLaunchStat = 18 / currAccel;
     currAccelStat = 38.5 / (currQmile - 4) - 1;
@@ -844,7 +844,7 @@ class Car extends CarModel {
                 currBrakingStat * brakingWeight) *
             100)
         .toInt();
-    // print("$name: $currPerformancePoint");
+    // // print("$name: $currPerformancePoint");
     if (currPerformancePoint < 0) {
       currPerformancePoint = 0;
     }

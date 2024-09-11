@@ -13,7 +13,7 @@ class SideNav extends StatelessWidget {
   final Weather weather;
   final int currentDay;
   final String username;
-  final Function logout;
+  final VoidCallback logout;
 
   // colors
   final theme = "light"; // light or dark
@@ -135,24 +135,22 @@ class SideNav extends StatelessWidget {
             // SECTION: Profile Picture (Todo)
 
             // SECTION: Username (Todo)
-
+            const SizedBox(height: 100),
             Text(username,
                 style: Theme.of(context)
                     .textTheme
                     .headlineSmall
-                    ?.copyWith(fontSize: 13)),
+                    ?.copyWith(fontSize: 16)),
 
             // SECTION: Settings and Log Out
             const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: logout(),
-                child: Row(
-                  children: [
-                    // Logout button
-                    Icon(Icons.logout, color: Colors.white),
-                    const SizedBox(width: 10),
-                  ],
-                ))
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: blue),
+                  onPressed: logout,
+                  child: Icon(Icons.logout, color: Colors.white)),
+            )
           ],
         ),
       ),

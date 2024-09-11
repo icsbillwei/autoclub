@@ -34,7 +34,7 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
     setState(() {
       page = newPage;
       if (newPage == UsedDealerPage.listing) {
-        // print("#### ${target["salePrice"]}");
+        // // print("#### ${target["salePrice"]}");
         targetListing = target;
       }
     });
@@ -44,7 +44,7 @@ class _UsedDealerHomepageState extends State<UsedDealerHomepage> {
   void initState() {
     super.initState();
     setState(() {});
-    print("!! Used dealer initstate");
+    // print("!! Used dealer initstate");
   }
 
   @override

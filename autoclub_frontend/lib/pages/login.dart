@@ -33,8 +33,8 @@ class _LoginPageState extends State<LoginPage>
   @override
   void initState() {
     super.initState();
+
     supabase.auth.onAuthStateChange.listen((data) async {
-      print("Auth state changed");
       final session = data.session;
       final user = session?.user;
 
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage>
         await _checkUserProfile();
       } else {
         // Handle the case where the user is not authenticated
-        print("null user");
+        // print("null user");
         // _showDialog('Error', 'User is not authenticated.');
       }
     });
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Future<void> _checkUserProfile() async {
-    print("check user profile");
+    // print("check user profile");
     try {
       final response = await supabase
           .from('profiles')
@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage>
         try {
           existingUserData = UserData.fromMap(response);
         } catch (e) {
-          print("User data not yet created");
+          // print("User data not yet created");
           existingUserData = UserData(
             username: response['username'],
             time: const TimeOfDay(hour: 9, minute: 00),
@@ -115,6 +115,7 @@ class _LoginPageState extends State<LoginPage>
             builder: (context) => MyHomePage(
               userData: existingUserData,
               supabase: supabase,
+              userId: _userId,
             ),
           ),
         );
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Future<void> _usernameInitialize() async {
-    print("User Initialize");
+    // print("User Initialize");
     final username = _signupUsernameController.text.trim();
 
     if (username.isEmpty) {
@@ -160,6 +161,7 @@ class _LoginPageState extends State<LoginPage>
           builder: (context) => MyHomePage(
             userData: newUserData,
             supabase: supabase,
+            userId: _userId,
           ),
         ),
       );
@@ -184,6 +186,16 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
+  String _getSmallImageUrl(String url) {
+    final extensionIndex = url.lastIndexOf('.');
+    if (extensionIndex == -1)
+      return url; // No extension found, return original URL
+
+    final baseUrl = url.substring(0, extensionIndex);
+    final extension = url.substring(extensionIndex);
+    return '${baseUrl}s$extension'; // Insert 's' before the extension
+  }
+
   Widget _buildBackgroundGrid() {
     const int gridCount = 70; // Increased number of images in the grid
     const double spacing = 2.0; // Fixed spacing between images
@@ -204,7 +216,8 @@ class _LoginPageState extends State<LoginPage>
             itemBuilder: (context, index) {
               final car = shuffledCarList[index % shuffledCarList.length];
               return CachedNetworkImage(
-                imageUrl: car.imgLinks, // Use lower resolution URL if available
+                imageUrl: _getSmallImageUrl(
+                    car.imgLinks), // Use lower resolution URL if available
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 placeholder: (context, url) => Container(
@@ -217,7 +230,7 @@ class _LoginPageState extends State<LoginPage>
           ),
           BackdropFilter(
             filter: ImageFilter.blur(
-                sigmaX: 2.0, sigmaY: 2.0), // Slight blur effect
+                sigmaX: 3.0, sigmaY: 3.0), // Slight blur effect
             child: Container(
               color: Colors.black
                   .withOpacity(0), // Transparent container to apply blur
@@ -229,7 +242,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildGoogleSignInContainer() {
-    print("Google Sign In Container");
+    // print("Google Sign In Container");
     final screenWidth = MediaQuery.of(context).size.width;
     final containerWidth =
         screenWidth < 1000 ? screenWidth * 0.9 : screenWidth * 0.6;
@@ -303,7 +316,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _usernameCreationContainer() {
-    print("Username Creation Container");
+    // print("Username Creation Container");
     final screenWidth = MediaQuery.of(context).size.width;
     final containerWidth =
         screenWidth < 1000 ? screenWidth * 0.9 : screenWidth * 0.6;

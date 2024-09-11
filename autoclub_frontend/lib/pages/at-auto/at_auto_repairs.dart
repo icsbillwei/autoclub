@@ -206,7 +206,7 @@ class _ATAutoRepairState extends State<ATAutoRepair> {
   @override
   Widget build(BuildContext context) {
     double componentPadding =
-        MediaQuery.of(context).size.width > 1600 ? 250 : 40;
+        MediaQuery.of(context).size.width > 1600 ? 200 : 40;
 
     return Stack(children: [
       Scaffold(
