@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage>
       final response = await supabase
           .from('profiles')
           .select(
-              'username, time, currentDay, money, currentCar, userCarList, currUserCarId')
+              'username, time, currentDay, money, currentCar, userCarList, currUserCarId, daysLeft')
           .eq('id', _userId)
           .single();
 
@@ -105,7 +105,10 @@ class _LoginPageState extends State<LoginPage>
             currentCar: null,
             userCarList: [],
             currUserCarId: 0,
+            daysLeft: 5,
           );
+          print("ERR LOADING DB DATA");
+          print(e);
         }
 
         // Navigate to the main app page or dashboard with the existing UserData object
@@ -152,6 +155,7 @@ class _LoginPageState extends State<LoginPage>
         currentCar: null,
         userCarList: [],
         currUserCarId: 0,
+        daysLeft: 5,
       );
 
       // Navigate to the main app page or dashboard

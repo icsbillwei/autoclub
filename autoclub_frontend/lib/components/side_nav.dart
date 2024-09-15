@@ -14,6 +14,8 @@ class SideNav extends StatelessWidget {
   final int currentDay;
   final String username;
   final VoidCallback logout;
+  final int daysLeft;
+  final Future<Duration> timeLeftForRefill;
 
   // colors
   final theme = "light"; // light or dark
@@ -27,6 +29,8 @@ class SideNav extends StatelessWidget {
     required this.currentDay,
     required this.username,
     required this.logout,
+    required this.daysLeft,
+    required this.timeLeftForRefill,
   });
 
   String daytimeLeft() {
@@ -43,6 +47,12 @@ class SideNav extends StatelessWidget {
     final minutesLeft = remainingMinutes % 60;
 
     return "${hoursLeft.toString().padLeft(2, '0')}:${minutesLeft.toString().padLeft(2, '0')}";
+  }
+
+  String formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -84,22 +94,80 @@ class SideNav extends StatelessWidget {
             ),
 
             // SECTION: Time
-            Text(
-              "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}",
-              style: Theme.of(context).textTheme.headlineMedium,
+            Tooltip(
+              message: "A day begins at 9:00\nand ends at 21:00",
+              child: Text(
+                "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
 
             const SizedBox(
               height: 15,
             ),
 
-            // SECTION: Time left in the day
-            Text(daytimeLeft(),
-                style: Theme.of(context).textTheme.headlineSmall),
-            Text("of daytime left",
-                style: Theme.of(context).textTheme.displaySmall),
+            // // SECTION: Time left in the day
+            // Text(daytimeLeft(),
+            //     style: Theme.of(context).textTheme.headlineSmall),
+            // Text("of daytime left",
+            //     style: Theme.of(context).textTheme.displaySmall),
+
+            // const SizedBox(height: 30),
+
+            // SECTION: Number of days left
+            Tooltip(
+              message: "You can progress this many days before the next refill",
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 60,
+                    child: LinearProgressIndicator(
+                      value: daysLeft / 5,
+                      minHeight: 10,
+                      backgroundColor: Colors.grey,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text("$daysLeft/5",
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 15),
+            Text("Next refill in",
+                style: Theme.of(context).textTheme.displaySmall),
+            Tooltip(
+              message:
+                  "Your days left will refill in this amount of real life time",
+              child: FutureBuilder<Duration>(
+                future: timeLeftForRefill,
+                builder: (context, snapshot) {
+                  if (daysLeft == 5) {
+                    return Text(
+                      "--:--",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final timeLeft = snapshot.data!;
+                    return Text(
+                      formatDuration(timeLeft),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    );
+                  }
+                },
+              ),
+            ),
+
+            const SizedBox(height: 30),
 
             // SECTION: Current Day
             Text("Day $currentDay",
@@ -135,7 +203,7 @@ class SideNav extends StatelessWidget {
             // SECTION: Profile Picture (Todo)
 
             // SECTION: Username (Todo)
-            const SizedBox(height: 100),
+            const SizedBox(height: 70),
             Text(username,
                 style: Theme.of(context)
                     .textTheme

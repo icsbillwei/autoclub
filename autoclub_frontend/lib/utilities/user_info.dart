@@ -9,6 +9,7 @@ class UserData {
   Car? currentCar;
   List<Car> userCarList;
   int currUserCarId;
+  int daysLeft;
 
   UserData({
     required this.username,
@@ -18,6 +19,7 @@ class UserData {
     this.currentCar,
     required this.userCarList,
     required this.currUserCarId,
+    required this.daysLeft,
   });
 
   // TODO convert car type to binary jsonb
@@ -30,6 +32,7 @@ class UserData {
       'currentCar': currentCar?.toMap(),
       'userCarList': userCarList.map((car) => car.toMap()).toList(),
       'currUserCarId': currUserCarId,
+      'daysLeft': daysLeft,
     };
   }
 
@@ -53,6 +56,7 @@ class UserData {
           map['currentCar'] != null ? Car.fromMap(map['currentCar']) : null,
       userCarList: userCarList,
       currUserCarId: map['currUserCarId'],
+      daysLeft: map['daysLeft'],
     );
   }
 }

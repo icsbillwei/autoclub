@@ -13,6 +13,7 @@ import 'package:autoclub_frontend/components/current_car.dart';
 import 'package:autoclub_frontend/models/job.dart';
 import 'package:autoclub_frontend/pages/location_job_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../browser/browser_window.dart';
 import '../models/car.dart';
@@ -40,7 +41,10 @@ class MyHomePageState extends State<MyHomePage> {
   late UserData userData = widget.userData;
   SelectedLocation location = SelectedLocation.home;
 
-  final usedDealerCount = 21; // adjust the number of used cars in the dealer
+  static const usedDealerCount =
+      21; // adjust the number of used cars in the dealer
+  static const int maxDays = 5; // maximum days available to play before refill
+  static const int refillHours = 2; // hours to refill days
 
   // Is there a better way to set theme
   final theme = "light";
@@ -120,6 +124,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       userData.currentDay += 1;
+      userData.daysLeft -= 1;
       userData.time = const TimeOfDay(hour: 9, minute: 0);
       location = SelectedLocation.home; // Reset location to home
     });
@@ -219,6 +224,31 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   void handleJobAcceptance(TempJob job) {
+    if (!hasTimeLeft(job.getTravelTime(50))) {
+      // Show a message or handle the case when there is no time left
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Not Enough Time'),
+            content: Text(
+              'You do not have enough time left in the day to take on this job. Please wait for your availble time to refill',
+              style: TextStyle(color: Colors.black),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     setState(() {
       location = job.endLocation;
     });
@@ -255,6 +285,7 @@ class MyHomePageState extends State<MyHomePage> {
       Navigator.of(context).pop();
     });
 
+    // TODO check day left
     progressTime(hour: hours, minute: minutes);
     updateUserData();
   }
@@ -387,6 +418,67 @@ class MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> recoverInGameDays() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastRecoveryTimestamp = prefs.getString('lastRecoveryTimestamp');
+    final currentTimestamp = DateTime.now().toIso8601String();
+
+    if (lastRecoveryTimestamp != null) {
+      final lastRecoveryDateTime = DateTime.parse(lastRecoveryTimestamp);
+      final currentDateTime = DateTime.parse(currentTimestamp);
+      final difference = currentDateTime.difference(lastRecoveryDateTime);
+
+      if (difference.inHours >= refillHours && userData.daysLeft < maxDays) {
+        print("##### Recovering days #####");
+        setState(() {
+          userData.daysLeft = maxDays; // Refill to 5
+        });
+        await prefs.setString('lastRecoveryTimestamp', currentTimestamp);
+        updateUserData();
+      } else if (userData.daysLeft == maxDays) {
+        await prefs.setString('lastRecoveryTimestamp', currentTimestamp);
+      }
+    } else {
+      // If no last recovery timestamp is found, initialize it
+      await prefs.setString('lastRecoveryTimestamp', currentTimestamp);
+    }
+  }
+
+  bool hasTimeLeft(int timeToPassInMinutes) {
+    // Calculate the total minutes after adding the time to pass
+    int totalMinutes =
+        userData.time.hour * 60 + userData.time.minute + timeToPassInMinutes;
+
+    // Calculate the new hour and minute
+    int newHour = totalMinutes ~/ 60;
+    int newMinute = totalMinutes % 60;
+
+    // Check if the new time exceeds 21:00 (9 PM) or if there are no days left
+    if (newHour >= 21 && userData.daysLeft <= 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<Duration> getTimeLeftForRefill() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastRecoveryTimestamp = prefs.getString('lastRecoveryTimestamp');
+    final currentTimestamp = DateTime.now();
+
+    if (lastRecoveryTimestamp != null) {
+      final lastRecoveryDateTime = DateTime.parse(lastRecoveryTimestamp);
+      final difference = currentTimestamp.difference(lastRecoveryDateTime);
+
+      if (difference.inHours < refillHours) {
+        final timeLeft = Duration(hours: refillHours) - difference;
+        return timeLeft;
+      }
+    }
+
+    return Duration.zero;
+  }
+
   @override
   void initState() {
     userData = widget.userData;
@@ -394,6 +486,7 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     getGameCarList();
     updateAllJobs();
+    recoverInGameDays();
   }
 
   @override
@@ -440,6 +533,8 @@ class MyHomePageState extends State<MyHomePage> {
                   money: userData.money,
                   currentDay: userData.currentDay,
                   logout: _logout,
+                  daysLeft: userData.daysLeft,
+                  timeLeftForRefill: getTimeLeftForRefill(),
                 )
               : null),
 
@@ -553,6 +648,36 @@ class MyHomePageState extends State<MyHomePage> {
         return;
       }
 
+      // Check if there is enough time left to travel
+      if (!hasTimeLeft(getTravelTimeInMinutes(current, toggle))) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              icon: Icon(Icons.warning_rounded),
+              actionsAlignment: MainAxisAlignment.end,
+              title: Text('Not Enough Time'),
+              content: Text(
+                'You do not have enough time left in the day to travel to this location. Please wait for your available time to refill.',
+                style: TextStyle(color: Colors.black),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'OK',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
+
       // Check if the car has broken components
       bool hasBrokenComponents = userData.currentCar!.hasBrokenComponents();
 
@@ -589,6 +714,7 @@ class MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           userData.money -= 500;
                           location = toggle;
+                          // TODO check day left
                           progressTime(
                               hour: travelTime['hours']!,
                               minute: travelTime['minutes']!);
@@ -821,7 +947,7 @@ class MyHomePageState extends State<MyHomePage> {
 
 void transformView(controller) {
   // Zoom controller
-  const zoomFactor = 1;
+  const zoomFactor = 0.7;
   const xTranslate = 450.0;
   const yTranslate = 200.0;
   controller.value.setEntry(0, 0, zoomFactor);

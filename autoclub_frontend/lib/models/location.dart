@@ -96,3 +96,11 @@ Map<String, int> getTravelTime(SelectedLocation from, SelectedLocation to) {
     'minutes': minutes,
   };
 }
+
+int getTravelTimeInMinutes(SelectedLocation from, SelectedLocation to) {
+  const double averageSpeed = 50.0; // km/h
+  int distance = getDistance(from, to);
+  double timeInHours = distance / averageSpeed;
+
+  return (timeInHours * 60).round();
+}
