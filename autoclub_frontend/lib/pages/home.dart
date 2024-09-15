@@ -232,7 +232,7 @@ class MyHomePageState extends State<MyHomePage> {
           return AlertDialog(
             title: Text('Not Enough Time'),
             content: Text(
-              'You do not have enough time left in the day to take on this job. Please wait for your availble time to refill',
+              'You do not have enough time left in the day to take on this job. Please wait for your availble days to refill',
               style: TextStyle(color: Colors.black),
             ),
             actions: <Widget>[
@@ -719,6 +719,7 @@ class MyHomePageState extends State<MyHomePage> {
                               hour: travelTime['hours']!,
                               minute: travelTime['minutes']!);
                         });
+                        updateUserData();
                         Navigator.of(context).pop();
                       } else {
                         showDialog(
@@ -792,7 +793,6 @@ class MyHomePageState extends State<MyHomePage> {
                         travelTime['hours']! +
                         totalMinutes ~/ 60;
                     int newMinute = totalMinutes % 60;
-
                     if (newHour >= 21) {
                       progressDay(extraPop: true);
                     } else {
@@ -802,6 +802,7 @@ class MyHomePageState extends State<MyHomePage> {
                           TimeOfDay(hour: newHour, minute: newMinute);
                       Navigator.of(context).pop();
                     }
+                    updateUserData();
                   });
                 },
               ),
